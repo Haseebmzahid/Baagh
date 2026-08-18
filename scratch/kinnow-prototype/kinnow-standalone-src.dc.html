@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="ext-resource-dependency" content="https://unpkg.com/three@0.184.0/build/three.module.js" data-resource-id="threeModule" />
+<meta name="ext-resource-dependency" content="https://unpkg.com/three@0.184.0/build/three.core.js" data-resource-id="threeCore" />
+<meta name="ext-resource-dependency" content="./kinnow-scene.js" data-resource-id="kinnowScene" />
+<template id="__bundler_thumbnail" data-bg-color="#100d0a">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#100d0a"/>
+    <ellipse cx="600" cy="415" rx="215" ry="190" fill="#f0871c"/>
+    <ellipse cx="530" cy="345" rx="86" ry="74" fill="#f8b45c" opacity="0.45"/>
+    <rect x="586" y="208" width="28" height="22" rx="9" fill="#717c36"/>
+  </svg>
+</template>
+<script>
+(function () {
+  window.__sceneModule = (async function () {
+    for (let i = 0; i < 200 && !(window.__resources && window.__resources.kinnowScene); i++) {
+      await new Promise(r => setTimeout(r, 25));
+    }
+    const R = window.__resources;
+    if (!R || !R.kinnowScene) return import('./kinnow-scene.js');
+    const [modSrc, coreSrc, sceneSrc] = await Promise.all([
+      fetch(R.threeModule).then(r => r.text()),
+      fetch(R.threeCore).then(r => r.text()),
+      fetch(R.kinnowScene).then(r => r.text()),
+    ]);
+    const blob = s => URL.createObjectURL(new Blob([s], { type: 'text/javascript' }));
+    const coreUrl = blob(coreSrc);
+    const modUrl = blob(modSrc.replace(/(['"])\.\/three\.core\.js\1/g, JSON.stringify(coreUrl)));
+    const sceneUrl = blob(sceneSrc.replace(/(['"])three\1/g, JSON.stringify(modUrl)));
+    return import(sceneUrl);
+  })();
+})();
+</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Work+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<script type="application/json" id="three-pin-note">
+{ "note": "three.js is inlined for offline use; see ext-resource-dependency metas in head" }
+</script>
+<style>
+  html { background: #100d0a; }
+  body { margin: 0; background: #100d0a; color: #f2e8d8; -webkit-font-smoothing: antialiased; overscroll-behavior-y: none; }
+  a { color: #e8b45c; text-decoration: none; }
+  a:hover { color: #f6d79a; }
+  ::selection { background: rgba(232,180,92,0.25); }
+  @keyframes hintFade { 0%,100% { opacity: .35 } 50% { opacity: .9 } }
+</style>
+</helmet>
+
+<div style="position: relative; background: #100d0a; font-family: 'Work Sans', system-ui, sans-serif;">
+
+  <div style="position: fixed; inset: 0; z-index: 0; background:
+      radial-gradient(120% 90% at 62% 18%, #2b2118 0%, #17120e 46%, #0d0a08 100%);"></div>
+  <div style="position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .5; background:
+      radial-gradient(60% 45% at 50% 42%, rgba(255,214,150,0.13), rgba(0,0,0,0) 70%);"></div>
+
+  <div ref="{{ stageRef }}" style="position: fixed; inset: 0; z-index: 2; touch-action: pan-y; cursor: grab;">
+    <canvas ref="{{ canvasRef }}" style="width: 100%; height: 100%; display: block;"></canvas>
+  </div>
+
+  <div ref="{{ fallbackRef }}" style="display: none; position: fixed; inset: 0; z-index: 3; align-items: center; justify-content: center; flex-direction: column; gap: 28px; padding: 8vw; text-align: center;">
+    <div style="width: min(40vw, 260px); aspect-ratio: 1 / 0.92; border-radius: 50%; background:
+        radial-gradient(58% 52% at 38% 28%, #f8b95c 0%, #ef9526 38%, #cf6f16 74%, #8d4610 100%);
+        box-shadow: 0 60px 90px -50px rgba(0,0,0,.9), inset -18px -26px 60px rgba(90,40,6,.5);"></div>
+    <div style="max-width: 34rem; font-size: 15px; line-height: 1.7; color: rgba(242,232,216,.68);">
+      Your device can’t run the interactive inspection. The same assessment — colour, button, weight, give — is written out below in full.
+    </div>
+  </div>
+
+  <!-- annotations -->
+  <div ref="{{ annoRef }}" style="position: fixed; inset: 0; z-index: 4; pointer-events: none;">
+    <div ref="{{ colourRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">COLOUR</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">Deep and even, with fine pebbling.</div>
+      </div>
+    </div>
+    <div ref="{{ buttonRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">BUTTON</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">The stem end stays tight and fresh, never dry.</div>
+      </div>
+    </div>
+    <div ref="{{ weightRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">WEIGHT</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">Heavy for its size. Juice has weight.</div>
+      </div>
+    </div>
+    <div ref="{{ giveRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">GIVE</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">Springy under the thumb. Never slack.</div>
+      </div>
+    </div>
+    <div ref="{{ rindRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">RIND</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">Thin, tight, and clean off the flesh.</div>
+      </div>
+    </div>
+    <div ref="{{ membraneRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">MEMBRANE</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">Fine enough to eat without noticing.</div>
+      </div>
+    </div>
+    <div ref="{{ juiceRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">JUICE</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">Vesicles standing full at the cut face.</div>
+      </div>
+    </div>
+    <div ref="{{ seedsRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">SEEDS</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">Kinnow carries seeds. We count them.</div>
+      </div>
+    </div>
+
+    <div ref="{{ coreRef }}" style="position: absolute; left: 0; top: 0; width: 210px; opacity: 0; pointer-events: auto; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-left: 14px; border-left: 1px solid rgba(232,180,92,.55); transition: border-color .35s, padding-left .35s;" style-hover="border-left-color: #f6d79a; padding-left: 18px;">
+        <div style="font-size: 10.5px; letter-spacing: .30em; color: #e8b45c;">CORE</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-size: 17px; line-height: 1.35; color: rgba(242,232,216,.85);">Tight and small — the segments carry the fruit.</div>
+      </div>
+    </div>
+    <div ref="{{ lineCore }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+    <div ref="{{ lineColour }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+    <div ref="{{ lineButton }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+    <div ref="{{ lineWeight }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+    <div ref="{{ lineGive }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+    <div ref="{{ lineRind }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+    <div ref="{{ lineMembrane }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+    <div ref="{{ lineJuice }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+    <div ref="{{ lineSeeds }}" style="position: absolute; left: 0; top: 0; height: 1px; width: 0; opacity: 0; background: linear-gradient(90deg, rgba(232,180,92,.5), rgba(232,180,92,0));"></div>
+
+    <div ref="{{ goodRef }}" style="position: absolute; left: 0; top: 0; opacity: 0; transform: translate(-50%,0); text-align: center; will-change: transform, opacity;">
+      <div style="font-size: 10.5px; letter-spacing: .32em; color: rgba(242,232,216,.5);">GOOD</div>
+    </div>
+    <div ref="{{ betterRef }}" style="position: absolute; left: 0; top: 0; opacity: 0; transform: translate(-50%,0); text-align: center; will-change: transform, opacity;">
+      <div style="font-size: 10.5px; letter-spacing: .32em; color: rgba(242,232,216,.62);">BETTER</div>
+    </div>
+    <div ref="{{ bestRef }}" style="position: absolute; left: 0; top: 0; opacity: 0; transform: translate(-50%,0); text-align: center; will-change: transform, opacity;">
+      <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+        <div style="font-size: 10.5px; letter-spacing: .32em; color: #e8b45c;">BEST</div>
+        <div style="width: 26px; height: 1px; background: rgba(232,180,92,.6);"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- narrative overlay -->
+  <div style="position: fixed; inset: 0; z-index: 5; pointer-events: none; display: flex; align-items: flex-end;">
+    <div style="position: relative; width: 100%; padding: 0 clamp(20px, 5vw, 84px) clamp(28px, 6vh, 76px);">
+
+      <div ref="{{ act0 }}" style="position: absolute; left: clamp(20px, 5vw, 84px); bottom: clamp(28px, 6vh, 76px); width: min(500px, 84vw); display: flex; flex-direction: column; gap: 18px; opacity: 0;">
+        <div style="font-size: 10.5px; letter-spacing: .34em; color: rgba(232,180,92,.9);">CHAPTER THREE — FRUIT INTELLIGENCE</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(34px, 5.4vw, 68px); line-height: 1.02; letter-spacing: -0.015em; text-wrap: pretty;">Judge a Kinnow<br />before you peel it.</div>
+        <div style="font-size: 14.5px; line-height: 1.7; color: rgba(242,232,216,.62); max-width: 34ch;">One fruit, examined properly. Drag to turn it in the light; scroll to follow the inspection.</div>
+      </div>
+
+      <div ref="{{ act1 }}" style="position: absolute; left: clamp(20px, 5vw, 84px); bottom: clamp(28px, 6vh, 76px); width: min(420px, 84vw); display: flex; flex-direction: column; gap: 14px; opacity: 0;">
+        <div style="font-size: 10.5px; letter-spacing: .34em; color: rgba(232,180,92,.9);">01 — THE INSPECTION</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(26px, 3.4vw, 42px); line-height: 1.12;">Four judgements, before the peel.</div>
+        <div style="font-size: 14px; line-height: 1.7; color: rgba(242,232,216,.6); max-width: 36ch;">Weight in the hand first. Then colour, then the button, then how the skin answers a thumb.</div>
+      </div>
+
+      <div ref="{{ act2 }}" style="position: absolute; left: clamp(20px, 5vw, 84px); bottom: clamp(28px, 6vh, 76px); width: min(420px, 84vw); display: flex; flex-direction: column; gap: 14px; opacity: 0;">
+        <div style="font-size: 10.5px; letter-spacing: .34em; color: rgba(232,180,92,.9);">02 — THE PEEL</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(26px, 3.4vw, 42px); line-height: 1.12;">How it releases tells us plenty.</div>
+        <div style="font-size: 14px; line-height: 1.7; color: rgba(242,232,216,.6); max-width: 36ch;">A good Kinnow lets its rind away cleanly, in one piece, leaving the flesh dry and the fingers oiled.</div>
+      </div>
+
+      <div ref="{{ act3 }}" style="position: absolute; left: clamp(20px, 5vw, 84px); bottom: clamp(28px, 6vh, 76px); width: min(420px, 84vw); display: flex; flex-direction: column; gap: 14px; opacity: 0;">
+        <div style="font-size: 10.5px; letter-spacing: .34em; color: rgba(232,180,92,.9);">03 — WHAT IS INSIDE</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(26px, 3.4vw, 42px); line-height: 1.12;">Ten segments, held together.</div>
+        <div style="font-size: 14px; line-height: 1.7; color: rgba(242,232,216,.6); max-width: 36ch;">They should part willingly and hold their shape. Segments that collapse have been picked too late.</div>
+      </div>
+
+      <div ref="{{ act4 }}" style="position: absolute; left: clamp(20px, 5vw, 84px); bottom: clamp(28px, 6vh, 76px); width: min(420px, 84vw); display: flex; flex-direction: column; gap: 14px; opacity: 0;">
+        <div style="font-size: 10.5px; letter-spacing: .34em; color: rgba(232,180,92,.9);">04 — THE CROSS SECTION</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(26px, 3.4vw, 42px); line-height: 1.12;">Cut across, it cannot hide anything.</div>
+        <div style="font-size: 14px; line-height: 1.7; color: rgba(242,232,216,.6); max-width: 36ch;">Ten wedges packed to the rind, a small tight core, juice standing at the face. This is the test that settles a crate.</div>
+      </div>
+
+      <div ref="{{ act5 }}" style="position: absolute; left: 50%; transform: translateX(-50%); bottom: clamp(28px, 6vh, 76px); width: min(560px, 88vw); display: flex; flex-direction: column; gap: 14px; align-items: center; text-align: center; opacity: 0;">
+        <div style="font-size: 10.5px; letter-spacing: .34em; color: rgba(232,180,92,.9);">05 — THE SELECTION TEST</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-style: italic; font-size: clamp(24px, 3.2vw, 40px); line-height: 1.18;">Colour is the easiest thing to admire. Weight is the harder truth.</div>
+        <div style="font-size: 14px; line-height: 1.7; color: rgba(242,232,216,.6); max-width: 46ch;">Three sound fruits. One is heavy for its size, tight at the button and even in colour — that is the one we send.</div>
+      </div>
+
+      <div ref="{{ act6 }}" style="position: absolute; left: clamp(20px, 5vw, 84px); bottom: clamp(28px, 6vh, 76px); width: min(420px, 84vw); display: flex; flex-direction: column; gap: 14px; opacity: 0;">
+        <div style="font-size: 10.5px; letter-spacing: .34em; color: rgba(232,180,92,.9);">06 — WHOLE AGAIN</div>
+        <div style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(26px, 3.4vw, 42px); line-height: 1.12;">Read once, then repeated crate after crate.</div>
+        <div style="font-size: 14px; line-height: 1.7; color: rgba(242,232,216,.6); max-width: 36ch;">The same four judgements, made by hand, before anything is packed.</div>
+      </div>
+
+      <div ref="{{ act7 }}" style="position: absolute; left: 50%; transform: translateX(-50%); bottom: clamp(18px, 4vh, 76px); width: min(620px, 90vw); display: flex; flex-direction: column; gap: clamp(12px, 2.2vh, 22px); align-items: center; text-align: center; opacity: 0; pointer-events: none;">
+        <div style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(28px, min(4.4vw, 7vh), 58px); line-height: 1.06;">The Kinnow we choose for you.</div>
+        <div style="font-size: 14.5px; line-height: 1.6; color: rgba(242,232,216,.62); max-width: 42ch;">Selected with the judgement of experienced fruit buyers.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; pointer-events: auto;">
+          <a href="#everyday-fresh" style="padding: 15px 30px; border-radius: 2px; background: #e8b45c; color: #1a1208; font-size: 12px; letter-spacing: .16em; transition: background .3s, transform .3s;" style-hover="background: #f6d79a; transform: translateY(-1px);">EXPLORE EVERYDAY FRESH</a>
+          <a href="#signature-collection" style="padding: 15px 30px; border-radius: 2px; border: 1px solid rgba(242,232,216,.28); color: rgba(242,232,216,.86); font-size: 12px; letter-spacing: .16em; transition: border-color .3s, color .3s;" style-hover="border-color: rgba(232,180,92,.7); color: #f6d79a;">EXPLORE SIGNATURE COLLECTION</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div ref="{{ railRef }}" style="position: fixed; z-index: 6; right: clamp(14px, 2.2vw, 34px); top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 12px; align-items: center; pointer-events: none;">
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(242,232,216,.25); transition: background .4s, transform .4s;"></div>
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(242,232,216,.25); transition: background .4s, transform .4s;"></div>
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(242,232,216,.25); transition: background .4s, transform .4s;"></div>
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(242,232,216,.25); transition: background .4s, transform .4s;"></div>
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(242,232,216,.25); transition: background .4s, transform .4s;"></div>
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(242,232,216,.25); transition: background .4s, transform .4s;"></div>
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(242,232,216,.25); transition: background .4s, transform .4s;"></div>
+    <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(242,232,216,.25); transition: background .4s, transform .4s;"></div>
+  </div>
+
+  <div ref="{{ hintRef }}" style="position: fixed; z-index: 6; left: 50%; transform: translateX(-50%); bottom: 18px; font-size: 10px; letter-spacing: .3em; color: rgba(242,232,216,.5); animation: hintFade 3.4s ease-in-out infinite; pointer-events: none;">SCROLL &nbsp;·&nbsp; DRAG TO TURN</div>
+
+  <div ref="{{ spacerRef }}" style="position: relative; z-index: 1; height: 820vh; pointer-events: none;"></div>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;annotations&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Experience&quot;},&quot;pace&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:8.2,&quot;min&quot;:5,&quot;max&quot;:12,&quot;step&quot;:0.2,&quot;unit&quot;:&quot;screens&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Experience&quot;},&quot;light&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1.12,&quot;min&quot;:0.85,&quot;max&quot;:1.5,&quot;step&quot;:0.02,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Experience&quot;}}">
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.refs = {};
+    ['stage','canvas','fallback','anno','rail','hint','spacer',
+     'colour','button','weight','give','rind','membrane','juice','seeds','core','good','better','best',
+     'lineColour','lineButton','lineWeight','lineGive','lineRind','lineMembrane','lineJuice','lineSeeds','lineCore']
+      .forEach(k => { this.refs[k] = React.createRef(); });
+    for (let i = 0; i < 8; i++) this.refs['act' + i] = React.createRef();
+    this.progress = 0;
+  }
+
+  renderVals() {
+    const r = this.refs;
+    return {
+      stageRef: r.stage, canvasRef: r.canvas, fallbackRef: r.fallback, annoRef: r.anno,
+      railRef: r.rail, hintRef: r.hint, spacerRef: r.spacer,
+      colourRef: r.colour, buttonRef: r.button, weightRef: r.weight, giveRef: r.give,
+      rindRef: r.rind, membraneRef: r.membrane, juiceRef: r.juice, seedsRef: r.seeds, coreRef: r.core,
+      lineCore: r.lineCore,
+      lineColour: r.lineColour, lineButton: r.lineButton, lineWeight: r.lineWeight, lineGive: r.lineGive,
+      lineRind: r.lineRind, lineMembrane: r.lineMembrane, lineJuice: r.lineJuice, lineSeeds: r.lineSeeds,
+      goodRef: r.good, betterRef: r.better, bestRef: r.best,
+      act0: r.act0, act1: r.act1, act2: r.act2, act3: r.act3,
+      act4: r.act4, act5: r.act5, act6: r.act6, act7: r.act7,
+    };
+  }
+
+  applyProps() {
+    const sp = this.refs.spacer.current;
+    const pace = this.props.pace != null ? this.props.pace : 8.2;
+    if (sp) sp.style.height = (pace * 100) + 'vh';
+    const anno = this.refs.anno.current;
+    if (anno) anno.style.display = this.props.annotations !== false ? 'block' : 'none';
+    if (this.exp) this.exp.setExposure(this.props.light != null ? this.props.light : 1.12);
+  }
+
+  componentDidUpdate() { this.applyProps(); }
+
+  componentDidMount() {
+    this.applyProps();
+    const canvas = this.refs.canvas.current;
+    let gl = null;
+    try { gl = document.createElement('canvas').getContext('webgl2') || document.createElement('canvas').getContext('webgl'); } catch (e) {}
+    if (!gl) { this.showFallback(); return; }
+
+    const low = Math.min(innerWidth, innerHeight) < 760 || (navigator.hardwareConcurrency || 8) <= 4;
+
+    (window.__sceneModule || import('./kinnow-scene.js')).then(({ createExperience }) => {
+      this.exp = createExperience(canvas, { low, onFrame: (pts, p) => this.paintOverlay(pts, p) });
+      window.__kinnow = this.exp;
+      this.applyProps();
+      this.bind();
+      this.onScroll();
+    }).catch(err => { console.error(err); this.showFallback(); });
+  }
+
+  showFallback() {
+    const f = this.refs.fallback.current;
+    if (f) f.style.display = 'flex';
+    const s = this.refs.stage.current;
+    if (s) s.style.display = 'none';
+    const a = this.refs.anno.current;
+    if (a) a.style.display = 'none';
+    [0,1,2,3,4,5,6].forEach(i => {
+      const el = this.refs['act' + i].current;
+      if (el) el.style.display = 'none';
+    });
+    const cta = this.refs.act7.current;
+    if (cta) { cta.style.opacity = 1; cta.style.bottom = '6vh'; }
+  }
+
+  bind() {
+    this.onScroll = this.onScroll.bind(this);
+    addEventListener('scroll', this.onScroll, { passive: true });
+    addEventListener('resize', this.onResize = () => { this.exp && this.exp.resize(); this.onScroll(); }, { passive: true });
+
+    const stage = this.refs.stage.current;
+    let down = false, lx = 0, ly = 0;
+    const start = (x, y) => { down = true; lx = x; ly = y; stage.style.cursor = 'grabbing'; };
+    const move = (x, y) => {
+      if (!down) return;
+      this.exp && this.exp.addDrag((x - lx) * 0.006, (y - ly) * 0.0016);
+      lx = x; ly = y;
+    };
+    const end = () => { down = false; stage.style.cursor = 'grab'; };
+    stage.addEventListener('pointerdown', e => start(e.clientX, e.clientY));
+    addEventListener('pointermove', e => move(e.clientX, e.clientY), { passive: true });
+    addEventListener('pointerup', end);
+    addEventListener('pointercancel', end);
+    stage.addEventListener('touchstart', e => start(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+    stage.addEventListener('touchmove', e => move(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+    stage.addEventListener('touchend', end);
+  }
+
+  componentWillUnmount() {
+    removeEventListener('scroll', this.onScroll);
+    removeEventListener('resize', this.onResize);
+    this.exp && this.exp.dispose();
+  }
+
+  onScroll() {
+    const doc = document.scrollingElement || document.documentElement;
+    const max = doc.scrollHeight - innerHeight;
+    this.progress = max > 0 ? Math.min(1, Math.max(0, doc.scrollTop / max)) : 0;
+    this.exp && this.exp.setProgress(this.progress);
+  }
+
+  win(p, a, b, fade) {
+    const f = fade || 0.035;
+    const inn = Math.min(1, Math.max(0, (p - a) / f));
+    const out = Math.min(1, Math.max(0, (b - p) / f));
+    const t = Math.min(inn, out);
+    return t * t * (3 - 2 * t);
+  }
+
+  paintOverlay(pts, p) {
+    const set = (key, o, x, y) => {
+      const el = this.refs[key] && this.refs[key].current;
+      if (!el) return;
+      el.style.opacity = o.toFixed(3);
+      if (x != null) el.style.transform = 'translate3d(' + Math.round(x) + 'px,' + Math.round(y) + 'px,0)';
+    };
+    const byId = {};
+    pts.forEach(pt => { byId[pt.id] = pt; });
+
+    const inspect = this.win(p, 0.085, 0.30, 0.05);
+    const segAct = this.win(p, 0.478, 0.552, 0.03);
+    const crossAct = this.win(p, 0.575, 0.665, 0.04);
+    const trio = this.win(p, 0.685, 0.845, 0.045);
+    const wide = innerWidth > 760;
+
+    const c = byId.center, t = byId.top, e = byId.edge;
+    const R = c && t ? Math.max(80, Math.abs(c.y - t.y)) : 180;
+    const colW = 210, W = innerWidth, H = innerHeight;
+    // clear whatever is widest on stage: the projected left edge, or the radius
+    const leftEdge = e ? Math.min(e.x, (c ? c.x : W * 0.5) - R) : (c ? c.x : W * 0.5) - R;
+    let colX = Math.min((c ? c.x : W * 0.5) - R * 1.15, leftEdge) - colW - 40;
+    colX = Math.max(wide ? 24 : 12, Math.min(colX, W - colW - 20));
+
+    const group = (keys, on) => {
+      const items = keys.map(k => ({ k, pt: byId[k] })).filter(o => o.pt);
+      items.sort((a, b) => a.pt.y - b.pt.y);
+      const minY = 28, maxY = H * (wide ? 0.42 : 0.34), gap = 80;
+      let prev = -1e9;
+      const ys = items.map(o => {
+        let y = Math.min(Math.max(o.pt.y - 18, minY), maxY);
+        if (y < prev + gap) y = prev + gap;
+        prev = y;
+        return y;
+      });
+      const limit = H * (wide ? 0.60 : 0.50);
+      if (ys.length) {
+        const over = (ys[ys.length - 1] + 64) - limit;
+        if (over > 0) {
+          const shift = Math.min(over, Math.max(0, ys[0] - minY));
+          for (let i = 0; i < ys.length; i++) ys[i] -= shift;
+        }
+      }
+      items.forEach((o, idx) => {
+        const y = ys[idx];
+        const o1 = on * (o.pt.front ? 1 : 0.55);
+        set(o.k, o1, colX, y);
+        const lineKey = 'line' + o.k.charAt(0).toUpperCase() + o.k.slice(1);
+        const el = this.refs[lineKey] && this.refs[lineKey].current;
+        if (el) {
+          const lx = colX + colW - 6, ly = y + 21;
+          const dx = Math.max(0, o.pt.x - lx - 10), dy = o.pt.y - ly;
+          const len = Math.sqrt(dx * dx + dy * dy);
+          el.style.opacity = (o1 * 0.9).toFixed(3);
+          el.style.width = Math.round(len) + 'px';
+          el.style.transformOrigin = '0 50%';
+          el.style.transform = 'translate3d(' + Math.round(lx) + 'px,' + Math.round(ly) + 'px,0) rotate(' + Math.atan2(dy, dx).toFixed(4) + 'rad)';
+        }
+      });
+    };
+    // each label group lives in the act where the thing it names is on stage
+    group(['colour', 'button', 'weight', 'give'], inspect);
+    group(['rind'], this.win(p, 0.335, 0.478, 0.04));
+    group(['membrane', 'seeds'], segAct);
+    group(['juice', 'core'], crossAct);
+
+    ['good', 'better', 'best'].forEach(k => {
+      const pt = byId[k];
+      const el = this.refs[k].current;
+      if (!pt || !el) return;
+      el.style.opacity = (trio * (k === 'best' ? 1 : 0.72)).toFixed(3);
+      el.style.transform = 'translate(-50%,0) translate3d(' + Math.round(pt.x) + 'px,' + Math.round(pt.y) + 'px,0)';
+    });
+
+    const acts = [
+      this.win(p, -0.02, 0.085, 0.03),
+      this.win(p, 0.10, 0.275, 0.03),
+      this.win(p, 0.295, 0.46, 0.03),
+      this.win(p, 0.475, 0.552, 0.03),
+      this.win(p, 0.568, 0.668, 0.03),
+      this.win(p, 0.68, 0.845, 0.03),
+      this.win(p, 0.86, 0.925, 0.025),
+      this.win(p, 0.935, 1.05, 0.025),
+    ];
+    for (let i = 0; i < 8; i++) {
+      const el = this.refs['act' + i].current;
+      if (!el) continue;
+      el.style.opacity = acts[i].toFixed(3);
+      el.style.pointerEvents = acts[i] > 0.6 ? 'auto' : 'none';
+      el.style.transform = (i === 5 || i === 7 ? 'translateX(-50%) ' : '') + 'translateY(' + ((1 - acts[i]) * 16).toFixed(1) + 'px)';
+    }
+
+    const rail = this.refs.rail.current;
+    if (rail) {
+      const active = acts.indexOf(Math.max.apply(null, acts));
+      for (let i = 0; i < rail.children.length; i++) {
+        const on = i === active;
+        rail.children[i].style.background = on ? '#e8b45c' : 'rgba(242,232,216,.22)';
+        rail.children[i].style.transform = on ? 'scale(1.6)' : 'scale(1)';
+      }
+    }
+    const hint = this.refs.hint.current;
+    if (hint && p > 0.03 && hint.style.visibility !== 'hidden') {
+      hint.style.animation = 'none';
+      hint.style.opacity = 0;
+      hint.style.visibility = 'hidden';
+    }
+  }
+}
+
+</script>
+</body>
+</html>
