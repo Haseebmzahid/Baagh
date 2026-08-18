@@ -62,6 +62,14 @@ export const AppContent: React.FC = () => {
       setViewMode('fruit-intelligence');
       setActiveFruit('apple');
     } else if (
+      pathname === '/fruit-intelligence/anaar' ||
+      pathname.startsWith('/fruit-intelligence/anaar') ||
+      queryFruit === 'anaar' ||
+      hash === '#anaar'
+    ) {
+      setViewMode('fruit-intelligence');
+      setActiveFruit('anaar');
+    } else if (
       pathname === '/fruit-intelligence/kinnow' ||
       pathname.startsWith('/fruit-intelligence/kinnow') ||
       queryFruit === 'kinnow' ||

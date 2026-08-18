@@ -5,6 +5,8 @@ import { kinnowConfig } from './kinnow/config';
 import { createKinnowScene } from './kinnow/KinnowScene';
 import { appleConfig } from './apple/config';
 import { createAppleScene } from './apple/AppleScene';
+import { anaarConfig } from './anaar/config';
+import { createAnaarScene } from './anaar/AnaarScene';
 
 export interface FruitRegistryEntry {
   config: FruitConfig;
@@ -23,6 +25,10 @@ export const fruitRegistry: Record<string, FruitRegistryEntry> = {
   apple: {
     config: appleConfig,
     factory: createAppleScene,
+  },
+  anaar: {
+    config: anaarConfig,
+    factory: createAnaarScene,
   },
 };
 

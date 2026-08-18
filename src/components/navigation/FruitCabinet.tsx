@@ -8,7 +8,7 @@ interface FruitCabinetProps {
 }
 
 interface SpecimenCardCanvasProps {
-  fruitId: 'chaunsa' | 'kinnow' | 'apple';
+  fruitId: 'chaunsa' | 'kinnow' | 'apple' | 'anaar';
   isActive: boolean;
   pointer: { x: number; y: number };
 }

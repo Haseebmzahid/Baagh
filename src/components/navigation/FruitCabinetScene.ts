@@ -11,9 +11,15 @@ import {
   fruitGeometry as createAppleGeometry,
 } from '../fruit-intelligence/fruits/apple/geometry';
 import { createSkinMaps as createAppleSkinMaps } from '../fruit-intelligence/fruits/apple/textures';
+import {
+  bodyGeometry as createAnaarGeometry,
+  crownGroup as createAnaarCrown,
+  shapeFor as anaarShapeFor,
+} from '../fruit-intelligence/fruits/anaar/geometry';
+import { createSkinMaps as createAnaarSkinMaps } from '../fruit-intelligence/fruits/anaar/textures';
 
 export interface SpecimenItem {
-  id: 'chaunsa' | 'kinnow' | 'apple';
+  id: 'chaunsa' | 'kinnow' | 'apple' | 'anaar';
   name: string;
   signature: string;
   secondary: string;
@@ -42,6 +48,13 @@ export const SPECIMENS: SpecimenItem[] = [
     secondary: 'Look inside before you choose.',
     route: '/fruit-intelligence/apple',
   },
+  {
+    id: 'anaar',
+    name: 'Anaar',
+    signature: 'CROWN · CHAMBERS · ARILS',
+    secondary: 'Read the crown before you open it.',
+    route: '/fruit-intelligence/anaar',
+  },
 ];
 
 export interface SpecimenEngine {
@@ -54,7 +67,7 @@ export interface SpecimenEngine {
 
 export function createSpecimenScene(
   canvas: HTMLCanvasElement,
-  fruitId: 'chaunsa' | 'kinnow' | 'apple',
+  fruitId: 'chaunsa' | 'kinnow' | 'apple' | 'anaar',
   options: { prefersReducedMotion?: boolean } = {}
 ): SpecimenEngine {
   const reducedMotion = !!options.prefersReducedMotion;
@@ -194,6 +207,28 @@ export function createSpecimenScene(
     group.add(mesh, stemGroup);
     baseRotation.set(0.08, 0.6, 0.05);
     disposables.push(geo, mat, stemGeo, capGeo, stemMat, maps.map, maps.bumpMap, maps.roughnessMap);
+  } else if (fruitId === 'anaar') {
+    const maps = createAnaarSkinMaps(11, 'Garnet', 512);
+    const mat = new THREE.MeshPhysicalMaterial({
+      map: maps.map,
+      bumpMap: maps.bumpMap,
+      bumpScale: 0.05,
+      roughnessMap: maps.bumpMap,
+      roughness: 0.62,
+      metalness: 0,
+      clearcoat: 0.14,
+      clearcoatRoughness: 0.85,
+    });
+    const geo = createAnaarGeometry(anaarShapeFor(21, 0.995), 0, Math.PI * 2, 48, 36);
+    const mesh = new THREE.Mesh(geo, mat);
+    const crown = createAnaarCrown(21, 0.8, 0.165);
+
+    baseScale = 1.02;
+    mesh.scale.setScalar(baseScale);
+    crown.group.scale.setScalar(baseScale);
+    group.add(mesh, crown.group);
+    baseRotation.set(0.06, 0.35, -0.04);
+    disposables.push(geo, mat, maps.map, maps.bumpMap, ...crown.disposables);
   }
 
   group.rotation.copy(baseRotation);
