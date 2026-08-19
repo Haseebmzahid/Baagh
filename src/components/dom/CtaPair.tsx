@@ -34,7 +34,7 @@ export const CtaPair: React.FC = () => {
     >
       {/* Primary CTA */}
       <a
-        href="#"
+        href="#everyday-fresh"
         onMouseEnter={() => setPrimaryHover(true)}
         onMouseLeave={() => setPrimaryHover(false)}
         style={{
@@ -49,7 +49,7 @@ export const CtaPair: React.FC = () => {
 
       {/* Secondary CTA */}
       <a
-        href="#"
+        href="#signature"
         onMouseEnter={() => setSecondaryHover(true)}
         onMouseLeave={() => setSecondaryHover(false)}
         style={{

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,300&family=IBM+Plex+Mono:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..400;1,6..72,200..400&family=IBM+Plex+Mono:wght@300;400&display=swap');
 
 /* CSS Reset & Core Document Styles */
 *, *::before, *::after {
@@ -107,3 +107,43 @@ a:hover {
   color: #f6d79a !important;
 }
 
+
+/* ---------------------------------------------------------------------------
+   Commercial layer (Stage 02) — keyframes only. All commercial styling lives
+   in src/components/commercial/theme.ts; nothing here overrides the journey.
+   --------------------------------------------------------------------------- */
+
+/* L1 · specimen plate drift, 8s loop. */
+@keyframes baaghPlateDrift {
+  0%, 100% { transform: scale(1.02) translate3d(0, 0, 0); }
+  50%      { transform: scale(1.05) translate3d(-1.1%, -0.9%, 0); }
+}
+
+/* L1 · Signature hero, 32s loop. */
+@keyframes baaghSignatureDrift {
+  0%, 100% { transform: scale(1.06) translate3d(0, 0, 0); }
+  50%      { transform: scale(1.13) translate3d(-1.6%, -1.2%, 0); }
+}
+
+/* L3 · loading — mono label plus three-dot pulse. */
+@keyframes baaghDotPulse {
+  0%, 80%, 100% { opacity: .25; }
+  40%           { opacity: .9; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Reduced motion drops L1 to a still frame. */
+  [style*="baaghPlateDrift"],
+  [style*="baaghSignatureDrift"] {
+    animation: none !important;
+  }
+}
+
+/* Commercial rails scroll horizontally without showing a bar. */
+.baagh-rail {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.baagh-rail::-webkit-scrollbar {
+  display: none;
+}
