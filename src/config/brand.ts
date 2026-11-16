@@ -27,7 +27,7 @@ export const brandConfig: BrandConfig = {
   navLinks: [
     { label: 'Everyday Fresh', href: '/everyday-fresh' },
     { label: 'Signature', href: '/signature' },
-    { label: 'Our Story', href: '#story' },
+    { label: 'Our Story', href: '/our-story' },
     { label: 'Fruit Intelligence', href: '#fruit-intelligence' },
     { label: 'Corporate', href: '/signature#corporate' },
     { label: 'WhatsApp Order', href: '/basket', primary: true }

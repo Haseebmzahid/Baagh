@@ -16,7 +16,7 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
   onBackToBrand,
 }) => {
   const entry = useMemo(() => getFruitEntry(fruit), [fruit]);
-  const { config, factory } = entry;
+  const { config, loadFactory } = entry;
 
   const [hasWebGL, setHasWebGL] = useState<boolean>(true);
   const [forceFallback, setForceFallback] = useState<boolean>(false);
@@ -29,19 +29,6 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
     const searchParams = new URLSearchParams(window.location.search);
     if (searchParams.get('fallback') === 'true') {
       setForceFallback(true);
-    }
-
-    try {
-      const canvas = document.createElement('canvas');
-      const gl =
-        canvas.getContext('webgl2') ||
-        canvas.getContext('webgl') ||
-        canvas.getContext('experimental-webgl');
-      if (!gl) {
-        setHasWebGL(false);
-      }
-    } catch {
-      setHasWebGL(false);
     }
 
     // Expose debug hook for verification testing
@@ -60,7 +47,10 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
   }, [fruit]);
 
   const handlePointsUpdate = useCallback((newPoints: ScreenPoint[]) => {
-    setPoints([...newPoints]);
+    setPoints(previous => previous.length === newPoints.length && previous.every((point, index) => {
+      const next = newPoints[index];
+      return point.id === next.id && point.front === next.front && Math.abs(point.x - next.x) < .75 && Math.abs(point.y - next.y) < .75;
+    }) ? previous : [...newPoints]);
   }, []);
 
   const handleProgressUpdate = useCallback((newProgress: number) => {
@@ -78,10 +68,10 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
 
   if (!hasWebGL || forceFallback) {
     return (
-      <FruitFallback
+      <><FruitFallback
         config={config}
-        reason={forceFallback ? 'Manual fallback mode test' : 'WebGL unsupported'}
-      />
+        reason={forceFallback ? 'Reading view selected' : 'Interactive graphics unavailable'}
+      /><button type="button" onClick={() => { setHasWebGL(true); setForceFallback(false); }} style={{position:'fixed',right:'22px',top:'94px',zIndex:10,minHeight:'44px',padding:'0 16px',border:'1px solid #e8cfa044',background:'#211e17',color:'#e8cfa0',borderRadius:'8px',cursor:'pointer'}}>Try 3D view</button></>
     );
   }
 
@@ -102,7 +92,7 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
       <FruitViewer
         key={`viewer-${fruit}`}
         config={config}
-        factory={factory}
+        loadFactory={loadFactory}
         onPointsUpdate={handlePointsUpdate}
         onProgressUpdate={handleProgressUpdate}
         onInteraction={handleInteraction}
@@ -124,6 +114,7 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
         progress={progress}
         hasInteracted={hasInteracted}
       />
+      <button type="button" onClick={() => setForceFallback(true)} style={{position:'fixed',right:'22px',top:'94px',zIndex:10,minHeight:'44px',padding:'0 16px',border:'1px solid #e8cfa044',background:'rgba(33,30,23,.85)',color:'#e8cfa0',borderRadius:'8px',cursor:'pointer'}}>Reading view</button>
 
       {/* Optional Top Nav / Return Bar if integrated in multi-experience site */}
       {onBackToBrand && (
@@ -131,12 +122,13 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
           onClick={onBackToBrand}
           style={{
             position: 'fixed',
-            top: '24px',
+            top: '94px',
             left: 'clamp(20px, 5vw, 84px)',
             zIndex: 10,
             background: 'transparent',
             border: 'none',
             color: 'rgba(242,232,216,0.6)',
+            minHeight: '44px',
             fontSize: '11px',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',

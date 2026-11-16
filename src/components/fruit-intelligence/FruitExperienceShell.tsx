@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { FruitConfig } from './core/types';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { win } from './core/mathUtils';
 
 interface FruitExperienceShellProps {
@@ -8,15 +9,20 @@ interface FruitExperienceShellProps {
   hasInteracted: boolean;
 }
 
-export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = ({
+export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.memo(({
   config,
   progress,
   hasInteracted,
 }) => {
+  const reducedMotion = useReducedMotion();
   // Calculate windowing values for each of the 8 acts
   const actOpacities = useMemo(() => {
     return config.acts.map((act) => {
-      return win(progress, act.minProgress, act.maxProgress, act.fadeDuration || 0.03);
+      const fade = act.fadeDuration || 0.03;
+      // The final invitation must stay fully visible and keyboard-accessible
+      // at the end of the native scroll range, rather than fading away there.
+      const end = act.hasCta ? Math.max(act.maxProgress, 1 + fade + .01) : act.maxProgress;
+      return win(progress, act.minProgress, end, fade);
     });
   }, [config.acts, progress]);
 
@@ -81,12 +87,13 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = ({
           {config.acts.map((act, i) => {
             const opacity = Number(actOpacities[i].toFixed(3));
             const isClickable = opacity > 0.6;
-            const translateY = (1 - actOpacities[i]) * 16;
+            const translateY = reducedMotion ? 0 : (1 - actOpacities[i]) * 16;
             const isCentered = act.isCentered;
 
             return (
               <div
                 key={act.index}
+                aria-hidden={!isClickable}
                 style={{
                   position: 'absolute',
                   left: isCentered ? '50%' : 'clamp(20px, 5vw, 84px)',
@@ -102,7 +109,8 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = ({
                   transform: isCentered
                     ? `translateX(-50%) translateY(${translateY.toFixed(1)}px)`
                     : `translateY(${translateY.toFixed(1)}px)`,
-                  transition: 'opacity 0.1s linear, transform 0.1s linear',
+                  visibility: opacity > .001 ? 'visible' : 'hidden',
+                  transition: reducedMotion ? 'none' : 'opacity 0.1s linear, transform 0.1s linear',
                   willChange: 'transform, opacity',
                 }}
               >
@@ -155,13 +163,14 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = ({
                       flexWrap: 'wrap',
                       gap: '14px',
                       justifyContent: 'center',
-                      pointerEvents: 'auto',
+                      pointerEvents: isClickable ? 'auto' : 'none',
                       paddingTop: '4px',
                     }}
                   >
                     <a
                       href={config.primaryCta.href}
                       className="fi-primary-cta"
+                      tabIndex={isClickable ? 0 : -1}
                       style={{
                         padding: '15px 30px',
                         borderRadius: '2px',
@@ -179,6 +188,7 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = ({
                     <a
                       href={config.secondaryCta.href}
                       className="fi-secondary-cta"
+                      tabIndex={isClickable ? 0 : -1}
                       style={{
                         padding: '15px 30px',
                         borderRadius: '2px',
@@ -242,11 +252,15 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = ({
             zIndex: 6,
             left: '50%',
             transform: 'translateX(-50%)',
+            width: 'max-content',
+            maxWidth: '90vw',
+            whiteSpace: 'nowrap',
+            textAlign: 'center',
             bottom: '18px',
             fontSize: '10px',
             letterSpacing: '0.3em',
             color: 'rgba(242,232,216,0.5)',
-            animation: 'hintFade 3.4s ease-in-out infinite',
+            animation: reducedMotion ? 'none' : 'hintFade 3.4s ease-in-out infinite',
             pointerEvents: 'none',
             fontFamily: "'Work Sans', system-ui, sans-serif",
           }}
@@ -267,4 +281,4 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = ({
       />
     </>
   );
-};
+});

@@ -84,6 +84,7 @@ export interface FruitConfig {
 
 export interface FruitSceneOptions {
   lowPerformance?: boolean;
+  reducedMotion?: boolean;
   onFrame?: (points: ScreenPoint[], progress: number) => void;
 }
 
@@ -94,6 +95,7 @@ export interface FruitSceneEngine {
   setExposure(exposure: number): void;
   renderAt(progress: number): void;
   dispose(): void;
+  getDiagnostics?(): { geometries: number; textures: number; drawCalls: number; triangles: number; progress: number; contextLost: boolean };
 }
 
 export type FruitSceneFactory = (

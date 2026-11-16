@@ -6,19 +6,24 @@ import { ScrollCue } from './components/dom/ScrollCue';
 import { ScrollSpacer } from './components/dom/ScrollSpacer';
 import { SiteHeader } from './components/dom/SiteHeader';
 import { EverydayFresh } from './components/commercial/EverydayFresh';
+import { NotFound } from './components/commercial/NotFound';
+import { SiteFooter } from './components/information/SiteFooter';
+import { sitePageMeta as sitePages, type SitePageId } from './data/sitePageRegistry';
 import { cueConfigs } from './config/cueConfig';
 import { BrandProvider } from './context/BrandContext';
 import { ScrollProvider } from './context/ScrollContext';
 import { useWebGLCapability } from './hooks/useWebGLCapability';
 import { BasketProvider, useBasket } from './context/BasketContext';
 import { BasketAnnouncements, BasketDrawer, BasketLauncher, BasketReview } from './components/commercial/Basket';
-import { resolveRoute } from './navigation/route';
+import { collectionFromHash, resolveRoute } from './navigation/route';
+import { gridFilters } from './data/catalogue';
 import type { ViewMode, ProductRoute } from './navigation/route';
 
 const CinemaStage = lazy(() => import('./components/canvas/CinemaStage').then((module) => ({default:module.CinemaStage})));
 const ProductDetail = lazy(() => import('./components/commercial/ProductDetail').then((module) => ({default:module.ProductDetail})));
 const Signature = lazy(() => import('./components/commercial/Signature').then((module) => ({default:module.Signature})));
 const FruitIntelligence = lazy(() => import('./components/fruit-intelligence/FruitIntelligence').then((module) => ({default:module.FruitIntelligence})));
+const InformationPage = lazy(() => import('./components/information/InformationPage').then(module => ({default:module.InformationPage})));
 
 const initialRoute = () => resolveRoute(window.location.pathname,window.location.hash,new URLSearchParams(window.location.search).get('fruit'));
 
@@ -38,6 +43,8 @@ export const AppContent: React.FC = () => {
   const { isSupported, errorMessage } = useWebGLCapability();
   const [forceFallback, setForceFallback] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<ViewMode>(() => initialRoute().view);
+  const [routeHash, setRouteHash] = useState(() => window.location.hash.toLowerCase());
+  const [informationPage, setInformationPage] = useState<SitePageId>(() => initialRoute().page ?? 'our-story');
   const [activeFruit, setActiveFruit] = useState<string>(() => initialRoute().fruit ?? 'chaunsa');
   // Which product the /product/:category/:slug route resolved to.
   const [productRoute, setProductRoute] = useState<ProductRoute>(() => initialRoute().product ?? {categorySlug:'mangoes',slug:'chaunsa'});
@@ -68,13 +75,30 @@ export const AppContent: React.FC = () => {
     document.body.scrollTop = 0;
 
     const route = resolveRoute(pathname, hash, queryFruit);
+    setRouteHash(hash);
     setViewMode(route.view);
     if (route.product) setProductRoute(route.product);
     if (route.fruit) setActiveFruit(route.fruit);
+    if (route.page) setInformationPage(route.page);
     if (hash && !['#journey','#signature','#everyday-fresh','#basket','#order'].includes(hash)) {
-      requestAnimationFrame(() => document.getElementById(hash.slice(1))?.scrollIntoView({behavior:'instant'}));
+      const target = route.view === 'everyday-fresh'
+        ? collectionFromHash(hash, gridFilters()).target ?? hash.slice(1)
+        : hash.slice(1);
+      requestAnimationFrame(() => document.getElementById(target)?.scrollIntoView({behavior:'instant'}));
     }
   }, [closeBasket]);
+
+  useEffect(() => {
+    const names: Partial<Record<ViewMode, string>> = { 'everyday-fresh': 'Everyday Fresh', signature: 'Signature', basket: 'Your basket', 'not-found': 'Page not found', 'fruit-intelligence': `${activeFruit.charAt(0).toUpperCase() + activeFruit.slice(1)} · Fruit Intelligence` };
+    const title = viewMode === 'information' ? sitePages[informationPage].label : names[viewMode];
+    document.title = title ? `${title} — BAAGH` : 'BAAGH — Fruit you never have to doubt.';
+    let description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (!description) { description = document.createElement('meta'); description.name = 'description'; document.head.append(description); }
+    description.content = viewMode === 'information' ? sitePages[informationPage].intro : 'Explore BAAGH fruit, thoughtful gifting and Fruit Intelligence. Choose a pack and send an order request on WhatsApp.';
+    let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.append(robots); }
+    robots.content = ['basket', 'not-found'].includes(viewMode) ? 'noindex, follow' : 'index, follow';
+  }, [viewMode, informationPage, activeFruit]);
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -166,10 +190,14 @@ export const AppContent: React.FC = () => {
       />
 
       <Suspense fallback={<div role="status" style={{minHeight:'100vh',padding:'140px 40px',color:'#e8cfa0',fontFamily:'Newsreader,serif'}}>Preparing your experience…</div>}>
-      {viewMode === 'basket' ? (
+      {viewMode === 'information' ? (
+        <InformationPage key={informationPage} page={informationPage} onNavigateRoute={handleNavigateRoute} />
+      ) : viewMode === 'not-found' ? (
+        <NotFound onNavigateRoute={handleNavigateRoute} />
+      ) : viewMode === 'basket' ? (
         <BasketReview onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'everyday-fresh' ? (
-        <EverydayFresh onNavigateRoute={handleNavigateRoute} />
+        <EverydayFresh onNavigateRoute={handleNavigateRoute} collectionHash={routeHash} />
       ) : viewMode === 'product' ? (
         <ProductDetail
           categorySlug={productRoute.categorySlug}
@@ -180,6 +208,7 @@ export const AppContent: React.FC = () => {
         <Signature onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'fruit-intelligence' ? (
         <FruitIntelligence
+          key={activeFruit}
           fruit={activeFruit}
           onBackToBrand={handleNavigateBrand}
         />
@@ -204,6 +233,7 @@ export const AppContent: React.FC = () => {
         </>
       )}
       </Suspense>
+      {(viewMode === 'basket' || viewMode === 'not-found') && <div style={{maxWidth:'1440px',margin:'0 auto',padding:'0 clamp(22px,5vw,80px)'}}><SiteFooter onNavigateRoute={handleNavigateRoute} /></div>}
       {(viewMode === 'everyday-fresh' || viewMode === 'product' || viewMode === 'signature') && (
         <BasketLauncher productPage={viewMode === 'product'} />
       )}

@@ -72,7 +72,7 @@ export const FruitFallback: React.FC<FruitFallbackProps> = ({ config, reason }) 
           marginBottom: '40px',
         }}
       >
-        {config.fallback.summaryText}
+        {config.fallback.summaryText.replace('Your device can’t run the interactive inspection. ', 'A lighter reading view. ')}
       </p>
 
       {/* Accessible Full Inspection Grid */}
@@ -171,7 +171,7 @@ export const FruitFallback: React.FC<FruitFallbackProps> = ({ config, reason }) 
             letterSpacing: '0.1em',
           }}
         >
-          Mode: {reason}
+          Reading view
         </div>
       )}
     </div>

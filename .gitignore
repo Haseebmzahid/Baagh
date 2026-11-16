@@ -84,3 +84,7 @@ $RECYCLE.BIN/
 *.tmp
 *.temp
 *~
+
+# Browser verification artifacts (curated screenshots live in docs/verification)
+playwright-report/
+test-results/

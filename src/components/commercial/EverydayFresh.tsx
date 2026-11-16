@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { commercial as c } from './theme';
 import {
   Button,
@@ -40,6 +40,8 @@ import type { Product } from '../../data/catalogue';
 import { useBasket } from '../../context/BasketContext';
 import { isOrderable } from '../../data/catalogue';
 import { FruitPhoto, fruitPhotos } from './FruitPhoto';
+import { SiteFooter } from '../information/SiteFooter';
+import { collectionFromHash } from '../../navigation/route';
 import { EverydayShowcase } from './EverydayShowcase';
 
 /**
@@ -60,9 +62,16 @@ import { EverydayShowcase } from './EverydayShowcase';
 
 export interface EverydayFreshProps {
   onNavigateRoute: (path: string) => void;
+  collectionHash?: string;
 }
 
-export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute }) => {
+export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute, collectionHash = '' }) => {
+  const selection = collectionFromHash(collectionHash, gridFilters());
+  useEffect(() => {
+    if (!selection.target) return;
+    const frame = requestAnimationFrame(() => document.getElementById(selection.target!)?.scrollIntoView({ behavior: 'instant' }));
+    return () => cancelAnimationFrame(frame);
+  }, [collectionHash, selection.target]);
   const { isMobile, isTablet, gutter } = useCommercialLayout();
 
   const portraits = fruitPhotos;
@@ -82,6 +91,7 @@ export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute })
 
         <GridSection
           onOpen={openProduct}
+          filter={selection.filter}
           onNavigateRoute={onNavigateRoute}
           isMobile={isMobile}
           isTablet={isTablet}
@@ -234,7 +244,7 @@ const LegendKey: React.FC<{ swatch: string; label: string }> = ({ swatch, label 
 // composition, not a shrunken desktop grid.
 // ===========================================================================
 
-const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; portraits: Record<string,string> }> = ({ portraits }) => {
+const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; portraits: Record<string,string> }> = ({ portraits, onNavigateRoute }) => {
   const { isMobile, isTablet, gutter, margin } = useCommercialLayout();
 
   const tiles = categories.map((cat) => (
@@ -247,9 +257,7 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; por
       href={`/everyday-fresh#${cat.slug}`}
       railWidth={isMobile ? 148 : undefined}
       onOpen={() => {
-        // Category landing pages are a later phase; the rail scrolls the grid
-        // into view rather than promising a route that does not exist.
-        document.getElementById('ready-today')?.scrollIntoView({ behavior: 'smooth' });
+        onNavigateRoute(`/everyday-fresh#${cat.slug}`);
       }}
     />
   ));
@@ -265,7 +273,7 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; por
           href="#ready-today"
           onClick={(e) => {
             e.preventDefault();
-            document.getElementById('ready-today')?.scrollIntoView({ behavior: 'smooth' });
+            onNavigateRoute('/everyday-fresh#ready-today');
           }}
         >
           Everything
@@ -432,13 +440,13 @@ const FeatureFact: React.FC<{ term: string; value: string }> = ({ term, value })
 
 const GridSection: React.FC<{
   onOpen: (p: Product) => void;
+  filter: string;
   onNavigateRoute: (path: string) => void;
   isMobile: boolean;
   isTablet: boolean;
   gutter: number;
   portraits: Record<string,string>;
-}> = ({ onOpen, onNavigateRoute, isMobile, isTablet, gutter, portraits }) => {
-  const [filter, setFilter] = useState('all');
+}> = ({ onOpen, filter, onNavigateRoute, isMobile, isTablet, gutter, portraits }) => {
 
   // Both the chips and the products they filter come from the catalogue, so
   // adding a product to a new category adds its chip with no code change.
@@ -459,12 +467,15 @@ const GridSection: React.FC<{
               key={f.id}
               label={f.label}
               active={filter === f.id}
-              onClick={() => setFilter(f.id)}
+              onClick={() => onNavigateRoute(`/everyday-fresh#${f.id === 'all' ? 'ready-today' : f.id}`)}
             />
           ))}
         </div>
       }
     >
+      <p role="status" aria-live="polite" style={{ color: c.color.ink70, fontFamily: c.font.serif, margin: '0 0 22px' }}>
+        {visible.length} {visible.length === 1 ? 'fruit' : 'fruits'} · {filters.find(entry => entry.id === filter)?.label ?? 'All'}
+      </p>
       <div
         style={{
           display: 'grid',
@@ -821,46 +832,9 @@ const FinalCtaSection: React.FC<{ onNavigateRoute: (path: string) => void }> = (
 export const PageFooter: React.FC<{
   onNavigateRoute: (path: string) => void;
   left?: string;
-}> = ({ onNavigateRoute, left = 'Everyday Fresh · Prices are placeholders' }) => {
-  const { isMobile } = useCommercialLayout();
-
-  return (
-    <footer
-      style={{
-        marginTop: isMobile ? '76px' : '140px',
-        paddingBottom: isMobile ? '56px' : '80px',
-        paddingTop: '26px',
-        borderTop: `1px solid ${c.color.hair12}`,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: '20px',
-        flexWrap: 'wrap',
-      }}
-    >
-      <Label>{left}</Label>
-      <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
-        <Button
-          variant="tertiary"
-          href="/signature"
-          onClick={(e) => {
-            e.preventDefault();
-            onNavigateRoute('/signature');
-          }}
-        >
-          Signature
-        </Button>
-        <Button
-          variant="tertiary"
-          href="/"
-          onClick={(e) => {
-            e.preventDefault();
-            onNavigateRoute('/');
-          }}
-        >
-          The journey
-        </Button>
-      </div>
-    </footer>
-  );
-};
+}> = ({ onNavigateRoute, left }) => (
+  <>
+    <SiteFooter onNavigateRoute={onNavigateRoute} />
+    {left && <p style={{color:c.color.ink50, fontFamily:c.font.mono, fontSize:'9px', paddingBottom:'24px'}}>{left}</p>}
+  </>
+);

@@ -2,6 +2,19 @@
 
 Audit date: 15 November 2026. Scope: the current working tree, including existing uncommitted commercial/catalogue changes. This document is a proposed next-stage plan; it does not replace the approved journey or Fruit Intelligence specifications.
 
+> Progress update — 16 November 2026: durable basket, manual WhatsApp order
+> requests, route loading boundaries and shopping photography have been
+> implemented since this audit. The shopping navigation sprint closes category
+> filtering links, unavailable-card enquiries and unknown-route recovery; see
+> [verification](SHOPPING_NAVIGATION_VERIFICATION.md). Historical gap descriptions
+> below describe the audit baseline. Backend phases remain deferred by the
+> current frontend-only scope. The subsequent performance/information sprint
+> adds per-fruit scene loading, adaptive rendering, lifecycle cleanup and public
+> story/contact/policy/support pages; see
+> [implementation and verification](PERFORMANCE_AND_INFORMATION_PAGES.md).
+> Physical-device profiling and owner-confirmed operating/legal details remain
+> launch gates. Signature corporate enquiry review remains future frontend work.
+
 ## 1. Product direction
 
 Preserve the cinematic fruit journey and interactive inspection experiences. Complete the commerce and operating system around them. The next milestone should be a customer placing a real, serviceable order that staff can reliably prepare and deliver.

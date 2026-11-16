@@ -1,3 +1,6 @@
+import { createSceneLoop } from '../../core/sceneLoop';
+import { disposeScene } from '../../core/disposeScene';
+import { damping } from '../../core/performance';
 import * as THREE from 'three';
 import { FruitSceneEngine, FruitSceneOptions, ScreenPoint } from '../../core/types';
 import { clamp, lerp, ramp, smooth } from '../../core/mathUtils';
@@ -35,10 +38,10 @@ export function createAppleScene(
     canvas,
     antialias: !low,
     alpha: true,
-    preserveDrawingBuffer: true,
+    preserveDrawingBuffer: false,
     powerPreference: 'high-performance',
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1 : 1.5));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = appleConfig.defaultExposure;
   renderer.shadowMap.enabled = true;
@@ -47,7 +50,10 @@ export function createAppleScene(
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromEquirectangular(createEnvTexture()).texture;
+  const envTex = createEnvTexture();
+  const environment = pmrem.fromEquirectangular(envTex);
+  scene.environment = environment.texture;
+  envTex.dispose();
 
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 60);
   const camTarget = new THREE.Vector3();
@@ -56,7 +62,7 @@ export function createAppleScene(
   const key = new THREE.DirectionalLight(0xfff4e2, 2.5);
   key.position.set(2.3, 3.8, 3.1);
   key.castShadow = true;
-  key.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
+  key.shadow.mapSize.set(low ? 512 : 1024, low ? 512 : 1024);
   key.shadow.camera.near = 1;
   key.shadow.camera.far = 26;
   key.shadow.camera.left = -5.5;
@@ -82,9 +88,9 @@ export function createAppleScene(
   scene.add(new THREE.HemisphereLight(0x6e5c46, 0x120e0b, 0.28));
 
   const SH = DEFAULT_APPLE_SHAPE;
-  const sm = createSkinMaps(low ? 1024 : 2048, low ? 512 : 1024, 0.74);
-  const fm = createFleshMaps(low ? 640 : 1024);
-  const cm = createCrossMaps(low ? 768 : 1280);
+  const sm = createSkinMaps(low ? 512 : 1024, low ? 256 : 512, 0.74);
+  const fm = createFleshMaps(low ? 384 : 768);
+  const cm = createCrossMaps(low ? 512 : 768);
 
   const skinMat = new THREE.MeshPhysicalMaterial({
     map: sm.map,
@@ -108,7 +114,8 @@ export function createAppleScene(
     clearcoat: 0,
     specularIntensity: 0.12,
     envMapIntensity: 0.1,
-    transmission: low ? 0 : 0.1,
+    // Flesh uses surface highlights; refraction would redraw the entire scene.
+    transmission: 0,
     thickness: 0.4,
     ior: 1.35,
     side: THREE.DoubleSide,
@@ -188,7 +195,7 @@ export function createAppleScene(
   };
 
   // ---- Whole fruit
-  const wholeGeo = fruitGeometry(low ? 104 : 176, low ? 72 : 120, SH);
+  const wholeGeo = fruitGeometry(low ? 72 : 120, low ? 48 : 84, SH);
   const whole = new THREE.Mesh(wholeGeo, skinMat);
   whole.castShadow = whole.receiveShadow = true;
   const wholeGroup = new THREE.Group();
@@ -232,7 +239,7 @@ export function createAppleScene(
   const sectionFace = new THREE.Mesh(
     new THREE.CircleGeometry(CORE_R * 1.02, 64),
     new THREE.MeshStandardMaterial({
-      map: createCoreSectionMap(low ? 640 : 1024),
+      map: createCoreSectionMap(low ? 384 : 768),
       roughness: 0.62,
       metalness: 0,
       envMapIntensity: 0.1,
@@ -334,7 +341,7 @@ export function createAppleScene(
   ];
   trioSpecs.forEach((sp) => {
     const sh = makeShape(sp.seed);
-    const maps = createSkinMaps(low ? 768 : 1024, low ? 384 : 512, sp.blush, sp.seed);
+    const maps = createSkinMaps(low ? 384 : 512, low ? 192 : 256, sp.blush, sp.seed);
     const m = new THREE.MeshPhysicalMaterial({
       map: maps.map,
       bumpMap: maps.bumpMap,
@@ -411,10 +418,8 @@ export function createAppleScene(
   const dragTarget = { x: 0, y: 0 };
   let progress = 0;
   let shown = 0;
-  const t0 = performance.now();
   let W = 1;
   let H = 1;
-  let running = true;
   const screenPts: ScreenPoint[] = [];
   const tmp = new THREE.Vector3();
   const hostCenter = new THREE.Vector3();
@@ -425,15 +430,18 @@ export function createAppleScene(
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
+    loop.invalidate();
   }
 
   function setProgress(p: number) {
     progress = clamp(p, 0, 1);
+    loop.invalidate();
   }
 
   function addDrag(dx: number, dy: number) {
     dragTarget.x += dx;
     dragTarget.y = clamp(dragTarget.y + dy, -0.5, 0.5);
+    loop.invalidate();
   }
 
   function layout(p: number, time: number) {
@@ -512,14 +520,14 @@ export function createAppleScene(
       camera.filmOffset = fo;
       camera.updateProjectionMatrix();
     }
-    const dScale = wide ? 1 : lerp(1.34, 1.06, clamp((W / H - 0.55) / 0.6, 0, 1));
+    const dScale = wide ? 1 : 1.12 * lerp(1.34, 1.06, clamp((W / H - 0.55) / 0.6, 0, 1));
     const ang = ch + drag.x * 0.12 + Math.sin(time * 0.07) * 0.022;
     camera.position.set(
       Math.sin(ang) * d * dScale,
       cy + Math.sin(time * 0.11) * 0.016 + drag.y * 0.38,
       Math.cos(ang) * d * dScale
     );
-    camTarget.set(0, tY + (wide ? 0 : 0.46), 0);
+    camTarget.set(0, tY + (wide ? 0 : -0.28), 0);
     camera.lookAt(camTarget);
 
     edgeAnchor.position.set(-(1 + 0.55 * fan), 0, 0);
@@ -565,22 +573,28 @@ export function createAppleScene(
     return screenPts;
   }
 
-  function frame() {
-    if (!running) return;
-    requestAnimationFrame(frame);
-    const time = (performance.now() - t0) / 1000;
-    shown += (progress - shown) * 0.085;
-    drag.x += (dragTarget.x - drag.x) * 0.09;
-    drag.y += (dragTarget.y - drag.y) * 0.09;
+  const loop = createSceneLoop((time, dt, publish) => {
+    const ease = opts.reducedMotion ? 1 : damping(7, dt);
+    shown += (progress - shown) * ease;
+    drag.x += (dragTarget.x - drag.x) * ease;
+    drag.y += (dragTarget.y - drag.y) * ease;
     layout(shown, time);
     renderer.render(scene, camera);
-    onFrame(collect(), shown);
-  }
+    if (publish) onFrame(collect(), shown);
+  }, opts.reducedMotion, () => {
+    const currentRatio = renderer.getPixelRatio();
+    const nextRatio = Math.max(.75, currentRatio * .8);
+    if (nextRatio < currentRatio) {
+      renderer.setPixelRatio(nextRatio);
+      renderer.setSize(W, H, false);
+    }
+  });
 
   resize();
-  frame();
+  loop.start();
 
   return {
+    getDiagnostics() { return { geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, progress: shown, contextLost: renderer.getContext().isContextLost() }; },
     setProgress,
     addDrag,
     resize,
@@ -593,10 +607,11 @@ export function createAppleScene(
       renderer.render(scene, camera);
       onFrame(collect(), shown);
     },
-    dispose() {
-      running = false;
+    dispose(): void {
+      loop.dispose();
+      disposeScene(scene, [environment, pmrem, envTex]);
       renderer.dispose();
-      pmrem.dispose();
+      renderer.forceContextLoss();
     },
   };
 }

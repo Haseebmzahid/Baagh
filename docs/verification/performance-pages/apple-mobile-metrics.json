@@ -1,0 +1,24 @@
+{
+  "fruit": "apple",
+  "readyMs": 1987,
+  "buildMs": 1215,
+  "firstRenderMs": 686,
+  "lowPerformance": true,
+  "geometries": 16,
+  "textures": 8,
+  "drawCalls": 4,
+  "triangles": 7278,
+  "progress": 0,
+  "contextLost": false,
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 620 (0x00003EA0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "disposed": {
+    "geometries": 0,
+    "textures": 1,
+    "drawCalls": 4,
+    "triangles": 7278,
+    "progress": 0.9997571621222922,
+    "contextLost": true
+  },
+  "errors": [],
+  "rendering": "Headless Chromium WebGL, renderer recorded above; not a physical-device FPS benchmark"
+}

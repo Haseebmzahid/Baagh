@@ -1,3 +1,7 @@
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { createSceneLoop } from '../../core/sceneLoop';
+import { disposeScene } from '../../core/disposeScene';
+import { damping } from '../../core/performance';
 import * as THREE from 'three';
 import { FruitSceneEngine, FruitSceneOptions, ScreenPoint } from '../../core/types';
 import { clamp, lerp, ramp, smooth } from '../../core/mathUtils';
@@ -35,20 +39,22 @@ export function createKinnowScene(
     canvas,
     antialias: !low,
     alpha: true,
-    preserveDrawingBuffer: true,
+    preserveDrawingBuffer: false,
     powerPreference: 'high-performance',
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1 : 1.5));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = kinnowConfig.defaultExposure;
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   renderer.localClippingEnabled = true;
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envTex = createKinnowEnvTexture();
-  scene.environment = pmrem.fromEquirectangular(envTex).texture;
+  const environment = pmrem.fromEquirectangular(envTex);
+  scene.environment = environment.texture;
+  envTex.dispose();
 
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 60);
   const camTarget = new THREE.Vector3();
@@ -57,7 +63,7 @@ export function createKinnowScene(
   const key = new THREE.DirectionalLight(0xfff2dc, 2.35);
   key.position.set(2.4, 3.9, 3.0);
   key.castShadow = true;
-  key.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
+  key.shadow.mapSize.set(low ? 512 : 1024, low ? 512 : 1024);
   key.shadow.camera.near = 1;
   key.shadow.camera.far = 26;
   key.shadow.camera.left = -5.5;
@@ -83,12 +89,12 @@ export function createKinnowScene(
   scene.add(new THREE.HemisphereLight(0x6e5c46, 0x120e0b, 0.3));
 
   // Textures and materials
-  const TW = low ? 1024 : 2048, TH = low ? 512 : 1024;
+  const TW = low ? 512 : 1024, TH = low ? 256 : 512;
   const rm = createRindMaps(TW, TH, 0.72);
-  const pith = createPithMap(low ? 512 : 1024);
-  const memb = createMembraneMap(low ? 512 : 1024);
-  const ves = createVesicleMaps(low ? 512 : 1024);
-  const cross = createCrossSectionMaps(low ? 768 : 1280, NS);
+  const pith = createPithMap(low ? 256 : 512);
+  const memb = createMembraneMap(low ? 256 : 512);
+  const ves = createVesicleMaps(low ? 256 : 512);
+  const cross = createCrossSectionMaps(low ? 512 : 768, NS);
 
   const rindMat = new THREE.MeshPhysicalMaterial({
     map: rm.map,
@@ -131,7 +137,8 @@ export function createKinnowScene(
     envMapIntensity: 0.45,
     sheen: 0.3,
     sheenColor: new THREE.Color(0xffe0a8),
-    transmission: low ? 0 : 0.22,
+    // Flesh uses surface highlights; refraction would redraw the entire scene.
+    transmission: 0,
     thickness: 0.5,
     ior: 1.36,
     side: THREE.DoubleSide,
@@ -146,7 +153,8 @@ export function createKinnowScene(
     clearcoat: 0.32,
     clearcoatRoughness: 0.3,
     envMapIntensity: 0.4,
-    transmission: low ? 0 : 0.16,
+    // Flesh uses surface highlights; refraction would redraw the entire scene.
+    transmission: 0,
     thickness: 0.35,
     ior: 1.36,
     side: THREE.DoubleSide,
@@ -172,7 +180,7 @@ export function createKinnowScene(
   scene.add(stage);
 
   const SH = DEFAULT_SHAPE;
-  const wholeGeo = createFruitGeometry(low ? 100 : 168, low ? 66 : 110, 1, SH);
+  const wholeGeo = createFruitGeometry(low ? 72 : 112, low ? 48 : 76, 1, SH);
 
   // ---- 1. Whole fruit
   const whole = new THREE.Mesh(wholeGeo, rindMat);
@@ -185,6 +193,9 @@ export function createKinnowScene(
   const petalHalf = (Math.PI / NP) * 0.985;
   const pb = createPetalBands(petalHalf, segU, segV, 1, 0.945, SH, SPLIT);
   const peel = new THREE.Group();
+  // Rim surfaces share a material and local coordinates: merge without changing shape.
+  const upperRims = mergeGeometries(pb.upper.rims);
+  const lowerRims = mergeGeometries(pb.lower.rims);
   interface PetalItem {
     hinge: THREE.Group;
     tip: THREE.Group;
@@ -201,7 +212,7 @@ export function createKinnowScene(
     const uo = new THREE.Mesh(pb.upper.outer, rindMat);
     uo.castShadow = true;
     upper.add(uo, new THREE.Mesh(pb.upper.inner, pithMat));
-    pb.upper.rims.forEach((r) => upper.add(new THREE.Mesh(r, rimMat)));
+    (upperRims ? [upperRims] : pb.upper.rims).forEach(r => upper.add(new THREE.Mesh(r, rimMat)));
 
     // tip band hinges on the split ring so it can curl independently
     const tip = new THREE.Group();
@@ -209,7 +220,7 @@ export function createKinnowScene(
     const to = new THREE.Mesh(pb.lower.outer, rindMat);
     to.castShadow = true;
     tip.add(to, new THREE.Mesh(pb.lower.inner, pithMat));
-    pb.lower.rims.forEach((r) => tip.add(new THREE.Mesh(r, rimMat)));
+    (lowerRims ? [lowerRims] : pb.lower.rims).forEach(r => tip.add(new THREE.Mesh(r, rimMat)));
 
     upper.add(tip);
     hinge.add(upper);
@@ -223,6 +234,7 @@ export function createKinnowScene(
   // ---- 3. Flesh segments
   const segHalf = (Math.PI / NS) * 0.80;
   const sg = createSegmentGeometry(segHalf, low ? 18 : 26, low ? 34 : 48, 0.80, SH);
+  const segmentSides = mergeGeometries(sg.sides);
   const flesh = new THREE.Group();
   const segs: THREE.Group[] = [];
 
@@ -233,7 +245,7 @@ export function createKinnowScene(
     const o = new THREE.Mesh(sg.outer, membMat);
     o.castShadow = true;
     arm.add(o);
-    sg.sides.forEach((s) => arm.add(new THREE.Mesh(s, vesMat)));
+    (segmentSides ? [segmentSides] : sg.sides).forEach(s => arm.add(new THREE.Mesh(s, vesMat)));
 
     if (i === 0) {
       const seed = new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 12), seedMat);
@@ -268,7 +280,7 @@ export function createKinnowScene(
   kinnowConfig.trioSpecs.forEach((sp) => {
     const seedVal = sp.id === 'good' ? 0.71 : (sp.id === 'better' ? 0.19 : 0.53);
     const sh = makeShape(seedVal);
-    const maps = createRindMaps(low ? 768 : 1024, low ? 384 : 512, sp.ripeness, seedVal);
+    const maps = createRindMaps(low ? 384 : 512, low ? 192 : 256, sp.ripeness, seedVal);
     const m = new THREE.MeshPhysicalMaterial({
       map: maps.map,
       bumpMap: maps.bumpMap,
@@ -348,10 +360,8 @@ export function createKinnowScene(
   const dragTarget = { x: 0, y: 0 };
   let progress = 0;
   let shown = 0;
-  const t0 = performance.now();
   let W = 1;
   let H = 1;
-  let running = true;
 
   function resize(): void {
     W = canvas.clientWidth || 1;
@@ -359,15 +369,18 @@ export function createKinnowScene(
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
+    loop.invalidate();
   }
 
   function setProgress(p: number): void {
     progress = clamp(p, 0, 1);
+    loop.invalidate();
   }
 
   function addDrag(dx: number, dy: number): void {
     dragTarget.x += dx;
     dragTarget.y = clamp(dragTarget.y + dy, -0.5, 0.5);
+    loop.invalidate();
   }
 
   const screenPts: ScreenPoint[] = [];
@@ -457,14 +470,14 @@ export function createKinnowScene(
       camera.filmOffset = fo;
       camera.updateProjectionMatrix();
     }
-    const dScale = wide ? 1 : lerp(1.34, 1.06, clamp((W / H - 0.55) / 0.6, 0, 1));
+    const dScale = wide ? 1 : 1.12 * lerp(1.34, 1.06, clamp((W / H - 0.55) / 0.6, 0, 1));
     const ang = ch + drag.x * 0.14 + Math.sin(time * 0.08) * 0.025;
     camera.position.set(
       Math.sin(ang) * d * dScale,
       cy + Math.sin(time * 0.12) * 0.018 + drag.y * 0.4,
       Math.cos(ang) * d * dScale
     );
-    camTarget.set(0, tY + (wide ? 0 : 0.46), 0);
+    camTarget.set(0, tY + (wide ? 0 : -0.28), 0);
     camera.lookAt(camTarget);
 
     const openWidth = 1 + 0.72 * Math.max(open, shed) * (peel.visible ? 1 : 0);
@@ -506,23 +519,28 @@ export function createKinnowScene(
     return screenPts;
   }
 
-  function frame(): void {
-    if (!running) return;
-    requestAnimationFrame(frame);
-    const time = (performance.now() - t0) / 1000;
-    shown += (progress - shown) * 0.085;
-    drag.x += (dragTarget.x - drag.x) * 0.09;
-    drag.y += (dragTarget.y - drag.y) * 0.09;
+  const loop = createSceneLoop((time, dt, publish) => {
+    const ease = opts.reducedMotion ? 1 : damping(7, dt);
+    shown += (progress - shown) * ease;
+    drag.x += (dragTarget.x - drag.x) * ease;
+    drag.y += (dragTarget.y - drag.y) * ease;
     layout(shown, time);
     renderer.render(scene, camera);
-
-    onFrame(collect(), shown);
-  }
+    if (publish) onFrame(collect(), shown);
+  }, opts.reducedMotion, () => {
+    const currentRatio = renderer.getPixelRatio();
+    const nextRatio = Math.max(.75, currentRatio * .8);
+    if (nextRatio < currentRatio) {
+      renderer.setPixelRatio(nextRatio);
+      renderer.setSize(W, H, false);
+    }
+  });
 
   resize();
-  frame();
+  loop.start();
 
   return {
+    getDiagnostics() { return { geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, progress: shown, contextLost: renderer.getContext().isContextLost() }; },
     setProgress,
     addDrag,
     resize,
@@ -536,9 +554,10 @@ export function createKinnowScene(
       onFrame(collect(), shown);
     },
     dispose(): void {
-      running = false;
+      loop.dispose();
+      disposeScene(scene, [environment, pmrem, envTex]);
       renderer.dispose();
-      pmrem.dispose();
+      renderer.forceContextLoss();
     },
   };
 }

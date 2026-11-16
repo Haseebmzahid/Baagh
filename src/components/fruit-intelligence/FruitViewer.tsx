@@ -1,218 +1,121 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { FruitConfig, FruitSceneEngine, FruitSceneFactory, ScreenPoint } from './core/types';
+import React, { useEffect, useRef, useState } from 'react';
+import type { FruitConfig, FruitSceneEngine, FruitSceneFactory, ScreenPoint } from './core/types';
+import { sceneQuality } from './core/performance';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 interface FruitViewerProps {
   config: FruitConfig;
-  factory: FruitSceneFactory;
+  loadFactory: () => Promise<FruitSceneFactory>;
   onPointsUpdate: (points: ScreenPoint[]) => void;
   onProgressUpdate: (progress: number) => void;
   onInteraction: () => void;
   onError: (err: Error) => void;
 }
 
-export const FruitViewer: React.FC<FruitViewerProps> = ({
-  config,
-  factory,
-  onPointsUpdate,
-  onProgressUpdate,
-  onInteraction,
-  onError,
-}) => {
+export const FruitViewer: React.FC<FruitViewerProps> = ({ config, loadFactory, onPointsUpdate, onProgressUpdate, onInteraction, onError }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const sceneRef = useRef<FruitSceneEngine | null>(null);
-  const [cursorGrab, setCursorGrab] = useState<'grab' | 'grabbing'>('grab');
-
-  // Handle pointer / touch dragging with inertia
-  const bindDragGestures = useCallback((stageEl: HTMLElement, scene: FruitSceneEngine) => {
-    let isDown = false;
-    let lastX = 0;
-    let lastY = 0;
-
-    const start = (x: number, y: number) => {
-      isDown = true;
-      lastX = x;
-      lastY = y;
-      setCursorGrab('grabbing');
-      onInteraction();
-    };
-
-    const move = (x: number, y: number) => {
-      if (!isDown) return;
-      const dx = (x - lastX) * 0.006;
-      const dy = (y - lastY) * 0.0016;
-      scene.addDrag(dx, dy);
-      lastX = x;
-      lastY = y;
-    };
-
-    const end = () => {
-      isDown = false;
-      setCursorGrab('grab');
-    };
-
-    const onPointerDown = (e: PointerEvent) => start(e.clientX, e.clientY);
-    const onPointerMove = (e: PointerEvent) => move(e.clientX, e.clientY);
-    const onPointerUp = () => end();
-    const onPointerCancel = () => end();
-
-    const onTouchStart = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        start(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 0) {
-        move(e.touches[0].clientX, e.touches[0].clientY);
-      }
-    };
-    const onTouchEnd = () => end();
-
-    stageEl.addEventListener('pointerdown', onPointerDown);
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    window.addEventListener('pointerup', onPointerUp);
-    window.addEventListener('pointercancel', onPointerCancel);
-
-    stageEl.addEventListener('touchstart', onTouchStart, { passive: true });
-    stageEl.addEventListener('touchmove', onTouchMove, { passive: true });
-    stageEl.addEventListener('touchend', onTouchEnd);
-
-    return () => {
-      stageEl.removeEventListener('pointerdown', onPointerDown);
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointercancel', onPointerCancel);
-
-      stageEl.removeEventListener('touchstart', onTouchStart);
-      stageEl.removeEventListener('touchmove', onTouchMove);
-      stageEl.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [onInteraction]);
+  const [ready, setReady] = useState(false);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const stage = stageRef.current;
     if (!canvas || !stage) return;
-
-    // Detect hardware capability
-    const isLowPerf =
-      Math.min(window.innerWidth, window.innerHeight) < 760 ||
-      (navigator.hardwareConcurrency || 8) <= 4;
-
-    // Reset every native scroll root BEFORE the scene is built, so the route
-    // transition can never leave a stale offset behind for the scroll handler.
-    const resetScrollRoots = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
-      if (document.scrollingElement) {
-        document.scrollingElement.scrollTop = 0;
-      }
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    };
-
-    if ('scrollRestoration' in window.history) {
-      try {
-        window.history.scrollRestoration = 'manual';
-      } catch {
-        // ignore
-      }
-    }
-    resetScrollRoots();
-
-    let scene: FruitSceneEngine;
-    try {
-      scene = factory(canvas, {
-        lowPerformance: isLowPerf,
-        onFrame: (points, currentProg) => {
-          onPointsUpdate(points);
-          onProgressUpdate(currentProg);
-        },
+    let cancelled = false;
+    let scene: FruitSceneEngine | undefined;
+    let cleanup = () => {};
+    let startFrame = 0;
+    const started = performance.now();
+    setReady(false);
+    // The narrative and loading state can paint before procedural scene work begins.
+    void loadFactory().then(factory => {
+      if (cancelled) return;
+      startFrame = requestAnimationFrame(() => {
+        if (cancelled) return;
+        try {
+          const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+          const quality = sceneQuality(window.innerWidth, window.innerHeight, nav.hardwareConcurrency || 8, nav.deviceMemory ?? 8, nav.connection?.saveData);
+          const buildStarted = performance.now();
+          scene = factory(canvas, { ...quality, reducedMotion, onFrame: (points, progress) => {
+            if (cancelled) return;
+            onPointsUpdate(points);
+            onProgressUpdate(progress);
+          }});
+          const buildMs = Math.round(performance.now() - buildStarted);
+          scene.setExposure(config.defaultExposure);
+          const updateProgress = () => {
+            const doc = document.scrollingElement || document.documentElement;
+            const max = doc.scrollHeight - window.innerHeight;
+            const progress = max > 0 ? Math.min(1, Math.max(0, doc.scrollTop / max)) : 0;
+            scene?.setProgress(progress);
+            if (progress > 0.01) onInteraction();
+          };
+          const resize = () => { scene?.resize(); updateProgress(); };
+          let pointerId: number | null = null;
+          let lastX = 0;
+          let lastY = 0;
+          const down = (event: PointerEvent) => {
+            if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+            pointerId = event.pointerId;
+            lastX = event.clientX; lastY = event.clientY;
+            stage.style.cursor = 'grabbing';
+            onInteraction();
+          };
+          const move = (event: PointerEvent) => {
+            if (event.pointerId !== pointerId) return;
+            scene?.addDrag((event.clientX - lastX) * .006, (event.clientY - lastY) * .0016);
+            lastX = event.clientX; lastY = event.clientY;
+          };
+          const up = () => { pointerId = null; stage.style.cursor = 'grab'; };
+          const contextLost = (event: Event) => {
+            event.preventDefault();
+            onError(new Error('Graphics context lost'));
+          };
+          stage.addEventListener('pointerdown', down);
+          window.addEventListener('pointermove', move, { passive: true });
+          window.addEventListener('pointerup', up);
+          window.addEventListener('pointercancel', up);
+          window.addEventListener('blur', up);
+          canvas.addEventListener('webglcontextlost', contextLost);
+          window.addEventListener('scroll', updateProgress, { passive: true });
+          window.addEventListener('resize', resize, { passive: true });
+          cleanup = () => {
+            stage.removeEventListener('pointerdown', down);
+            window.removeEventListener('pointermove', move);
+            window.removeEventListener('pointerup', up);
+            window.removeEventListener('pointercancel', up);
+            window.removeEventListener('blur', up);
+            canvas.removeEventListener('webglcontextlost', contextLost);
+            window.removeEventListener('scroll', updateProgress);
+            window.removeEventListener('resize', resize);
+          };
+          const renderStarted = performance.now();
+          scene.renderAt(0);
+          const firstRenderMs = Math.round(performance.now() - renderStarted);
+          updateProgress();
+          setReady(true);
+          (window as any).__fruitScene = scene;
+          (window as any).__fruitPerformance = { fruit: config.id, readyMs: Math.round(performance.now() - started), buildMs, firstRenderMs, lowPerformance: quality.lowPerformance };
+        } catch (error) {
+          scene?.dispose();
+          scene = undefined;
+          cleanup();
+          onError(error instanceof Error ? error : new Error(String(error)));
+        }
       });
-      sceneRef.current = scene;
-      (window as any).__fruitScene = scene;
-    } catch (err) {
-      console.error('Failed to create fruit scene:', err);
-      onError(err instanceof Error ? err : new Error(String(err)));
-      return;
-    }
-
-    // Initialize the 3D scene explicitly at progress 0
-    scene.setExposure(config.defaultExposure);
-    scene.setProgress(0);
-    scene.renderAt(0);
-
-    const onScroll = () => {
-      const doc = document.scrollingElement || document.documentElement;
-      const max = doc.scrollHeight - window.innerHeight;
-      const currentScroll = doc.scrollTop || window.scrollY || 0;
-      const progress = max > 0 ? Math.min(1, Math.max(0, currentScroll / max)) : 0;
-      scene.setProgress(progress);
-      if (progress > 0.01) {
-        onInteraction();
-      }
-    };
-
-    const onResize = () => {
-      scene.resize();
-      onScroll();
-    };
-
-    // Attach only now that the scroll roots are zeroed and the scene is seeded
-    // at 0. onScroll always re-reads the live scroll position, so a scroll
-    // event queued by the route transition cannot replay a stale offset.
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize, { passive: true });
-    onScroll();
-
-    // Re-assert the baseline once the incoming layout has settled, in case the
-    // outgoing page's scroll space was released after this effect ran.
-    // Scheduled on both a frame and a task, so it still runs when rAF is
-    // throttled (background tab); whichever fires first wins.
-    let settled = false;
-    const settleBaseline = () => {
-      if (settled) return;
-      settled = true;
-      const doc = document.scrollingElement || document.documentElement;
-      if ((doc.scrollTop || window.scrollY || 0) === 0) return;
-      resetScrollRoots();
-      scene.setProgress(0);
-      scene.renderAt(0);
-    };
-    const settleRaf = requestAnimationFrame(settleBaseline);
-    const settleTimer = window.setTimeout(settleBaseline, 0);
-
-    const unbindDrag = bindDragGestures(stage, scene);
-
+    }).catch(error => { if (!cancelled) onError(error instanceof Error ? error : new Error(String(error))); });
     return () => {
-      cancelAnimationFrame(settleRaf);
-      window.clearTimeout(settleTimer);
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
-      unbindDrag();
-      scene.dispose();
-      sceneRef.current = null;
+      cancelled = true;
+      cancelAnimationFrame(startFrame);
+      cleanup();
+      scene?.dispose();
+      if ((window as any).__fruitScene === scene) delete (window as any).__fruitScene;
     };
-  }, [factory, config, bindDragGestures, onError, onPointsUpdate, onProgressUpdate, onInteraction]);
+  }, [loadFactory, config, reducedMotion, onError, onPointsUpdate, onProgressUpdate, onInteraction]);
 
-  return (
-    <div
-      ref={stageRef}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 2,
-        touchAction: 'pan-y',
-        cursor: cursorGrab,
-      }}
-    >
-      <canvas
-        ref={canvasRef}
-        style={{
-          width: '100%',
-          height: '100%',
-          display: 'block',
-        }}
-      />
-    </div>
-  );
+  return <div ref={stageRef} aria-busy={!ready} style={{ position: 'fixed', inset: 0, zIndex: 2, touchAction: 'pan-y', cursor: 'grab' }}>
+    <canvas ref={canvasRef} aria-label={`${config.name} interactive three-dimensional study`} role="img" style={{ width: '100%', height: '100%', display: 'block' }} />
+    {!ready && <div role="status" style={{ position: 'absolute', top: '24%', left: '50%', transform: 'translateX(-50%)', color: '#e8cfa0', font: '12px/1.8 Work Sans, sans-serif', textAlign: 'center', padding: '18px 26px', background: 'rgba(32,26,19,.8)', border: '1px solid rgba(232,207,160,.2)', borderRadius: '12px' }}>Preparing {config.name}<br /><span style={{ color: '#d4cbbc' }}>Your fruit study is loading.</span></div>}
+  </div>;
 };

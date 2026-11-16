@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { resolveRoute } from '../src/navigation/route.ts';
+import { collectionFromHash, resolveRoute } from '../src/navigation/route.ts';
 import { specimenFruitFor } from '../src/components/commercial/specimenRegistry.ts';
 
 test('direct shopping routes resolve before rendering a cinematic scene', () => {
@@ -35,4 +35,24 @@ test('specimen registry reuses supported fruit bodies and safely rejects unsuppo
   assert.equal(specimenFruitFor('sindhri','mangoes'),'chaunsa');
   assert.equal(specimenFruitFor('unknown','citrus'),'kinnow');
   assert.equal(specimenFruitFor('unknown','boxes'),null);
+});
+
+test('unknown and malformed inspection URLs never boot the homepage or another fruit', () => {
+  for (const path of ['/missing', '/signature/missing', '/fruit-intelligence/pear', '/fruit-intelligence/chaunsa/extra']) {
+    assert.equal(resolveRoute(path).view, 'not-found', path);
+  }
+  assert.equal(resolveRoute('/').view, 'journey');
+  assert.deepEqual(resolveRoute('/fruit-intelligence'), { view: 'fruit-intelligence', fruit: 'chaunsa' });
+});
+
+test('category links restore the selected catalogue filter, including direct and history visits', () => {
+  const filters = [{ id: 'all' }, { id: 'mangoes' }, { id: 'citrus' }, { id: 'apples' }, { id: 'seasonal' }];
+  for (const category of ['mangoes', 'citrus', 'apples', 'seasonal']) {
+    assert.deepEqual(collectionFromHash(`#${category}`, filters), { filter: category, target: 'ready-today' });
+    assert.equal(resolveRoute('/everyday-fresh', `#${category}`).view, 'everyday-fresh');
+  }
+  assert.deepEqual(collectionFromHash('#CITRUS', filters), { filter: 'citrus', target: 'ready-today' });
+  assert.deepEqual(collectionFromHash('#ready-today', filters), { filter: 'all', target: 'ready-today' });
+  for (const hash of ['', '#unknown', '#removed-category']) assert.deepEqual(collectionFromHash(hash, filters), { filter: 'all' });
+  for (const hash of ['#boxes', '#family']) assert.deepEqual(collectionFromHash(hash, filters), { filter: 'all', target: 'boxes' });
 });

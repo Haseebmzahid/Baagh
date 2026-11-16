@@ -1,3 +1,6 @@
+import { createSceneLoop } from '../../core/sceneLoop';
+import { disposeScene } from '../../core/disposeScene';
+import { damping } from '../../core/performance';
 import * as THREE from 'three';
 import { FruitSceneEngine, FruitSceneOptions, ScreenPoint } from '../../core/types';
 import { clamp, lerp, ramp, smooth } from '../../core/mathUtils';
@@ -21,17 +24,17 @@ export function createChaunsaScene(
 ): FruitSceneEngine {
   const low = !!opts.lowPerformance;
   const onFrame = opts.onFrame || (() => {});
-  const segU = low ? 96 : 168;
-  const segV = low ? 72 : 132;
+  const segU = low ? 64 : 112;
+  const segV = low ? 48 : 84;
 
   const renderer = new THREE.WebGLRenderer({
     canvas,
     antialias: !low,
     alpha: true,
-    preserveDrawingBuffer: true,
+    preserveDrawingBuffer: false,
     powerPreference: 'high-performance',
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1.5 : 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1 : 1.5));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = chaunsaConfig.defaultExposure;
   renderer.shadowMap.enabled = true;
@@ -41,8 +44,9 @@ export function createChaunsaScene(
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envTex = createEnvTexture();
-  const env = pmrem.fromEquirectangular(envTex).texture;
-  scene.environment = env;
+  const environment = pmrem.fromEquirectangular(envTex);
+  scene.environment = environment.texture;
+  envTex.dispose();
 
   const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 60);
   const camTarget = new THREE.Vector3();
@@ -51,7 +55,7 @@ export function createChaunsaScene(
   const key = new THREE.DirectionalLight(0xfff0d6, 3.4);
   key.position.set(2.6, 4.2, 3.2);
   key.castShadow = true;
-  key.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
+  key.shadow.mapSize.set(low ? 512 : 1024, low ? 512 : 1024);
   key.shadow.camera.near = 1;
   key.shadow.camera.far = 26;
   key.shadow.camera.left = -5.5;
@@ -77,7 +81,7 @@ export function createChaunsaScene(
   scene.add(new THREE.HemisphereLight(0x6b5a44, 0x120e0b, 0.35));
 
   // Textures and materials
-  const sm = createSkinMaps(low ? 1024 : 2048, low ? 512 : 1024, 0.55);
+  const sm = createSkinMaps(low ? 512 : 1024, low ? 256 : 512, 0.55);
   const fm = createFleshMaps(low ? 512 : 1024);
   const dm = createSeedMaps(512, 512);
 
@@ -270,10 +274,8 @@ export function createChaunsaScene(
   const dragTarget = { x: 0, y: 0 };
   let progress = 0;
   let shown = 0;
-  const t0 = performance.now();
   let W = 1;
   let H = 1;
-  let running = true;
 
   function resize(): void {
     W = canvas.clientWidth || 1;
@@ -281,15 +283,18 @@ export function createChaunsaScene(
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
+    loop.invalidate();
   }
 
   function setProgress(p: number): void {
     progress = clamp(p, 0, 1);
+    loop.invalidate();
   }
 
   function addDrag(dx: number, dy: number): void {
     dragTarget.x += dx;
     dragTarget.y = clamp(dragTarget.y + dy, -0.5, 0.5);
+    loop.invalidate();
   }
 
   const screenPts: ScreenPoint[] = [];
@@ -375,13 +380,13 @@ export function createChaunsaScene(
       camera.filmOffset = fo;
       camera.updateProjectionMatrix();
     }
-    const dScale = wide ? 1 : lerp(1.34, 1.06, clamp((W / H - 0.55) / 0.6, 0, 1));
+    const dScale = wide ? 1 : 1.12 * lerp(1.34, 1.06, clamp((W / H - 0.55) / 0.6, 0, 1));
     camera.position.set(
       Math.sin(ang) * d * dScale,
       cy + Math.sin(time * 0.13) * 0.02 + drag.y * 0.5,
       Math.cos(ang) * d * dScale
     );
-    camTarget.set(0, tY + (wide ? 0 : 0.62), 0);
+    camTarget.set(0, tY + (wide ? 0 : -0.28), 0);
     camera.lookAt(camTarget);
 
     ground.material.opacity = lerp(
@@ -411,23 +416,28 @@ export function createChaunsaScene(
     return screenPts;
   }
 
-  function frame(): void {
-    if (!running) return;
-    requestAnimationFrame(frame);
-    const time = (performance.now() - t0) / 1000;
-    shown += (progress - shown) * 0.085;
-    drag.x += (dragTarget.x - drag.x) * 0.09;
-    drag.y += (dragTarget.y - drag.y) * 0.09;
+  const loop = createSceneLoop((time, dt, publish) => {
+    const ease = opts.reducedMotion ? 1 : damping(7, dt);
+    shown += (progress - shown) * ease;
+    drag.x += (dragTarget.x - drag.x) * ease;
+    drag.y += (dragTarget.y - drag.y) * ease;
     layout(shown, time);
     renderer.render(scene, camera);
-
-    onFrame(collect(), shown);
-  }
+    if (publish) onFrame(collect(), shown);
+  }, opts.reducedMotion, () => {
+    const currentRatio = renderer.getPixelRatio();
+    const nextRatio = Math.max(.75, currentRatio * .8);
+    if (nextRatio < currentRatio) {
+      renderer.setPixelRatio(nextRatio);
+      renderer.setSize(W, H, false);
+    }
+  });
 
   resize();
-  frame();
+  loop.start();
 
   return {
+    getDiagnostics() { return { geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, progress: shown, contextLost: renderer.getContext().isContextLost() }; },
     setProgress,
     addDrag,
     resize,
@@ -441,9 +451,10 @@ export function createChaunsaScene(
       onFrame(collect(), shown);
     },
     dispose(): void {
-      running = false;
+      loop.dispose();
+      disposeScene(scene, [environment, pmrem, envTex]);
       renderer.dispose();
-      pmrem.dispose();
+      renderer.forceContextLoss();
     },
   };
 }

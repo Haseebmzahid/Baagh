@@ -1,3 +1,6 @@
+import { createSceneLoop } from '../../core/sceneLoop';
+import { disposeScene } from '../../core/disposeScene';
+import { damping } from '../../core/performance';
 import * as THREE from 'three';
 import { FruitSceneEngine, FruitSceneOptions, ScreenPoint } from '../../core/types';
 import { clamp, lerp, ramp } from '../../core/mathUtils';
@@ -45,10 +48,10 @@ export function createAnaarScene(
     canvas,
     antialias: !low,
     alpha: true,
-    preserveDrawingBuffer: true,
+    preserveDrawingBuffer: false,
     powerPreference: 'high-performance',
   });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1.25 : 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, low ? 1 : 1.5));
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = anaarConfig.defaultExposure;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -60,7 +63,8 @@ export function createAnaarScene(
 
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envSrc = createEnvTexture();
-  scene.environment = pmrem.fromEquirectangular(envSrc).texture;
+  const environment = pmrem.fromEquirectangular(envSrc);
+  scene.environment = environment.texture;
   envSrc.dispose();
 
   const camera = new THREE.PerspectiveCamera(30, 1, 0.05, 120);
@@ -95,7 +99,7 @@ export function createAnaarScene(
   scene.add(ground);
 
   // ---- Shared materials -------------------------------------------------
-  const skinTex = createSkinMaps(11, tone, low ? 768 : 1280);
+  const skinTex = createSkinMaps(11, tone, low ? 512 : 1024);
   track(skinTex.map);
   track(skinTex.bumpMap);
   const skinMat = track(
@@ -134,7 +138,7 @@ export function createAnaarScene(
   const shapeMain = shapeFor(21, 0.995);
   const wholeGroup = new THREE.Group();
   const wholeGeo = track(
-    bodyGeometry(shapeMain, 0, Math.PI * 2, low ? 112 : 168, low ? 76 : 112)
+    bodyGeometry(shapeMain, 0, Math.PI * 2, low ? 80 : 120, low ? 56 : 84)
   );
   const wholeMesh = new THREE.Mesh(wholeGeo, skinMat);
   wholeMesh.castShadow = true;
@@ -147,7 +151,7 @@ export function createAnaarScene(
 
   // ---- Cut halves -------------------------------------------------------
   const arilCount = low ? 105 : 155;
-  const faceSize = low ? 768 : 1024;
+  const faceSize = low ? 512 : 768;
   const segA = low ? 64 : 96;
   const segV = low ? 68 : 104;
 
@@ -385,10 +389,8 @@ export function createAnaarScene(
   let spin = 0;
   let dragging = false;
   let dragIdle = 0;
-  let running = true;
   let W = 1;
   let H = 1;
-  const t0 = performance.now();
 
   const screenPts: ScreenPoint[] = [];
   const tmp = new THREE.Vector3();
@@ -403,10 +405,12 @@ export function createAnaarScene(
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
+    loop.invalidate();
   }
 
   function setProgress(p: number): void {
     progress = clamp(p, 0, 1);
+    loop.invalidate();
   }
 
   function addDrag(dx: number, dy: number): void {
@@ -414,6 +418,7 @@ export function createAnaarScene(
     pitch = clamp(pitch + dy, -0.42, 0.42);
     dragging = true;
     dragIdle = 0;
+    loop.invalidate();
   }
 
   /** Applies the prototype's stage choreography at stage scalar s. */
@@ -540,31 +545,29 @@ export function createAnaarScene(
     return screenPts;
   }
 
-  let last = performance.now();
-  function frame(): void {
-    if (!running) return;
-    requestAnimationFrame(frame);
-    const now = performance.now();
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
-    const time = (now - t0) / 1000;
-
-    // Release the drag lock shortly after the last drag delta.
+  const loop = createSceneLoop((time, dt, publish) => {
     if (dragging) {
       dragIdle += dt;
       if (dragIdle > 0.25) dragging = false;
     }
-
-    shown += (progress - shown) * Math.min(1, dt * 7);
+    shown += (progress - shown) * (opts.reducedMotion ? 1 : damping(7, dt));
     layout(shown * ANAAR_STAGES, time, dt);
     renderer.render(scene, camera);
-    onFrame(collect(), shown);
-  }
+    if (publish) onFrame(collect(), shown);
+  }, opts.reducedMotion, () => {
+    const currentRatio = renderer.getPixelRatio();
+    const nextRatio = Math.max(.75, currentRatio * .8);
+    if (nextRatio < currentRatio) {
+      renderer.setPixelRatio(nextRatio);
+      renderer.setSize(W, H, false);
+    }
+  });
 
   resize();
-  frame();
+  loop.start();
 
   return {
+    getDiagnostics() { return { geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures, drawCalls: renderer.info.render.calls, triangles: renderer.info.render.triangles, progress: shown, contextLost: renderer.getContext().isContextLost() }; },
     setProgress,
     addDrag,
     resize,
@@ -577,13 +580,11 @@ export function createAnaarScene(
       renderer.render(scene, camera);
       onFrame(collect(), shown);
     },
-    dispose() {
-      running = false;
-      for (const d of disposables) d.dispose();
-      disposables.length = 0;
-      pmrem.dispose();
-      if (scene.environment) scene.environment.dispose();
+    dispose(): void {
+      loop.dispose();
+      disposeScene(scene, [environment, pmrem, envSrc, ...disposables]);
       renderer.dispose();
+      renderer.forceContextLoss();
     },
   };
 }

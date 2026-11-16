@@ -6,6 +6,7 @@ import {
   QuantityStepper,
   SpecimenPlate,
   StateMark,
+  WhatsAppButton,
   useCommercialLayout,
   useHasPointer,
   usePrefersReducedMotion,
@@ -221,7 +222,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
 
         {!orderable ? (
-          <NotifyAction />
+          <AvailabilityAction product={product} />
         ) : selected ? (
           <QuantityStepper
             value={quantity}
@@ -317,36 +318,12 @@ const AddAction: React.FC<{
   );
 };
 
-/** Out of season — the card offers notification instead of an add action. */
-const NotifyAction: React.FC = () => {
-  const [hover, setHover] = useState(false);
-  return (
-    <button
-      type="button"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      onFocus={() => setHover(true)}
-      onBlur={() => setHover(false)}
-      style={{
-        height: `${c.control.minTap}px`,
-        padding: '0 18px',
-        flex: 'none',
-        background: 'transparent',
-        border: `1px solid ${hover ? c.color.gold70 : c.color.hair22}`,
-        borderRadius: c.radius.button,
-        cursor: 'pointer',
-        fontFamily: c.font.mono,
-        fontSize: '9px',
-        letterSpacing: '.18em',
-        textTransform: 'uppercase',
-        color: hover ? c.color.goldHover : c.color.ink42,
-        transition: `color ${c.motion.l3.duration} ${c.motion.l3.ease}, border-color ${c.motion.l3.duration} ${c.motion.l3.ease}`,
-      }}
-    >
-      Notify
-    </button>
-  );
-};
+/** Enquiries are manual requests; no notification subscription is implied. */
+const AvailabilityAction: React.FC<{ product: Product }> = ({ product }) => (
+  <WhatsAppButton compact message={`Hello BAAGH — I would like to ask about availability of ${product.name}. Please confirm whether it can be ordered and the current packs and prices.`}>
+    Ask availability
+  </WhatsAppButton>
+);
 
 // ---------------------------------------------------------------------------
 // Rule 07 · Category tiles & collection cards

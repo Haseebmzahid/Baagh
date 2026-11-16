@@ -1,34 +1,30 @@
 import { FruitConfig, FruitSceneFactory } from '../core/types';
 import { chaunsaConfig } from './chaunsa/config';
-import { createChaunsaScene } from './chaunsa/ChaunsaScene';
 import { kinnowConfig } from './kinnow/config';
-import { createKinnowScene } from './kinnow/KinnowScene';
 import { appleConfig } from './apple/config';
-import { createAppleScene } from './apple/AppleScene';
 import { anaarConfig } from './anaar/config';
-import { createAnaarScene } from './anaar/AnaarScene';
 
 export interface FruitRegistryEntry {
   config: FruitConfig;
-  factory: FruitSceneFactory;
+  loadFactory: () => Promise<FruitSceneFactory>;
 }
 
 export const fruitRegistry: Record<string, FruitRegistryEntry> = {
   chaunsa: {
     config: chaunsaConfig,
-    factory: createChaunsaScene,
+    loadFactory: () => import('./chaunsa/ChaunsaScene').then(module => module.createChaunsaScene),
   },
   kinnow: {
     config: kinnowConfig,
-    factory: createKinnowScene,
+    loadFactory: () => import('./kinnow/KinnowScene').then(module => module.createKinnowScene),
   },
   apple: {
     config: appleConfig,
-    factory: createAppleScene,
+    loadFactory: () => import('./apple/AppleScene').then(module => module.createAppleScene),
   },
   anaar: {
     config: anaarConfig,
-    factory: createAnaarScene,
+    loadFactory: () => import('./anaar/AnaarScene').then(module => module.createAnaarScene),
   },
 };
 

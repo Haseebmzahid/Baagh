@@ -129,9 +129,10 @@ Each fruit requires dedicated physical modeling:
   - Planar cross-section showing 10 wedges, juice vesicles, core, and seed cross-sections.
 
 ### 3.6 Performance & Rendering Strategy
-- **Zero External 3D File Overhead**: All geometries and textures are procedurally generated in WebGL/Canvas memory. No multi-megabyte GLTF/GLB files, ensuring sub-100ms initialization and zero network fetch latency.
-- **Hardware-Adaptive Detail (LOD)**: When `navigator.hardwareConcurrency <= 4` or viewport $< 760\text{px}$, texture resolutions are halved (e.g., 1024 instead of 2048) and geometry tessellations are reduced (e.g. $96 \times 72$ segments instead of $168 \times 132$).
-- **FPS Optimization**: Render loop uses decoupled inertia calculations with dirty-check bounding; render targets utilize `preserveDrawingBuffer: true` and `powerPreference: 'high-performance'`.
+- **Procedural construction**: Geometry and textures are generated in memory; no GLTF/GLB download is required. Generation, texture uploads and shader compilation still cost time. No sub-100ms initialization or zero-network-latency guarantee is made. Each selected scene engine is now dynamically imported.
+- **Hardware-adaptive detail**: Constrained viewport, CPU, memory and data-saving signals select bounded texture, geometry and pixel-ratio budgets. Sustained slow frames can reduce rendering resolution further without replacing the anatomy or inspection sequence.
+- **Render lifecycle**: A shared cancellable loop uses elapsed-time damping, bounded DOM publication and a 60 Hz render ceiling. Hidden tabs pause and reduced-motion scenes render on demand. Drawing-buffer preservation is disabled. Resources and the owned graphics context are explicitly released on exit.
+- **Current verification**: See [performance and information sprint](PERFORMANCE_AND_INFORMATION_PAGES.md) and its recorded browser measurements; physical-device profiling remains a launch check.
 
 ---
 

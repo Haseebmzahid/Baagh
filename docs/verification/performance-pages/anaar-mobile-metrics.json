@@ -1,0 +1,24 @@
+{
+  "fruit": "anaar",
+  "readyMs": 3722,
+  "buildMs": 1256,
+  "firstRenderMs": 2370,
+  "lowPerformance": true,
+  "geometries": 21,
+  "textures": 7,
+  "drawCalls": 11,
+  "triangles": 9710,
+  "progress": 0,
+  "contextLost": false,
+  "renderer": "ANGLE (Intel, Intel(R) UHD Graphics 620 (0x00003EA0) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+  "disposed": {
+    "geometries": 0,
+    "textures": 1,
+    "drawCalls": 11,
+    "triangles": 9710,
+    "progress": 0.9996584257416273,
+    "contextLost": true
+  },
+  "errors": [],
+  "rendering": "Headless Chromium WebGL, renderer recorded above; not a physical-device FPS benchmark"
+}
