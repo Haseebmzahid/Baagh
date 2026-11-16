@@ -1,0 +1,26 @@
+/* Functional L3 step: solid canvas, hairlines and the existing type pairing. */
+.baagh-request { max-width:720px; padding:28px 0; animation:baaghRequestAppear 120ms ease-out; }
+.baagh-request h3 { font:300 38px/1.1 'Newsreader',Georgia,serif; letter-spacing:-.015em; margin:16px 0; }
+.baagh-request h3:focus { outline:none; }
+.baagh-request h3, .baagh-basket-review h1 { scroll-margin-top:110px; }
+.baagh-request-lead { font:300 19px/1.5 'Newsreader',Georgia,serif; color:rgba(242,236,224,.84); margin-bottom:18px; }
+.baagh-request-privacy, .baagh-request-hint { font:300 15px/1.5 'Newsreader',Georgia,serif; color:rgba(242,236,224,.70); }
+.baagh-request-privacy { padding:16px 0; border-block:1px solid rgba(244,238,226,.12); }
+.baagh-request-caution { font:300 16px/1.5 'Newsreader',Georgia,serif; color:#e8cfa0; margin:18px 0 24px; }
+.baagh-request-required { font:300 15px/1.4 'Newsreader',Georgia,serif; color:rgba(242,236,224,.70); margin-bottom:22px; }
+.baagh-request-field { margin:0 0 22px; }
+.baagh-request-field label { display:block; font:10px/1.5 'IBM Plex Mono',monospace; letter-spacing:.14em; text-transform:uppercase; color:#f2ece0; margin-bottom:10px; }
+.baagh-request-field input, .baagh-request-field textarea { display:block; width:100%; min-height:52px; border:1px solid rgba(244,238,226,.32); border-radius:2px; background:#100f0a; color:#f2ece0; padding:14px; font:300 18px/1.45 'Newsreader',Georgia,serif; caret-color:#e8cfa0; }
+.baagh-request-field textarea { resize:vertical; }
+.baagh-request-field [aria-invalid=true] { border-color:#d9a17e; }
+.baagh-request-hint { margin-top:8px; }
+.baagh-request-actions { display:grid; gap:12px; margin-top:24px; }
+.baagh-request-open { display:flex; align-items:center; justify-content:center; width:100%; min-height:56px; padding:16px 18px; border:1px solid transparent; border-radius:2px; background:#4a5a44; color:#f6f1e6; font:10px/1.5 'IBM Plex Mono',monospace; letter-spacing:.14em; text-transform:uppercase; text-align:center; text-decoration:none; cursor:pointer; transition:background-color 120ms ease-out; }
+.baagh-request-open:hover { color:#f6f1e6; background:#57694f; }
+.baagh-request-open:disabled { opacity:.42; cursor:not-allowed; }
+.baagh-request-preview { white-space:pre-wrap; overflow-wrap:anywhere; font:300 17px/1.65 'Newsreader',Georgia,serif; padding:24px; border:1px solid rgba(244,238,226,.22); border-radius:2px; background:#100f0a; color:#f2ece0; }
+.baagh-basket-request-scroll { padding:0 32px 24px; overflow-y:auto; overscroll-behavior:contain; flex:1; min-height:0; }
+@keyframes baaghRequestAppear { from { opacity:0; } to { opacity:1; } }
+@media(max-width:760px) { .baagh-basket-request-scroll { padding-inline:20px; } .baagh-request h3 { font-size:32px; } .baagh-request h3, .baagh-basket-review h1 { scroll-margin-top:90px; } .baagh-request-preview { padding:18px; font-size:16px; } .baagh-request-field input, .baagh-request-field textarea { min-height:56px; } }
+@media(max-height:650px) { .baagh-basket-request-scroll { overflow:visible; flex:none; } }
+@media(prefers-reduced-motion:reduce) { .baagh-request { animation:none; } }

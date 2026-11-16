@@ -18,15 +18,28 @@ import {
 import { CategoryTile, CollectionCard, ProductCard } from './ProductCard';
 import {
   boxes,
+  everydayFreshHero,
+  defaultPack,
+  featureCopyFor,
   categories,
   featuredProduct,
-  gridProducts,
+  filterProducts,
+  gridFilters,
   MONTH_INITIALS,
+  monthInWindow,
   PRICE_NOTE,
-  seasonWindows,
+  priceOf,
+  routeOf,
+  seasonCategories,
+  todayAtTheHouse,
+  selectionMeta,
   selections,
+  windowIsOpen,
+  withPriceNote,
 } from '../../data/catalogue';
 import type { Product } from '../../data/catalogue';
+import { useBasket } from '../../context/BasketContext';
+import { isOrderable } from '../../data/catalogue';
 
 /**
  * EVERYDAY FRESH — /everyday-fresh
@@ -51,7 +64,7 @@ export interface EverydayFreshProps {
 export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute }) => {
   const { isMobile, isTablet, gutter } = useCommercialLayout();
 
-  const openProduct = (product: Product) => onNavigateRoute(product.href);
+  const openProduct = (product: Product) => onNavigateRoute(routeOf(product));
 
   return (
     <CommercialPage>
@@ -102,6 +115,8 @@ const HeroSection: React.FC<{ onNavigateRoute: (path: string) => void }> = ({
 }) => {
   const { isMobile, isTablet } = useCommercialLayout();
   const week = useMemo(() => isoWeek(), []);
+  const featured = featuredProduct();
+  const house = useMemo(() => todayAtTheHouse(), []);
 
   return (
     <section
@@ -130,7 +145,7 @@ const HeroSection: React.FC<{ onNavigateRoute: (path: string) => void }> = ({
             textWrap: 'balance' as React.CSSProperties['textWrap'],
           }}
         >
-          Chaunsa is at its peak.
+          {everydayFreshHero.headline}
         </h1>
 
         <p
@@ -145,7 +160,7 @@ const HeroSection: React.FC<{ onNavigateRoute: (path: string) => void }> = ({
             textWrap: 'pretty' as React.CSSProperties['textWrap'],
           }}
         >
-          Graded this morning in Multan. Three weeks left in the window.
+          {everydayFreshHero.body}
         </p>
 
         <div
@@ -182,7 +197,7 @@ const HeroSection: React.FC<{ onNavigateRoute: (path: string) => void }> = ({
       {/* Plate column, with the G1 vitrine panel floating over it. */}
       <div style={{ position: 'relative' }}>
         <SpecimenPlate
-          tint={featuredProduct.tint}
+          tint={featured.image.tint}
           ratio={isMobile ? '4 / 3' : '5 / 4'}
           drift
           label="Hero specimen placeholder"
@@ -204,13 +219,9 @@ const HeroSection: React.FC<{ onNavigateRoute: (path: string) => void }> = ({
           <Label gold>Today at the house</Label>
 
           <ul style={{ listStyle: 'none', margin: '16px 0 0', padding: 0 }}>
-            {[
-              'Chaunsa · graded 06:40',
-              'Anwar Ratol · last crates',
-              'Sindhri · steady',
-            ].map((line) => (
-              <li key={line} style={{ padding: '5px 0' }}>
-                <Fact>{line}</Fact>
+            {house.map((entry) => (
+              <li key={entry.id} style={{ padding: '5px 0' }}>
+                <Fact>{entry.line}</Fact>
               </li>
             ))}
           </ul>
@@ -276,9 +287,12 @@ const SeasonSection: React.FC = () => {
           <Hairline />
 
           {/* One row per window */}
-          {seasonWindows.map((w) => (
+          {seasonCategories.map((cat) => {
+            const window = cat.window!;
+            const open = windowIsOpen(window);
+            return (
             <div
-              key={w.id}
+              key={cat.id}
               style={{
                 display: 'grid',
                 gridTemplateColumns: `${isMobile ? 66 : 92}px repeat(12, 1fr)`,
@@ -294,36 +308,29 @@ const SeasonSection: React.FC = () => {
                   fontSize: '9.5px',
                   letterSpacing: '.14em',
                   textTransform: 'uppercase',
-                  color: w.open ? c.color.gold80 : c.color.ink50,
+                  color: open ? c.color.gold80 : c.color.ink50,
                 }}
               >
-                {w.label}
+                {cat.windowLabel ?? cat.label}
               </span>
 
-              {MONTH_INITIALS.map((_, month) => {
-                // Windows can wrap the year end (citrus runs Dec — Feb).
-                const inWindow =
-                  w.from <= w.to
-                    ? month >= w.from && month <= w.to
-                    : month >= w.from || month <= w.to;
-
-                return (
-                  <span
-                    key={month}
-                    style={{
-                      height: '7px',
-                      borderRadius: '1px',
-                      background: !inWindow
-                        ? c.color.hair10
-                        : w.open
-                          ? c.color.gold70
-                          : 'rgba(244,238,226,.26)',
-                    }}
-                  />
-                );
-              })}
+              {MONTH_INITIALS.map((_, month) => (
+                <span
+                  key={month}
+                  style={{
+                    height: '7px',
+                    borderRadius: '1px',
+                    background: !monthInWindow(month, window)
+                      ? c.color.hair10
+                      : open
+                        ? c.color.gold70
+                        : 'rgba(244,238,226,.26)',
+                  }}
+                />
+              ))}
             </div>
-          ))}
+            );
+          })}
         </div>
       </Glass>
 
@@ -436,7 +443,10 @@ const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void }> = (
   onNavigateRoute,
 }) => {
   const { isMobile, isTablet } = useCommercialLayout();
-  const p = featuredProduct;
+  const p = featuredProduct();
+  const copy = featureCopyFor(p);
+  const pack = defaultPack(p);
+  const basket = useBasket();
   const stacked = isMobile || isTablet;
 
   return (
@@ -450,19 +460,19 @@ const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void }> = (
         }}
       >
         <a
-          href={p.href}
+          href={routeOf(p)}
           onClick={(e) => {
             e.preventDefault();
-            onNavigateRoute(p.href);
+            onNavigateRoute(routeOf(p));
           }}
           aria-label={`View ${p.name}`}
           style={{ display: 'block' }}
         >
           <SpecimenPlate
-            tint={p.tint}
+            tint={p.image.tint}
             ratio={stacked ? '3 / 2' : '4 / 3'}
             drift
-            label={p.plateNote}
+            label={p.image.note}
           />
         </a>
 
@@ -479,7 +489,7 @@ const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void }> = (
               textWrap: 'balance' as React.CSSProperties['textWrap'],
             }}
           >
-            White Chaunsa, tree-ripened
+            {copy.headline}
           </h3>
 
           <p
@@ -494,28 +504,24 @@ const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void }> = (
               textWrap: 'pretty' as React.CSSProperties['textWrap'],
             }}
           >
-            Left on the tree three days longer than the market standard. Sugar is higher, the
-            window is shorter.
+            {copy.body}
           </p>
 
           <dl style={{ margin: '28px 0 0', display: 'grid', gap: '10px' }}>
             <FeatureFact term="Variety" value={p.variety} />
-            <FeatureFact term="Origin" value={`${p.origin} district`} />
-            <FeatureFact term="Window" value={p.season} />
+            <FeatureFact term="Origin" value={p.origin} />
+            <FeatureFact term="Window" value={p.seasonLabel} />
           </dl>
 
           <div style={{ marginTop: '28px', paddingTop: '22px', borderTop: `1px solid ${c.color.hair12}` }}>
-            <Price
-              amount={p.price}
-              note={`/ 5 kg crate${PRICE_NOTE ? ` · ${PRICE_NOTE}` : ''}`}
-              size="detail"
-            />
+            <Price amount={priceOf(p)} note={withPriceNote(`/ ${pack.label}`)} size="detail" />
           </div>
 
           <div style={{ display: 'flex', gap: '14px', marginTop: '26px', flexWrap: 'wrap' }}>
             <Button
               variant="primary"
-              onClick={() => onNavigateRoute(p.href)}
+              disabled={!isOrderable(p) || !pack.available}
+              onClick={() => basket.add(p.id, pack.id, 1)}
             >
               Add to basket
             </Button>
@@ -555,13 +561,6 @@ const FeatureFact: React.FC<{ term: string; value: string }> = ({ term, value })
 // with landscape 3:2 cards so one fills the screen.
 // ===========================================================================
 
-const FILTERS = [
-  { id: 'all', label: 'All' },
-  { id: 'mangoes', label: 'Mango' },
-  { id: 'seasonal', label: 'Melon' },
-  { id: 'boxes', label: 'Boxes' },
-];
-
 const GridSection: React.FC<{
   onOpen: (p: Product) => void;
   onNavigateRoute: (path: string) => void;
@@ -571,13 +570,10 @@ const GridSection: React.FC<{
 }> = ({ onOpen, onNavigateRoute, isMobile, isTablet, gutter }) => {
   const [filter, setFilter] = useState('all');
 
-  const visible = useMemo(
-    () =>
-      filter === 'all' || filter === 'boxes'
-        ? gridProducts
-        : gridProducts.filter((p) => p.categoryId === filter),
-    [filter]
-  );
+  // Both the chips and the products they filter come from the catalogue, so
+  // adding a product to a new category adds its chip with no code change.
+  const filters = useMemo(() => gridFilters(), []);
+  const visible = useMemo(() => filterProducts(filter), [filter]);
 
   const columns = isMobile ? 1 : isTablet ? 2 : 3;
 
@@ -588,20 +584,12 @@ const GridSection: React.FC<{
       title="Ready today"
       action={
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-          {FILTERS.map((f) => (
+          {filters.map((f) => (
             <FilterChip
               key={f.id}
               label={f.label}
               active={filter === f.id}
-              onClick={() => {
-                // "Boxes" belongs to section 07 — send the reader there rather
-                // than filtering the fruit grid to nothing.
-                if (f.id === 'boxes') {
-                  document.getElementById('boxes')?.scrollIntoView({ behavior: 'smooth' });
-                  return;
-                }
-                setFilter(f.id);
-              }}
+              onClick={() => setFilter(f.id)}
             />
           ))}
         </div>
@@ -615,7 +603,7 @@ const GridSection: React.FC<{
           alignItems: 'stretch',
         }}
       >
-        {visible.map((p, i) => (
+        {visible.map((p: Product, i: number) => (
           <React.Fragment key={p.id}>
             <ProductCard product={p} onOpen={onOpen} landscape={isMobile} />
 
@@ -761,7 +749,7 @@ const SelectionsSection: React.FC = () => {
             key={s.id}
             title={s.title}
             purpose={s.purpose}
-            meta={s.meta}
+            meta={selectionMeta(s)}
             tint={s.tint}
           />
         ))}
@@ -843,7 +831,7 @@ const BoxesSection: React.FC = () => {
                 {primary.purpose}
               </p>
             </div>
-            <Price amount={primary.from} from note={PRICE_NOTE || undefined} />
+            <Price amount={primary.fromPrice} from note={PRICE_NOTE || undefined} />
           </div>
         </div>
 
@@ -876,7 +864,7 @@ const BoxesSection: React.FC = () => {
                 </h3>
                 <span style={{ display: 'block', marginTop: '9px' }}>
                   <Fact quiet>
-                    {b.purpose} · from PKR {b.from}
+                    {b.purpose} · from PKR {b.fromPrice}
                   </Fact>
                 </span>
               </div>

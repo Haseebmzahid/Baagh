@@ -20,12 +20,9 @@ vite.config.js.timestamp-*
 vite.config.mts.timestamp-*
 
 # ---- Environment / secrets ----
-# Never commit real credentials. Commit a .env.example instead.
+# Keep all environment-file variants out of commits.
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
 *.pem
 *.key
 

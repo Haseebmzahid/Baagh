@@ -763,6 +763,7 @@ export const QuantityStepper: React.FC<{
         type="button"
         style={btn}
         aria-label="Decrease quantity"
+        disabled={value <= min}
         onClick={() => onChange(Math.max(min, value - 1))}
       >
         −
@@ -783,6 +784,7 @@ export const QuantityStepper: React.FC<{
         type="button"
         style={btn}
         aria-label="Increase quantity"
+        disabled={value >= max}
         onClick={() => onChange(Math.min(max, value + 1))}
       >
         +

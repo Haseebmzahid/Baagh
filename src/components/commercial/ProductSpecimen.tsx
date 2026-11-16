@@ -22,11 +22,14 @@ import type { Product } from '../../data/catalogue';
 export interface ProductSpecimenProps {
   product: Product;
   ratio?: string;
+  /** Basket thumbnail: existing geometry at low detail, without the inspection caption. */
+  compact?: boolean;
 }
 
 export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
   product,
   ratio = '1 / 1',
+  compact = false,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -37,7 +40,10 @@ export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
   const reduced = usePrefersReducedMotion();
   const [failed, setFailed] = useState(false);
 
-  const fruit = specimenFruitFor(product.id, product.categoryId);
+  // A product that has a Fruit Intelligence study reuses that fruit's body.
+  // Anything else falls back to its category's representative fruit, and to
+  // the CSS plate when neither applies.
+  const fruit = product.fruitIntelligenceSlug ?? specimenFruitFor(product.id, product.category);
   const use3D = isSupported && !failed && fruit !== null;
 
   useEffect(() => {
@@ -47,7 +53,7 @@ export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
     if (!canvas || !wrap) return;
 
     const lowPerformance =
-      Math.min(window.innerWidth, window.innerHeight) < 760 ||
+      compact || Math.min(window.innerWidth, window.innerHeight) < 760 ||
       (navigator.hardwareConcurrency || 8) <= 4;
 
     let engine: SpecimenEngine;
@@ -81,7 +87,7 @@ export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
       engine.dispose();
       engineRef.current = null;
     };
-  }, [use3D, fruit, product.id, reduced]);
+  }, [use3D, fruit, product.id, reduced, compact]);
 
   // --- desktop: pointer tilt ------------------------------------------------
   const handlePointerMove = (e: React.PointerEvent) => {
@@ -118,10 +124,10 @@ export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
   if (!use3D) {
     return (
       <SpecimenPlate
-        tint={product.tint}
+        tint={product.image.tint}
         ratio={ratio}
-        drift
-        label={product.plateNote ?? 'Specimen placeholder'}
+        drift={!compact}
+        label={compact ? undefined : product.image.note ?? 'Specimen placeholder'}
       />
     );
   }
@@ -150,7 +156,7 @@ export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
         style={{
           position: 'absolute',
           inset: 0,
-          background: `radial-gradient(56% 48% at 44% 38%, ${product.tint}22 0%, rgba(16,15,10,.6) 58%, ${c.color.deep} 100%)`,
+          background: `radial-gradient(56% 48% at 44% 38%, ${product.image.tint}22 0%, rgba(16,15,10,.6) 58%, ${c.color.deep} 100%)`,
         }}
       />
 
@@ -161,7 +167,7 @@ export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
         style={{ position: 'relative', width: '100%', height: '100%', display: 'block' }}
       />
 
-      <span
+      {!compact && <span
         style={{
           position: 'absolute',
           left: '14px',
@@ -175,7 +181,7 @@ export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
         }}
       >
         {hasPointer ? 'Move to inspect' : 'Swipe to turn'}
-      </span>
+      </span>}
     </div>
   );
 };

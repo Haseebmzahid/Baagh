@@ -14,6 +14,8 @@ import { cueConfigs } from './config/cueConfig';
 import { BrandProvider } from './context/BrandContext';
 import { ScrollProvider } from './context/ScrollContext';
 import { useWebGLCapability } from './hooks/useWebGLCapability';
+import { BasketProvider, useBasket } from './context/BasketContext';
+import { BasketAnnouncements, BasketDrawer, BasketLauncher, BasketReview } from './components/commercial/Basket';
 
 // Take control of scroll restoration at module-evaluation time, before React
 // renders and before any route handler or scroll listener can sample a
@@ -31,6 +33,7 @@ type ViewMode =
   | 'fruit-intelligence'
   | 'everyday-fresh'
   | 'product'
+  | 'basket'
   | 'signature';
 
 interface ProductRoute {
@@ -53,6 +56,7 @@ function matchProductRoute(pathname: string): ProductRoute | null {
 }
 
 export const AppContent: React.FC = () => {
+  const { closeBasket } = useBasket();
   const { isSupported, errorMessage } = useWebGLCapability();
   const [forceFallback, setForceFallback] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<ViewMode>('journey');
@@ -78,6 +82,7 @@ export const AppContent: React.FC = () => {
   }, []);
 
   const handleRoute = useCallback(() => {
+    closeBasket();
     const searchParams = new URLSearchParams(window.location.search);
     const queryFruit = searchParams.get('fruit');
     const hash = window.location.hash.toLowerCase();
@@ -91,7 +96,9 @@ export const AppContent: React.FC = () => {
     // under both /product/... and the /everyday-fresh/... breadcrumb path and
     // would otherwise be swallowed by the Everyday Fresh prefix match below.
     const productMatch = matchProductRoute(pathname);
-    if (productMatch) {
+    if (pathname === '/basket' || hash === '#basket') {
+      setViewMode('basket');
+    } else if (productMatch) {
       setProductRoute(productMatch);
       setViewMode('product');
     } else if (pathname === '/signature' || hash === '#signature') {
@@ -139,7 +146,7 @@ export const AppContent: React.FC = () => {
     } else {
       setViewMode('journey');
     }
-  }, []);
+  }, [closeBasket]);
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {
@@ -159,6 +166,7 @@ export const AppContent: React.FC = () => {
   }, [handleRoute]);
 
   const handleNavigateFruit = useCallback((fruitId: string) => {
+    closeBasket();
     const cleanId = fruitId.toLowerCase();
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
     document.documentElement.scrollTop = 0;
@@ -166,15 +174,16 @@ export const AppContent: React.FC = () => {
     window.history.pushState(null, '', `/fruit-intelligence/${cleanId}`);
     setActiveFruit(cleanId);
     setViewMode('fruit-intelligence');
-  }, []);
+  }, [closeBasket]);
 
   const handleNavigateBrand = useCallback(() => {
+    closeBasket();
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
     window.history.pushState(null, '', '/');
     setViewMode('journey');
-  }, []);
+  }, [closeBasket]);
 
   const handleNavigateRoute = useCallback((path: string) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
@@ -196,7 +205,9 @@ export const AppContent: React.FC = () => {
     };
   }, []);
 
-  if (!isSupported || forceFallback) {
+  // The new review route remains a DOM shopping surface without WebGL.
+  // Broader graphics-failure remediation stays in its separately planned task.
+  if ((!isSupported || forceFallback) && viewMode !== 'basket') {
     return (
       <FallbackView
         reason={errorMessage || (forceFallback ? 'Manual fallback mode test' : null)}
@@ -224,7 +235,9 @@ export const AppContent: React.FC = () => {
         onNavigateBrand={handleNavigateBrand}
       />
 
-      {viewMode === 'everyday-fresh' ? (
+      {viewMode === 'basket' ? (
+        <BasketReview onNavigateRoute={handleNavigateRoute} />
+      ) : viewMode === 'everyday-fresh' ? (
         <EverydayFresh onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'product' ? (
         <ProductDetail
@@ -259,6 +272,11 @@ export const AppContent: React.FC = () => {
           <ScrollSpacer />
         </>
       )}
+      {(viewMode === 'everyday-fresh' || viewMode === 'product' || viewMode === 'signature') && (
+        <BasketLauncher productPage={viewMode === 'product'} />
+      )}
+      <BasketDrawer onNavigateRoute={handleNavigateRoute} />
+      <BasketAnnouncements />
     </div>
   );
 };
@@ -267,7 +285,7 @@ export const App: React.FC = () => {
   return (
     <BrandProvider>
       <ScrollProvider>
-        <AppContent />
+        <BasketProvider><AppContent /></BasketProvider>
       </ScrollProvider>
     </BrandProvider>
   );

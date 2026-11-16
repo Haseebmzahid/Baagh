@@ -20,12 +20,22 @@ import { ProductCard } from './ProductCard';
 import { PageFooter } from './EverydayFresh';
 import { ProductSpecimen } from './ProductSpecimen';
 import {
+  availabilityLabel,
+  categoryLabel,
+  defaultPack,
+  fruitIntelligenceRouteOf,
   getProduct,
+  isOrderable,
   orderAssurances,
+  packNote,
   PRICE_NOTE,
   relatedTo,
+  routeOf,
+  stateMarkFor,
+  unavailableNote,
 } from '../../data/catalogue';
 import type { Pack, Product } from '../../data/catalogue';
+import { useBasket } from '../../context/BasketContext';
 
 /**
  * PRODUCT DETAIL — /product/:category/:slug
@@ -59,7 +69,7 @@ export const ProductDetail: React.FC<ProductDetailProps> = ({
     return <NotFound slug={slug} onNavigateRoute={onNavigateRoute} />;
   }
 
-  return <ProductDetailView product={product} onNavigateRoute={onNavigateRoute} />;
+  return <ProductDetailView key={product.id} product={product} onNavigateRoute={onNavigateRoute} />;
 };
 
 // ===========================================================================
@@ -71,21 +81,22 @@ const ProductDetailView: React.FC<{
   const { isMobile, isTablet, gutter } = useCommercialLayout();
   const stacked = isMobile || isTablet;
 
-  const packs: Pack[] = product.packs ?? [
-    { id: 'default', label: product.packSize, short: product.packSize, price: product.price, note: product.packSize },
-  ];
+  const packs: Pack[] = product.packs;
 
-  // The default pack is the one the card advertises, so the price the reader
-  // arrived with is the price they land on.
-  const [packId, setPackId] = useState(
-    () => packs.find((p) => p.price === product.price)?.id ?? packs[0].id
-  );
+  // Open on the pack that supplied the headline price, so the figure the
+  // reader arrived with is the figure they land on.
+  const [packId, setPackId] = useState(() => defaultPack(product).id);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const basket = useBasket();
 
   const pack = packs.find((p) => p.id === packId) ?? packs[0];
-  const closed = product.state === 'closed';
+  const orderable = isOrderable(product) && !!pack?.available;
+  const addToBasket = () => setAdded(basket.add(product.id, pack.id, quantity));
+  const mark = stateMarkFor(product);
   const related = useMemo(() => relatedTo(product), [product]);
+  // The route comes from the product's own data — never a hard-coded path.
+  const fruitIntelligenceRoute = fruitIntelligenceRouteOf(product);
 
   const orderMessage = `Hello BAAGH — I would like to order ${product.name} (${pack.label}), quantity ${quantity}.`;
 
@@ -107,9 +118,9 @@ const ProductDetailView: React.FC<{
         setAdded(false);
       }}
       added={added}
-      onAdd={() => setAdded(true)}
+      onAdd={addToBasket}
       orderMessage={orderMessage}
-      closed={closed}
+      orderable={orderable}
     />
   );
 
@@ -134,8 +145,8 @@ const ProductDetailView: React.FC<{
 
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
-              <Label gold>{closed ? 'Out of season' : 'In season · peak week'}</Label>
-              <StateMark state={product.state} label={product.stateLabel} />
+              <Label gold>{availabilityLabel(product.availability)}</Label>
+              <StateMark state={mark.state} label={mark.label} />
             </div>
 
             <h1
@@ -164,10 +175,10 @@ const ProductDetailView: React.FC<{
             >
               <Fact>{product.variety}</Fact>
               <Fact>{product.origin}</Fact>
-              <Fact quiet>{product.season}</Fact>
+              <Fact quiet>{product.seasonLabel}</Fact>
             </div>
 
-            {product.lead && (
+            {product.shortDescription && (
               <p
                 style={{
                   fontFamily: c.font.serif,
@@ -180,7 +191,7 @@ const ProductDetailView: React.FC<{
                   textWrap: 'pretty' as React.CSSProperties['textWrap'],
                 }}
               >
-                {product.lead}
+                {product.shortDescription}
               </p>
             )}
 
@@ -195,7 +206,7 @@ const ProductDetailView: React.FC<{
         {isMobile && <div style={{ marginTop: '36px' }}>{orderBlock}</div>}
 
         {/* ---- Quality standard ------------------------------------------- */}
-        <Section eyebrow="How this fruit is chosen" title={product.standardTitle}>
+        <Section eyebrow="How this fruit is chosen" title={product.selection.title}>
           <div
             style={{
               display: 'grid',
@@ -215,24 +226,24 @@ const ProductDetailView: React.FC<{
                 textWrap: 'pretty' as React.CSSProperties['textWrap'],
               }}
             >
-              {product.standardBody}
+              {product.selection.body}
             </p>
 
             <div>
               <dl style={{ margin: 0, display: 'grid', gap: '20px' }}>
-                <StandardFact term="Selection" value={product.selectionNote} />
-                <StandardFact term="Ripeness" value={product.ripenessNote} />
+                <StandardFact term="Selection" value={product.selection.selectionNote} />
+                <StandardFact term="Ripeness" value={product.selection.ripenessNote} />
               </dl>
 
               <div style={{ marginTop: '32px' }}>
-                {product.fruitIntelligence ? (
+                {fruitIntelligenceRoute ? (
                   <>
                     <Button
                       variant="tertiary"
-                      href={product.fruitIntelligence}
+                      href={fruitIntelligenceRoute}
                       onClick={(e) => {
                         e.preventDefault();
-                        onNavigateRoute(product.fruitIntelligence!);
+                        onNavigateRoute(fruitIntelligenceRoute);
                       }}
                     >
                       Learn how we select it
@@ -285,7 +296,7 @@ const ProductDetailView: React.FC<{
                 key={r.id}
                 product={r}
                 landscape={isMobile}
-                onOpen={(p) => onNavigateRoute(p.href)}
+                onOpen={(p) => onNavigateRoute(routeOf(p))}
               />
             ))}
           </div>
@@ -307,8 +318,8 @@ const ProductDetailView: React.FC<{
           pack={pack}
           orderMessage={orderMessage}
           added={added}
-          onAdd={() => setAdded(true)}
-          closed={closed}
+          onAdd={addToBasket}
+          orderable={orderable}
         />
       )}
     </CommercialPage>
@@ -323,8 +334,7 @@ const Breadcrumb: React.FC<{
   product: Product;
   onNavigateRoute: (path: string) => void;
 }> = ({ product, onNavigateRoute }) => {
-  const categoryLabel =
-    product.categorySlug.charAt(0).toUpperCase() + product.categorySlug.slice(1);
+  const category = categoryLabel(product.category);
 
   return (
     <nav
@@ -339,7 +349,7 @@ const Breadcrumb: React.FC<{
     >
       <BreadcrumbLink label="Everyday Fresh" onClick={() => onNavigateRoute('/everyday-fresh')} />
       <Separator />
-      <BreadcrumbLink label={categoryLabel} onClick={() => onNavigateRoute('/everyday-fresh')} />
+      <BreadcrumbLink label={category} onClick={() => onNavigateRoute('/everyday-fresh')} />
       <Separator />
       <span
         style={{
@@ -399,7 +409,7 @@ const OrderBlock: React.FC<{
   added: boolean;
   onAdd: () => void;
   orderMessage: string;
-  closed: boolean;
+  orderable: boolean;
 }> = ({
   product,
   packs,
@@ -411,7 +421,7 @@ const OrderBlock: React.FC<{
   added,
   onAdd,
   orderMessage,
-  closed,
+  orderable,
 }) => (
   <Glass
     tier="vitrine"
@@ -422,8 +432,12 @@ const OrderBlock: React.FC<{
   >
     {/* Price plate */}
     <Price
-      amount={closed ? '—' : pack.price}
-      note={closed ? (product.returnsNote ?? 'Returns next season') : `${pack.note}${PRICE_NOTE ? ` · ${PRICE_NOTE} pricing` : ''}`}
+      amount={orderable ? pack.price : '—'}
+      note={
+        orderable
+          ? `${packNote(pack)}${PRICE_NOTE ? ` · ${PRICE_NOTE} pricing` : ''}`
+          : unavailableNote(product)
+      }
       size="detail"
     />
 
@@ -445,7 +459,7 @@ const OrderBlock: React.FC<{
               key={p.id}
               pack={p}
               active={p.id === packId}
-              disabled={closed}
+              disabled={!isOrderable(product) || !p.available}
               onClick={() => onSelectPack(p.id)}
             />
           ))}
@@ -469,8 +483,12 @@ const OrderBlock: React.FC<{
         ariaLabel={`Quantity of ${product.name}`}
       />
       <div style={{ flex: '1 1 180px' }}>
-        <Button variant="primary" full disabled={closed} onClick={onAdd}>
-          {closed ? 'Out of season' : added ? 'Added to basket' : 'Add to basket'}
+        <Button variant="primary" full disabled={!orderable} onClick={onAdd}>
+          {!orderable
+            ? availabilityLabel(product.availability)
+            : added
+              ? 'Added to basket'
+              : 'Add to basket'}
         </Button>
       </div>
     </div>
@@ -559,8 +577,8 @@ const MobileOrderBar: React.FC<{
   orderMessage: string;
   added: boolean;
   onAdd: () => void;
-  closed: boolean;
-}> = ({ product, pack, orderMessage, added, onAdd, closed }) => (
+  orderable: boolean;
+}> = ({ product, pack, orderMessage, added, onAdd, orderable }) => (
   <div
     style={{
       position: 'fixed',
@@ -591,9 +609,9 @@ const MobileOrderBar: React.FC<{
           textOverflow: 'ellipsis',
         }}
       >
-        {closed ? (product.returnsNote ?? 'Out of season') : pack.label}
+        {orderable ? pack.label : unavailableNote(product)}
       </span>
-      {!closed && (
+      {orderable && (
         <span
           style={{
             display: 'block',
@@ -609,7 +627,7 @@ const MobileOrderBar: React.FC<{
       )}
     </div>
 
-    <Button variant="primary" compact disabled={closed} onClick={onAdd}>
+    <Button variant="primary" compact disabled={!orderable} onClick={onAdd}>
       {added ? 'Added' : 'Add'}
     </Button>
     <WhatsAppButton compact message={orderMessage}>

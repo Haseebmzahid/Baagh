@@ -23,6 +23,7 @@ import {
   corporateFacts,
   giftBoxes,
   PRICE_NOTE,
+  seasonalClosure,
   signatureCollections,
   whatsappConfigured,
   whatsappHref,
@@ -324,7 +325,7 @@ const LeadCollection: React.FC<{ collection: Collection }> = ({ collection }) =>
           </p>
         </div>
 
-        <Price amount={collection.from} from note={PRICE_NOTE || undefined} />
+        <Price amount={collection.fromPrice} from note={PRICE_NOTE || undefined} />
       </div>
     </article>
   );
@@ -367,7 +368,7 @@ const SmallCollection: React.FC<{ collection: Collection }> = ({ collection }) =
         {collection.title}
       </h3>
       <span style={{ display: 'block', marginTop: '9px' }}>
-        <Fact quiet>from PKR {collection.from}</Fact>
+        <Fact quiet>from PKR {collection.fromPrice}</Fact>
       </span>
     </div>
   </article>
@@ -421,7 +422,7 @@ const FullBleedCollection: React.FC<{ collection: Collection; margin: number }> 
       >
         {collection.purpose}
       </p>
-      <Price amount={collection.from} from note={PRICE_NOTE || undefined} />
+      <Price amount={collection.fromPrice} from note={PRICE_NOTE || undefined} />
     </div>
   </article>
 );
@@ -444,7 +445,7 @@ const BoxSection: React.FC = () => {
           alignItems: 'center',
         }}
       >
-        <PresentationBox />
+        <PresentationBox tint={signatureCollections[0].tint} />
 
         <div>
           <p
@@ -617,7 +618,7 @@ const SeasonalSection: React.FC = () => {
         }}
       >
         <div>
-          <Label gold>Seasonal · closing 31 August</Label>
+          <Label gold>{seasonalClosure.eyebrow}</Label>
 
           <h2
             style={{
@@ -631,7 +632,7 @@ const SeasonalSection: React.FC = () => {
               textWrap: 'balance' as React.CSSProperties['textWrap'],
             }}
           >
-            The last of the Chaunsa, boxed for the table.
+            {seasonalClosure.headline}
           </h2>
 
           <p
@@ -646,8 +647,7 @@ const SeasonalSection: React.FC = () => {
               textWrap: 'pretty' as React.CSSProperties['textWrap'],
             }}
           >
-            A limited run assembled while the window is still open. When the fruit stops, the
-            collection closes.
+            {seasonalClosure.body}
           </p>
 
           <div style={{ display: 'flex', gap: '14px', marginTop: '32px', flexWrap: 'wrap' }}>
@@ -667,7 +667,12 @@ const SeasonalSection: React.FC = () => {
           </div>
         </div>
 
-        <SpecimenPlate tint="#8c5a3c" ratio={stacked ? '3 / 2' : '4 / 3'} drift label="Seasonal placeholder" />
+        <SpecimenPlate
+          tint={seasonalClosure.tint}
+          ratio={stacked ? '3 / 2' : '4 / 3'}
+          drift
+          label={seasonalClosure.plateNote}
+        />
       </div>
     </Section>
   );

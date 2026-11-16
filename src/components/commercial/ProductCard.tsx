@@ -10,7 +10,16 @@ import {
   useHasPointer,
   usePrefersReducedMotion,
 } from './primitives';
+import {
+  defaultPack,
+  isOrderable,
+  priceOf,
+  routeOf,
+  stateMarkFor,
+  unavailableNote,
+} from '../../data/catalogue';
 import type { Product } from '../../data/catalogue';
+import { useBasket } from '../../context/BasketContext';
 
 /**
  * Rule 06 · The product card.
@@ -41,13 +50,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   landscape,
 }) => {
   const [hover, setHover] = useState(false);
-  const [quantity, setQuantity] = useState(0);
+  const basket = useBasket();
+  const pack = defaultPack(product);
+  const quantity = basket.quantityOf(product.id, pack.id);
   const { isMobile } = useCommercialLayout();
   const hasPointer = useHasPointer();
   const reduced = usePrefersReducedMotion();
 
   const selected = quantity > 0;
-  const closed = product.state === 'closed';
+  // Availability is data. The card asks the catalogue what to show; it never
+  // inspects a product's state itself.
+  const orderable = isOrderable(product) && pack.available;
+  const mark = stateMarkFor(product);
   const lift = hover && hasPointer && !reduced ? 1 : 0;
 
   const handleOpen = () => {
@@ -56,13 +70,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleAdd = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (closed) return;
-    setQuantity(1);
-    if (onAdd) onAdd(product, 1);
+    if (!orderable) return;
+    if (basket.add(product.id, pack.id, 1) && onAdd) onAdd(product, 1);
   };
 
   const handleQuantity = (next: number) => {
-    setQuantity(next);
+    const line = basket.lines.find((candidate) => candidate.productId === product.id && candidate.packId === pack.id);
+    if (line) basket.setQuantity(line.key, next);
     if (onAdd) onAdd(product, next);
   };
 
@@ -83,7 +97,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ? `1px solid ${c.color.gold70}`
           : '1px solid transparent',
         paddingBottom: '4px',
-        opacity: closed ? 0.72 : 1,
+        opacity: orderable ? 1 : 0.72,
       }}
     >
       {/* Plate — 4:5 on Deep (3:2 landscape on mobile). */}
@@ -104,14 +118,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         }}
       >
         <SpecimenPlate
-          tint={product.tint}
+          tint={product.image.tint}
           ratio={landscape ? '3 / 2' : '4 / 5'}
           lift={lift}
-          label={product.plateNote}
+          label={product.image.note}
         />
 
         {/* State mark — one word, top right. Absent by default. */}
-        {product.state && product.state !== 'steady' && (
+        {mark.state !== 'steady' && (
           <span
             style={{
               position: 'absolute',
@@ -120,7 +134,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               zIndex: 2,
             }}
           >
-            <StateMark state={product.state} label={product.stateLabel} />
+            <StateMark state={mark.state} label={mark.label} />
           </span>
         )}
       </button>
@@ -138,7 +152,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       >
         {onOpen ? (
           <a
-            href={product.href}
+            href={routeOf(product)}
             onClick={(e) => {
               e.preventDefault();
               handleOpen();
@@ -164,7 +178,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         <Fact>
           {product.variety} · {product.origin}
         </Fact>
-        <Fact quiet>{closed ? product.returnsNote ?? product.season : product.season}</Fact>
+        <Fact quiet>{orderable ? product.seasonLabel : unavailableNote(product)}</Fact>
       </div>
 
       {/* Price row — hairline above. Price left, pack size inline, action right. */}
@@ -181,7 +195,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           minHeight: `${c.control.minTap}px`,
         }}
       >
-        {closed ? (
+        {orderable ? (
+          <Price
+            amount={priceOf(product)}
+            note={`/ ${defaultPack(product).weightLabel}`}
+            inlineNote
+          />
+        ) : (
           <span
             style={{
               fontFamily: c.font.mono,
@@ -191,13 +211,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               color: c.color.ink42,
             }}
           >
-            {product.returnsNote ?? 'Returns next season'}
+            {unavailableNote(product)}
           </span>
-        ) : (
-          <Price amount={product.price} note={`/ ${product.packSize}`} inlineNote />
         )}
 
-        {closed ? (
+        {!orderable ? (
           <NotifyAction />
         ) : selected ? (
           <QuantityStepper
