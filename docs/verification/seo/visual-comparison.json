@@ -1,0 +1,50 @@
+[
+  {
+    "image": "before-about-1440.png",
+    "changedPixels": 0,
+    "totalPixels": 1296000,
+    "changedPercent": 0.0
+  },
+  {
+    "image": "before-about-375.png",
+    "changedPixels": 0,
+    "totalPixels": 304500,
+    "changedPercent": 0.0
+  },
+  {
+    "image": "before-product-1440.png",
+    "changedPixels": 0,
+    "totalPixels": 1296000,
+    "changedPercent": 0.0
+  },
+  {
+    "image": "before-product-375.png",
+    "changedPixels": 0,
+    "totalPixels": 304500,
+    "changedPercent": 0.0
+  },
+  {
+    "image": "before-shop-1440.png",
+    "changedPixels": 0,
+    "totalPixels": 1296000,
+    "changedPercent": 0.0
+  },
+  {
+    "image": "before-shop-375.png",
+    "changedPixels": 0,
+    "totalPixels": 304500,
+    "changedPercent": 0.0
+  },
+  {
+    "image": "before-signature-1440.png",
+    "changedPixels": 0,
+    "totalPixels": 1296000,
+    "changedPercent": 0.0
+  },
+  {
+    "image": "before-signature-375.png",
+    "changedPixels": 0,
+    "totalPixels": 304500,
+    "changedPercent": 0.0
+  }
+]

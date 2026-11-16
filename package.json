@@ -6,7 +6,9 @@
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && node scripts/build-seo.mjs && node scripts/check-seo.mjs",
+    "check:types": "tsc --noEmit",
+    "test:seo": "node scripts/check-seo.mjs",
     "preview": "vite preview",
     "test:browser": "playwright test"
   },

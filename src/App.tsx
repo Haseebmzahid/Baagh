@@ -8,7 +8,9 @@ import { SiteHeader } from './components/dom/SiteHeader';
 import { EverydayFresh } from './components/commercial/EverydayFresh';
 import { NotFound } from './components/commercial/NotFound';
 import { SiteFooter } from './components/information/SiteFooter';
-import { sitePageMeta as sitePages, type SitePageId } from './data/sitePageRegistry';
+import { type SitePageId } from './data/sitePageRegistry';
+import { applySeo } from './seo/head';
+import { seoForRoute } from './seo/pages';
 import { cueConfigs } from './config/cueConfig';
 import { BrandProvider } from './context/BrandContext';
 import { ScrollProvider } from './context/ScrollContext';
@@ -89,16 +91,8 @@ export const AppContent: React.FC = () => {
   }, [closeBasket]);
 
   useEffect(() => {
-    const names: Partial<Record<ViewMode, string>> = { 'everyday-fresh': 'Everyday Fresh', signature: 'Signature', basket: 'Your basket', 'not-found': 'Page not found', 'fruit-intelligence': `${activeFruit.charAt(0).toUpperCase() + activeFruit.slice(1)} · Fruit Intelligence` };
-    const title = viewMode === 'information' ? sitePages[informationPage].label : names[viewMode];
-    document.title = title ? `${title} — BAAGH` : 'BAAGH — Fruit you never have to doubt.';
-    let description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
-    if (!description) { description = document.createElement('meta'); description.name = 'description'; document.head.append(description); }
-    description.content = viewMode === 'information' ? sitePages[informationPage].intro : 'Explore BAAGH fruit, thoughtful gifting and Fruit Intelligence. Choose a pack and send an order request on WhatsApp.';
-    let robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
-    if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.append(robots); }
-    robots.content = ['basket', 'not-found'].includes(viewMode) ? 'noindex, follow' : 'index, follow';
-  }, [viewMode, informationPage, activeFruit]);
+    applySeo(seoForRoute({ view: viewMode, page: informationPage, fruit: activeFruit, product: productRoute }));
+  }, [viewMode, informationPage, activeFruit, productRoute]);
 
   useEffect(() => {
     if ('scrollRestoration' in window.history) {

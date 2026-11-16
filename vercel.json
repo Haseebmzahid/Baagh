@@ -1,5 +1,145 @@
 {
+  "trailingSlash": false,
   "rewrites": [
-    { "source": "/((?!assets/).*)", "destination": "/index.html" }
+    {
+      "source": "/",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/everyday-fresh",
+      "destination": "/everyday-fresh/index.html"
+    },
+    {
+      "source": "/signature",
+      "destination": "/signature/index.html"
+    },
+    {
+      "source": "/product/mangoes/chaunsa",
+      "destination": "/product/mangoes/chaunsa/index.html"
+    },
+    {
+      "source": "/product/citrus/kinnow",
+      "destination": "/product/citrus/kinnow/index.html"
+    },
+    {
+      "source": "/product/apples/apple",
+      "destination": "/product/apples/apple/index.html"
+    },
+    {
+      "source": "/product/seasonal/anaar",
+      "destination": "/product/seasonal/anaar/index.html"
+    },
+    {
+      "source": "/fruit-intelligence/chaunsa",
+      "destination": "/fruit-intelligence/chaunsa/index.html"
+    },
+    {
+      "source": "/fruit-intelligence/kinnow",
+      "destination": "/fruit-intelligence/kinnow/index.html"
+    },
+    {
+      "source": "/fruit-intelligence/apple",
+      "destination": "/fruit-intelligence/apple/index.html"
+    },
+    {
+      "source": "/fruit-intelligence/anaar",
+      "destination": "/fruit-intelligence/anaar/index.html"
+    },
+    {
+      "source": "/our-story",
+      "destination": "/our-story/index.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact/index.html"
+    },
+    {
+      "source": "/privacy-policy",
+      "destination": "/privacy-policy/index.html"
+    },
+    {
+      "source": "/cookies",
+      "destination": "/cookies/index.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms/index.html"
+    },
+    {
+      "source": "/delivery",
+      "destination": "/delivery/index.html"
+    },
+    {
+      "source": "/returns",
+      "destination": "/returns/index.html"
+    },
+    {
+      "source": "/help",
+      "destination": "/help/index.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/about/index.html"
+    },
+    {
+      "source": "/about-us",
+      "destination": "/about-us/index.html"
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact-us/index.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy/index.html"
+    },
+    {
+      "source": "/cookie-policy",
+      "destination": "/cookie-policy/index.html"
+    },
+    {
+      "source": "/terms-and-conditions",
+      "destination": "/terms-and-conditions/index.html"
+    },
+    {
+      "source": "/faq",
+      "destination": "/faq/index.html"
+    },
+    {
+      "source": "/shipping-policy",
+      "destination": "/shipping-policy/index.html"
+    },
+    {
+      "source": "/refund-policy",
+      "destination": "/refund-policy/index.html"
+    },
+    {
+      "source": "/fruit-intelligence",
+      "destination": "/fruit-intelligence/index.html"
+    },
+    {
+      "source": "/basket",
+      "destination": "/basket/index.html"
+    },
+    {
+      "source": "/everyday-fresh/mangoes/chaunsa",
+      "destination": "/everyday-fresh/mangoes/chaunsa/index.html"
+    },
+    {
+      "source": "/everyday-fresh/citrus/kinnow",
+      "destination": "/everyday-fresh/citrus/kinnow/index.html"
+    },
+    {
+      "source": "/everyday-fresh/apples/apple",
+      "destination": "/everyday-fresh/apples/apple/index.html"
+    },
+    {
+      "source": "/everyday-fresh/seasonal/anaar",
+      "destination": "/everyday-fresh/seasonal/anaar/index.html"
+    },
+    {
+      "source": "/((?!assets/|images/|robots\\.txt$|sitemap\\.xml$|llms\\.txt$|seo-manifest\\.json$).*)",
+      "destination": "/spa.html"
+    }
   ]
 }

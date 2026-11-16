@@ -1,0 +1,15 @@
+{
+  "fruit": "kinnow",
+  "readyMs": 4732,
+  "buildMs": 3521,
+  "firstRenderMs": 999,
+  "lowPerformance": false,
+  "geometries": 15,
+  "textures": 8,
+  "drawCalls": 4,
+  "triangles": 17138,
+  "progress": 0,
+  "contextLost": false,
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "phase": "initial render"
+}

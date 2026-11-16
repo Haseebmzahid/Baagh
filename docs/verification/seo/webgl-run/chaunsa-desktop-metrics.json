@@ -1,0 +1,24 @@
+{
+  "fruit": "chaunsa",
+  "readyMs": 4137,
+  "buildMs": 755,
+  "firstRenderMs": 2570,
+  "lowPerformance": false,
+  "geometries": 14,
+  "textures": 8,
+  "drawCalls": 3,
+  "triangles": 18866,
+  "progress": 0,
+  "contextLost": false,
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "disposed": {
+    "geometries": 0,
+    "textures": 1,
+    "drawCalls": 3,
+    "triangles": 18866,
+    "progress": 0.9999531851603606,
+    "contextLost": true
+  },
+  "errors": [],
+  "rendering": "Headless Chromium WebGL, renderer recorded above; not a physical-device FPS benchmark"
+}

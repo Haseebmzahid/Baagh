@@ -1,0 +1,24 @@
+{
+  "fruit": "apple",
+  "readyMs": 2598,
+  "buildMs": 1521,
+  "firstRenderMs": 813,
+  "lowPerformance": true,
+  "geometries": 16,
+  "textures": 8,
+  "drawCalls": 4,
+  "triangles": 7278,
+  "progress": 0,
+  "contextLost": false,
+  "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+  "disposed": {
+    "geometries": 0,
+    "textures": 1,
+    "drawCalls": 4,
+    "triangles": 7278,
+    "progress": 0.9999942870264332,
+    "contextLost": true
+  },
+  "errors": [],
+  "rendering": "Headless Chromium WebGL, renderer recorded above; not a physical-device FPS benchmark"
+}

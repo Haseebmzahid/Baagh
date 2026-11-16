@@ -1,0 +1,14 @@
+{
+  "fullSuiteBeforePreviewFix": {
+    "passed": 13,
+    "failed": 5,
+    "failures": [
+      "desktop Kinnow: 20s scroll-settling timeout",
+      "desktop Anaar: 20s scroll-settling timeout",
+      "mobile reduced-motion/fallback: final CTA not visible within 20s",
+      "desktop metadata initial HTML: preview served homepage (fixed in vite.config.ts)",
+      "mobile metadata initial HTML: preview served homepage (fixed in vite.config.ts)"
+    ]
+  },
+  "graphics": "Software WebGL (SwiftShader); no scene source modified. All four mobile full-progress/disposal tests passed. Desktop Chaunsa/Apple and desktop reduced-motion/fallback/basket passed. Remaining graphics failures are unresolved; no all-clear is claimed."
+}

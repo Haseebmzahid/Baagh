@@ -1,0 +1,50 @@
+[
+  {
+    "path": "/",
+    "lcp": 2296,
+    "cls": 0,
+    "fcp": 1648,
+    "ttfb": 28.40000000037253,
+    "notes": "Single local unthrottled mobile viewport; software WebGL; not field Core Web Vitals. INP not measured."
+  },
+  {
+    "path": "/everyday-fresh",
+    "lcp": 1684,
+    "cls": 0.0019551817159681943,
+    "fcp": 1532,
+    "ttfb": 8.5,
+    "notes": "Single local unthrottled mobile viewport; software WebGL; not field Core Web Vitals. INP not measured."
+  },
+  {
+    "path": "/signature",
+    "lcp": 1276,
+    "cls": 0,
+    "fcp": 744,
+    "ttfb": 12.099999999627471,
+    "notes": "Single local unthrottled mobile viewport; software WebGL; not field Core Web Vitals. INP not measured."
+  },
+  {
+    "path": "/product/mangoes/chaunsa",
+    "lcp": 2064,
+    "cls": 0.010091713000598575,
+    "fcp": 864,
+    "ttfb": 9.5,
+    "notes": "Single local unthrottled mobile viewport; software WebGL; not field Core Web Vitals. INP not measured."
+  },
+  {
+    "path": "/fruit-intelligence/apple",
+    "lcp": 1344,
+    "cls": 0.0037309325632750127,
+    "fcp": 896,
+    "ttfb": 7.900000000372529,
+    "notes": "Single local unthrottled mobile viewport; software WebGL; not field Core Web Vitals. INP not measured."
+  },
+  {
+    "path": "/our-story",
+    "lcp": 1488,
+    "cls": 0.021071182114343955,
+    "fcp": 740,
+    "ttfb": 10.899999998509884,
+    "notes": "Single local unthrottled mobile viewport; software WebGL; not field Core Web Vitals. INP not measured."
+  }
+]
