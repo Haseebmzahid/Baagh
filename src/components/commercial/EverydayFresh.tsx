@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { commercial as c } from './theme';
 import {
   Button,
@@ -18,7 +18,6 @@ import {
 import { CategoryTile, CollectionCard, ProductCard } from './ProductCard';
 import {
   boxes,
-  everydayFreshHero,
   defaultPack,
   featureCopyFor,
   categories,
@@ -31,15 +30,16 @@ import {
   priceOf,
   routeOf,
   seasonCategories,
-  todayAtTheHouse,
   selectionMeta,
   selections,
   windowIsOpen,
   withPriceNote,
+  productsInCategory,
 } from '../../data/catalogue';
 import type { Product } from '../../data/catalogue';
 import { useBasket } from '../../context/BasketContext';
 import { isOrderable } from '../../data/catalogue';
+import { EverydayShowcase } from './EverydayShowcase';
 
 /**
  * EVERYDAY FRESH — /everyday-fresh
@@ -52,9 +52,9 @@ import { isOrderable } from '../../data/catalogue';
  *   01 Hero · 02 Availability / season · 03 Categories · 04 Featured selection
  *   05 Product grid · 06 Curated selections · 07 Boxes · 08 Final CTA
  *
- * This page is deliberately lighter than the homepage and Fruit Intelligence.
- * It carries no WebGL: depth comes from the plate treatment, hover comes from
- * the L2 card system, and the only cinematic motion is the hero plate drift.
+ * A single live commercial stage carries the hero and generates cached fruit
+ * portraits for the product grid. Shopping remains native DOM with no pinned
+ * scroll journey; the existing Fruit Intelligence experience stays separate.
  */
 
 export interface EverydayFreshProps {
@@ -64,18 +64,21 @@ export interface EverydayFreshProps {
 export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute }) => {
   const { isMobile, isTablet, gutter } = useCommercialLayout();
 
+  const [portraits, setPortraits] = useState<Record<string,string>>({});
+  const onPortrait = useCallback((id: string, source: string) => setPortraits((previous) => ({...previous,[id]:source})),[]);
+
   const openProduct = (product: Product) => onNavigateRoute(routeOf(product));
 
   return (
     <CommercialPage>
+      <EverydayShowcase onNavigateRoute={onNavigateRoute} onPortrait={onPortrait} />
       <PageContainer>
-        <HeroSection onNavigateRoute={onNavigateRoute} />
 
         <SeasonSection />
 
-        <CategoriesSection onNavigateRoute={onNavigateRoute} />
+        <CategoriesSection onNavigateRoute={onNavigateRoute} portraits={portraits} />
 
-        <FeaturedSection onNavigateRoute={onNavigateRoute} />
+        <FeaturedSection onNavigateRoute={onNavigateRoute} portrait={portraits[featuredProduct().id]} />
 
         <GridSection
           onOpen={openProduct}
@@ -83,9 +86,10 @@ export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute })
           isMobile={isMobile}
           isTablet={isTablet}
           gutter={gutter}
+          portraits={portraits}
         />
 
-        <SelectionsSection />
+        <SelectionsSection portraits={portraits} />
 
         <BoxesSection />
 
@@ -94,144 +98,6 @@ export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute })
         <PageFooter onNavigateRoute={onNavigateRoute} />
       </PageContainer>
     </CommercialPage>
-  );
-};
-
-// ===========================================================================
-// 01 · HERO
-// ===========================================================================
-
-/** ISO week number — a calendar fact, not an operational claim. */
-function isoWeek(date = new Date()): number {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  const day = d.getUTCDay() || 7;
-  d.setUTCDate(d.getUTCDate() + 4 - day);
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  return Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
-}
-
-const HeroSection: React.FC<{ onNavigateRoute: (path: string) => void }> = ({
-  onNavigateRoute,
-}) => {
-  const { isMobile, isTablet } = useCommercialLayout();
-  const week = useMemo(() => isoWeek(), []);
-  const featured = featuredProduct();
-  const house = useMemo(() => todayAtTheHouse(), []);
-
-  return (
-    <section
-      style={{
-        paddingTop: isMobile ? '28px' : '44px',
-        display: 'grid',
-        gridTemplateColumns: isMobile || isTablet ? '1fr' : 'minmax(0,1.15fr) minmax(0,1fr)',
-        gap: isMobile ? '32px' : '48px',
-        alignItems: 'center',
-      }}
-    >
-      {/* Copy column */}
-      <div>
-        <Label gold>In season now · week {week}</Label>
-
-        <h1
-          style={{
-            fontFamily: c.font.serif,
-            fontSize: c.type.d1.size,
-            fontWeight: c.type.d1.weight,
-            lineHeight: c.type.d1.lineHeight,
-            letterSpacing: c.type.d1.letterSpacing,
-            color: c.color.ink,
-            margin: '24px 0 0',
-            maxWidth: '13ch',
-            textWrap: 'balance' as React.CSSProperties['textWrap'],
-          }}
-        >
-          {everydayFreshHero.headline}
-        </h1>
-
-        <p
-          style={{
-            fontFamily: c.font.serif,
-            fontSize: c.type.b1.size,
-            fontWeight: c.type.b1.weight,
-            lineHeight: c.type.b1.lineHeight,
-            color: c.color.ink70,
-            margin: '22px 0 0',
-            maxWidth: '40ch',
-            textWrap: 'pretty' as React.CSSProperties['textWrap'],
-          }}
-        >
-          {everydayFreshHero.body}
-        </p>
-
-        <div
-          style={{
-            display: 'flex',
-            gap: '14px',
-            marginTop: '38px',
-            flexWrap: 'wrap',
-          }}
-        >
-          <Button
-            variant="primary"
-            href="#ready-today"
-            onClick={(e) => {
-              e.preventDefault();
-              document.getElementById('ready-today')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            Shop what is ready
-          </Button>
-          <Button
-            variant="secondary"
-            href="/signature"
-            onClick={(e) => {
-              e.preventDefault();
-              onNavigateRoute('/signature');
-            }}
-          >
-            Signature collections
-          </Button>
-        </div>
-      </div>
-
-      {/* Plate column, with the G1 vitrine panel floating over it. */}
-      <div style={{ position: 'relative' }}>
-        <SpecimenPlate
-          tint={featured.image.tint}
-          ratio={isMobile ? '4 / 3' : '5 / 4'}
-          drift
-          label="Hero specimen placeholder"
-        />
-
-        <Glass
-          tier="vitrine"
-          style={{
-            position: isMobile ? 'relative' : 'absolute',
-            left: isMobile ? undefined : '22px',
-            bottom: isMobile ? undefined : '22px',
-            marginTop: isMobile ? '-1px' : undefined,
-            right: isMobile ? undefined : 'auto',
-            width: isMobile ? '100%' : 'min(300px, 74%)',
-            padding: '20px 22px 18px',
-            borderRadius: c.radius.plate,
-          }}
-        >
-          <Label gold>Today at the house</Label>
-
-          <ul style={{ listStyle: 'none', margin: '16px 0 0', padding: 0 }}>
-            {house.map((entry) => (
-              <li key={entry.id} style={{ padding: '5px 0' }}>
-                <Fact>{entry.line}</Fact>
-              </li>
-            ))}
-          </ul>
-
-          <div style={{ marginTop: '15px', paddingTop: '13px', borderTop: `1px solid ${c.color.hair12}` }}>
-            <PlaceholderNote>Placeholder — live feed pending</PlaceholderNote>
-          </div>
-        </Glass>
-      </div>
-    </section>
   );
 };
 
@@ -246,7 +112,7 @@ const SeasonSection: React.FC = () => {
     <Section
       index="02"
       title="What the year looks like"
-      note="Indicative windows. Fruit is listed only while its own window is open — nothing is stretched to fill a gap."
+      note="Indicative harvest windows. Availability and timing are confirmed by our team when you enquire."
     >
       <Glass
         tier="shelf"
@@ -366,7 +232,7 @@ const LegendKey: React.FC<{ swatch: string; label: string }> = ({ swatch, label 
 // composition, not a shrunken desktop grid.
 // ===========================================================================
 
-const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void }> = () => {
+const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; portraits: Record<string,string> }> = ({ portraits }) => {
   const { isMobile, isTablet, gutter, margin } = useCommercialLayout();
 
   const tiles = categories.map((cat) => (
@@ -375,6 +241,7 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void }> =
       label={cat.label}
       note={cat.note}
       tint={cat.tint}
+      portraitSrc={portraits[productsInCategory(cat.id)[0]?.id ?? boxes[0].productIds[0]]}
       href={`/everyday-fresh#${cat.slug}`}
       railWidth={isMobile ? 148 : undefined}
       onOpen={() => {
@@ -439,8 +306,8 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void }> =
 // Desktop: image left, copy right. Tablet/mobile: stacked image over text.
 // ===========================================================================
 
-const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void }> = ({
-  onNavigateRoute,
+const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void; portrait?: string }> = ({
+  onNavigateRoute, portrait,
 }) => {
   const { isMobile, isTablet } = useCommercialLayout();
   const p = featuredProduct();
@@ -469,11 +336,11 @@ const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void }> = (
           style={{ display: 'block' }}
         >
           <SpecimenPlate
-            tint={p.image.tint}
+            tint={portrait ? '#16150f' : p.image.tint}
             ratio={stacked ? '3 / 2' : '4 / 3'}
             drift
-            label={p.image.note}
-          />
+            label={portrait ? undefined : p.image.note}
+          >{portrait && <img className="everyday-product-portrait" src={portrait} alt={`${p.name} three-dimensional study`} />}</SpecimenPlate>
         </a>
 
         <div>
@@ -567,7 +434,8 @@ const GridSection: React.FC<{
   isMobile: boolean;
   isTablet: boolean;
   gutter: number;
-}> = ({ onOpen, onNavigateRoute, isMobile, isTablet, gutter }) => {
+  portraits: Record<string,string>;
+}> = ({ onOpen, onNavigateRoute, isMobile, isTablet, gutter, portraits }) => {
   const [filter, setFilter] = useState('all');
 
   // Both the chips and the products they filter come from the catalogue, so
@@ -581,7 +449,7 @@ const GridSection: React.FC<{
     <Section
       id="ready-today"
       index="05"
-      title="Ready today"
+      title="Choose your fruit"
       action={
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {filters.map((f) => (
@@ -605,7 +473,7 @@ const GridSection: React.FC<{
       >
         {visible.map((p: Product, i: number) => (
           <React.Fragment key={p.id}>
-            <ProductCard product={p} onOpen={onOpen} landscape={isMobile} />
+            <ProductCard product={p} onOpen={onOpen} landscape={isMobile} portraitSrc={portraits[p.id]} />
 
             {/* The text cell that breaks the matrix — desktop only, after the
                 first row, exactly as the approved composition sets it. */}
@@ -677,7 +545,7 @@ const GridNoteCell: React.FC = () => (
         textWrap: 'pretty' as React.CSSProperties['textWrap'],
       }}
     >
-      Everything on this page was graded within the last twenty-four hours.
+      A good choice begins with a closer look. Explore the fruit, then choose the pack that suits your table.
     </p>
   </div>
 );
@@ -724,7 +592,7 @@ const BoxesPromptCell: React.FC<{ onNavigateRoute: (path: string) => void }> = (
 // 06 · CURATED SELECTIONS
 // ===========================================================================
 
-const SelectionsSection: React.FC = () => {
+const SelectionsSection: React.FC<{ portraits: Record<string,string> }> = ({ portraits }) => {
   const { isMobile, isTablet, gutter } = useCommercialLayout();
 
   return (
@@ -751,6 +619,9 @@ const SelectionsSection: React.FC = () => {
             purpose={s.purpose}
             meta={selectionMeta(s)}
             tint={s.tint}
+            portraitSrc={portraits[s.productIds[0]]}
+            href="#ready-today"
+            onOpen={() => document.getElementById('ready-today')?.scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth'})}
           />
         ))}
       </div>

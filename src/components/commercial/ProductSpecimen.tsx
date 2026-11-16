@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { commercial as c } from './theme';
 import { SpecimenPlate, useHasPointer, usePrefersReducedMotion } from './primitives';
-import { createSpecimenScene, specimenFruitFor } from './specimenScene';
+import { specimenFruitFor } from './specimenRegistry';
 import type { SpecimenEngine } from './specimenScene';
 import { useWebGLCapability } from '../../hooks/useWebGLCapability';
 import type { Product } from '../../data/catalogue';
@@ -56,35 +56,30 @@ export const ProductSpecimen: React.FC<ProductSpecimenProps> = ({
       compact || Math.min(window.innerWidth, window.innerHeight) < 760 ||
       (navigator.hardwareConcurrency || 8) <= 4;
 
-    let engine: SpecimenEngine;
-    try {
-      engine = createSpecimenScene(canvas, fruit, product.id, {
-        lowPerformance,
-        reducedMotion: reduced,
-        onContextLost: () => setFailed(true),
-      });
-    } catch (err) {
-      console.warn('Product specimen unavailable, using the plate instead:', err);
-      setFailed(true);
-      return;
-    }
-    engineRef.current = engine;
-
-    // Idle the loop whenever the specimen is off screen, so a long product
-    // page is not paying for a render it cannot see.
-    const io = new IntersectionObserver(
-      ([entry]) => engine.setActive(entry.isIntersecting),
-      { threshold: 0.01 }
-    );
-    io.observe(wrap);
-
-    const ro = new ResizeObserver(() => engine.resize());
-    ro.observe(wrap);
-
+    let cancelled = false;
+    let engine: SpecimenEngine | undefined;
+    let io: IntersectionObserver | undefined;
+    let ro: ResizeObserver | undefined;
+    void import('./specimenScene').then(({ createSpecimenScene }) => {
+      if (cancelled) return;
+      try {
+        engine = createSpecimenScene(canvas, fruit, product.id, {
+          lowPerformance,
+          reducedMotion: reduced,
+          onContextLost: () => setFailed(true),
+        });
+        engineRef.current = engine;
+        io = new IntersectionObserver(([entry]) => engine?.setActive(entry.isIntersecting), { threshold: .01 });
+        io.observe(wrap);
+        ro = new ResizeObserver(() => engine?.resize());
+        ro.observe(wrap);
+      } catch { if (!cancelled) setFailed(true); }
+    }).catch(() => { if (!cancelled) setFailed(true); });
     return () => {
-      io.disconnect();
-      ro.disconnect();
-      engine.dispose();
+      cancelled = true;
+      io?.disconnect();
+      ro?.disconnect();
+      engine?.dispose();
       engineRef.current = null;
     };
   }, [use3D, fruit, product.id, reduced, compact]);

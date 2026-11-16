@@ -54,27 +54,9 @@ export interface SpecimenEngine {
   dispose(): void;
 }
 
-/** Fruits with a reusable whole-fruit representation. */
-export type SpecimenFruit = 'chaunsa' | 'kinnow' | 'apple' | 'anaar';
-
-const SPECIMEN_FRUITS: SpecimenFruit[] = ['chaunsa', 'kinnow', 'apple', 'anaar'];
-
-/**
- * Maps a catalogue product onto an existing fruit representation. Products
- * without one fall back to the CSS specimen plate — we do not model a new
- * fruit just to fill a page.
- */
-export function specimenFruitFor(productId: string, categoryId: string): SpecimenFruit | null {
-  const id = productId.toLowerCase();
-  if ((SPECIMEN_FRUITS as string[]).includes(id)) return id as SpecimenFruit;
-
-  // Every mango variety can be shown on the mango body; the skin tint is
-  // varied below so Sindhri does not render as a Chaunsa clone.
-  if (categoryId === 'mangoes') return 'chaunsa';
-  if (categoryId === 'citrus') return 'kinnow';
-  if (categoryId === 'apples') return 'apple';
-  return null;
-}
+export { specimenFruitFor } from './specimenRegistry';
+export type { SpecimenFruit } from './specimenRegistry';
+import type { SpecimenFruit } from './specimenRegistry';
 
 /** Per-variety ripeness so the shared body does not read as one fruit. */
 const RIPENESS: Record<string, number> = {
@@ -97,7 +79,7 @@ interface BuiltSpecimen {
 const FRAMING = 0.74;
 const FOV_DEG = 30;
 
-function buildSpecimen(
+export function buildSpecimen(
   fruit: SpecimenFruit,
   productId: string,
   low: boolean,

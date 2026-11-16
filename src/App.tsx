@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { CinemaStage } from './components/canvas/CinemaStage';
+import React, { lazy, Suspense, useState, useEffect, useCallback, useRef } from 'react';
 import { ChapterRail } from './components/dom/ChapterRail';
 import { FallbackView } from './components/dom/FallbackView';
 import { GradeOverlay } from './components/dom/GradeOverlay';
@@ -7,15 +6,21 @@ import { ScrollCue } from './components/dom/ScrollCue';
 import { ScrollSpacer } from './components/dom/ScrollSpacer';
 import { SiteHeader } from './components/dom/SiteHeader';
 import { EverydayFresh } from './components/commercial/EverydayFresh';
-import { ProductDetail } from './components/commercial/ProductDetail';
-import { Signature } from './components/commercial/Signature';
-import { FruitIntelligence } from './components/fruit-intelligence/FruitIntelligence';
 import { cueConfigs } from './config/cueConfig';
 import { BrandProvider } from './context/BrandContext';
 import { ScrollProvider } from './context/ScrollContext';
 import { useWebGLCapability } from './hooks/useWebGLCapability';
 import { BasketProvider, useBasket } from './context/BasketContext';
 import { BasketAnnouncements, BasketDrawer, BasketLauncher, BasketReview } from './components/commercial/Basket';
+import { resolveRoute } from './navigation/route';
+import type { ViewMode, ProductRoute } from './navigation/route';
+
+const CinemaStage = lazy(() => import('./components/canvas/CinemaStage').then((module) => ({default:module.CinemaStage})));
+const ProductDetail = lazy(() => import('./components/commercial/ProductDetail').then((module) => ({default:module.ProductDetail})));
+const Signature = lazy(() => import('./components/commercial/Signature').then((module) => ({default:module.Signature})));
+const FruitIntelligence = lazy(() => import('./components/fruit-intelligence/FruitIntelligence').then((module) => ({default:module.FruitIntelligence})));
+
+const initialRoute = () => resolveRoute(window.location.pathname,window.location.hash,new URLSearchParams(window.location.search).get('fruit'));
 
 // Take control of scroll restoration at module-evaluation time, before React
 // renders and before any route handler or scroll listener can sample a
@@ -28,44 +33,14 @@ if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
   }
 }
 
-type ViewMode =
-  | 'journey'
-  | 'fruit-intelligence'
-  | 'everyday-fresh'
-  | 'product'
-  | 'basket'
-  | 'signature';
-
-interface ProductRoute {
-  categorySlug: string;
-  slug: string;
-}
-
-/**
- * Matches the commercial product route.
- *
- * Canonical form is /product/:category/:slug. The approved Product Detail
- * design also shows the breadcrumb path /everyday-fresh/:category/:slug, so
- * that form resolves to the same page rather than 404-ing.
- */
-function matchProductRoute(pathname: string): ProductRoute | null {
-  const parts = pathname.split('/').filter(Boolean);
-  if (parts.length !== 3) return null;
-  if (parts[0] !== 'product' && parts[0] !== 'everyday-fresh') return null;
-  return { categorySlug: parts[1], slug: parts[2] };
-}
-
 export const AppContent: React.FC = () => {
   const { closeBasket } = useBasket();
   const { isSupported, errorMessage } = useWebGLCapability();
   const [forceFallback, setForceFallback] = useState<boolean>(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('journey');
-  const [activeFruit, setActiveFruit] = useState<string>('chaunsa');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => initialRoute().view);
+  const [activeFruit, setActiveFruit] = useState<string>(() => initialRoute().fruit ?? 'chaunsa');
   // Which product the /product/:category/:slug route resolved to.
-  const [productRoute, setProductRoute] = useState<ProductRoute>({
-    categorySlug: 'mangoes',
-    slug: 'chaunsa',
-  });
+  const [productRoute, setProductRoute] = useState<ProductRoute>(() => initialRoute().product ?? {categorySlug:'mangoes',slug:'chaunsa'});
 
   // Always reflects the current view, so a late context-loss callback cannot
   // act on the view that was active when it was registered.
@@ -92,59 +67,12 @@ export const AppContent: React.FC = () => {
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
 
-    // Commercial routes are matched first, because the product route lives
-    // under both /product/... and the /everyday-fresh/... breadcrumb path and
-    // would otherwise be swallowed by the Everyday Fresh prefix match below.
-    const productMatch = matchProductRoute(pathname);
-    if (pathname === '/basket' || hash === '#basket') {
-      setViewMode('basket');
-    } else if (productMatch) {
-      setProductRoute(productMatch);
-      setViewMode('product');
-    } else if (pathname === '/signature' || hash === '#signature') {
-      setViewMode('signature');
-    } else if (
-      pathname === '/everyday-fresh' ||
-      pathname.startsWith('/everyday-fresh') ||
-      hash === '#everyday-fresh'
-    ) {
-      setViewMode('everyday-fresh');
-    } else if (
-      pathname === '/fruit-intelligence/apple' ||
-      pathname.startsWith('/fruit-intelligence/apple') ||
-      queryFruit === 'apple' ||
-      hash === '#apple'
-    ) {
-      setViewMode('fruit-intelligence');
-      setActiveFruit('apple');
-    } else if (
-      pathname === '/fruit-intelligence/anaar' ||
-      pathname.startsWith('/fruit-intelligence/anaar') ||
-      queryFruit === 'anaar' ||
-      hash === '#anaar'
-    ) {
-      setViewMode('fruit-intelligence');
-      setActiveFruit('anaar');
-    } else if (
-      pathname === '/fruit-intelligence/kinnow' ||
-      pathname.startsWith('/fruit-intelligence/kinnow') ||
-      queryFruit === 'kinnow' ||
-      hash === '#kinnow'
-    ) {
-      setViewMode('fruit-intelligence');
-      setActiveFruit('kinnow');
-    } else if (
-      pathname === '/fruit-intelligence/chaunsa' ||
-      pathname.startsWith('/fruit-intelligence/chaunsa') ||
-      pathname === '/fruit-intelligence' ||
-      queryFruit === 'chaunsa' ||
-      hash === '#chaunsa' ||
-      hash === '#fruit-intelligence'
-    ) {
-      setViewMode('fruit-intelligence');
-      setActiveFruit('chaunsa');
-    } else {
-      setViewMode('journey');
+    const route = resolveRoute(pathname, hash, queryFruit);
+    setViewMode(route.view);
+    if (route.product) setProductRoute(route.product);
+    if (route.fruit) setActiveFruit(route.fruit);
+    if (hash && !['#journey','#signature','#everyday-fresh','#basket','#order'].includes(hash)) {
+      requestAnimationFrame(() => document.getElementById(hash.slice(1))?.scrollIntoView({behavior:'instant'}));
     }
   }, [closeBasket]);
 
@@ -207,10 +135,11 @@ export const AppContent: React.FC = () => {
 
   // The new review route remains a DOM shopping surface without WebGL.
   // Broader graphics-failure remediation stays in its separately planned task.
-  if ((!isSupported || forceFallback) && viewMode !== 'basket') {
+  if ((!isSupported || forceFallback) && viewMode === 'journey') {
     return (
       <FallbackView
         reason={errorMessage || (forceFallback ? 'Manual fallback mode test' : null)}
+        onNavigateRoute={handleNavigateRoute}
       />
     );
   }
@@ -233,8 +162,10 @@ export const AppContent: React.FC = () => {
       <SiteHeader
         onNavigateFruit={handleNavigateFruit}
         onNavigateBrand={handleNavigateBrand}
+        onNavigateRoute={handleNavigateRoute}
       />
 
+      <Suspense fallback={<div role="status" style={{minHeight:'100vh',padding:'140px 40px',color:'#e8cfa0',fontFamily:'Newsreader,serif'}}>Preparing your experience…</div>}>
       {viewMode === 'basket' ? (
         <BasketReview onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'everyday-fresh' ? (
@@ -272,6 +203,7 @@ export const AppContent: React.FC = () => {
           <ScrollSpacer />
         </>
       )}
+      </Suspense>
       {(viewMode === 'everyday-fresh' || viewMode === 'product' || viewMode === 'signature') && (
         <BasketLauncher productPage={viewMode === 'product'} />
       )}

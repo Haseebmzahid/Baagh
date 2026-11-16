@@ -1,22 +1,31 @@
-import React, { useState, useCallback } from 'react';
+import React, { lazy, Suspense, useState, useCallback } from 'react';
 import { useBrand } from '../../context/BrandContext';
 import { useViewportTier } from '../../hooks/useViewportTier';
-import { FruitCabinet } from '../navigation/FruitCabinet';
+const FruitCabinet = lazy(() => import('../navigation/FruitCabinet').then((module) => ({default:module.FruitCabinet})));
 
 interface SiteHeaderProps {
   onNavigateFruit?: (fruitId: string) => void;
   onNavigateBrand?: () => void;
+  onNavigateRoute?: (path: string) => void;
 }
 
 export const SiteHeader: React.FC<SiteHeaderProps> = ({
   onNavigateFruit,
   onNavigateBrand,
+  onNavigateRoute,
 }) => {
   const brand = useBrand();
   const { tier } = useViewportTier();
   const [cabinetOpen, setCabinetOpen] = useState<boolean>(false);
 
-  const isMobile = tier === 'mobile';
+  // Keep the six-link desktop navigation from overflowing tablet widths.
+  const isMobile = tier !== 'desktop';
+  const navigate = (event: React.MouseEvent, path: string) => {
+    if (!onNavigateRoute || !path.startsWith('/') || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    setCabinetOpen(false);
+    onNavigateRoute(path);
+  };
 
   const handleFruitSelect = useCallback(
     (fruitId: string) => {
@@ -32,6 +41,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
 
   const handleBrandClick = useCallback(
     (e: React.MouseEvent) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       if (onNavigateBrand) {
         e.preventDefault();
         setCabinetOpen(false);
@@ -72,7 +82,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
           }}
         >
           <a
-            href="#journey"
+            href="/"
             onClick={handleBrandClick}
             style={{
               fontFamily: 'Newsreader, Georgia, serif',
@@ -83,6 +93,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
               textShadow: '0 1px 14px rgba(0,0,0,.5)',
               textTransform: 'uppercase',
               textDecoration: 'none',
+              paddingBlock: '12px',
+              marginBlock: '-12px',
             }}
           >
             {brand.name}
@@ -95,6 +107,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
               letterSpacing: '0.20em',
               color: 'rgba(244,238,226,.42)',
               textTransform: 'uppercase',
+              display: isMobile ? 'none' : undefined,
             }}
           >
             est. {brand.establishedYear}
@@ -116,7 +129,8 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
                 fontWeight: 400,
                 letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                padding: '6px 12px',
+                padding: '8px 12px',
+                minHeight: '44px',
                 border: cabinetOpen
                   ? '1px solid #e8b45c'
                   : '1px solid rgba(244,238,226,.32)',
@@ -129,12 +143,13 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
                 gap: '6px',
               }}
             >
-              <span>FRUIT INTELLIGENCE</span>
+              <span>FRUIT GUIDE</span>
               <span style={{ fontSize: '7px' }}>{cabinetOpen ? '▲' : '▼'}</span>
             </button>
 
             <a
-              href="#order"
+              href="/basket"
+              onClick={(event) => navigate(event,'/basket')}
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
                 fontSize: '9.5px',
@@ -146,6 +161,9 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
                 borderRadius: '2px',
                 color: 'rgba(244,238,226,.78)',
                 textDecoration: 'none',
+                minHeight: '44px',
+                display: 'inline-flex',
+                alignItems: 'center',
               }}
             >
               Order
@@ -156,7 +174,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: tier === 'tablet' ? '20px' : '28px',
+              gap: '28px',
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: '10px',
               fontWeight: 400,
@@ -220,6 +238,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
                   <a
                     key={index}
                     href={link.href}
+                    onClick={(event) => navigate(event,link.href)}
                     style={{
                       padding: '8px 15px',
                       border: '1px solid rgba(244,238,226,.32)',
@@ -237,6 +256,7 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
                 <a
                   key={index}
                   href={link.href}
+                  onClick={(event) => navigate(event,link.href)}
                   style={{
                     color: 'rgba(244,238,226,.78)',
                     textDecoration: 'none',
@@ -254,11 +274,11 @@ export const SiteHeader: React.FC<SiteHeaderProps> = ({
       </header>
 
       {/* 3D Specimen Exhibition Cabinet Dropdown */}
-      <FruitCabinet
+      {cabinetOpen && <Suspense fallback={null}><FruitCabinet
         isOpen={cabinetOpen}
         onClose={() => setCabinetOpen(false)}
         onSelectFruit={handleFruitSelect}
-      />
+      /></Suspense>}
     </>
   );
 };

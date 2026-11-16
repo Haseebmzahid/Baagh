@@ -25,11 +25,11 @@ export const brandConfig: BrandConfig = {
   primaryCtaLabel: 'EXPLORE EVERYDAY FRESH',
   secondaryCtaLabel: 'DISCOVER SIGNATURE COLLECTION',
   navLinks: [
-    { label: 'Everyday Fresh', href: '#everyday-fresh' },
-    { label: 'Signature', href: '#signature' },
+    { label: 'Everyday Fresh', href: '/everyday-fresh' },
+    { label: 'Signature', href: '/signature' },
     { label: 'Our Story', href: '#story' },
     { label: 'Fruit Intelligence', href: '#fruit-intelligence' },
-    { label: 'Corporate', href: '#corporate' },
-    { label: 'WhatsApp Order', href: '#order', primary: true }
+    { label: 'Corporate', href: '/signature#corporate' },
+    { label: 'WhatsApp Order', href: '/basket', primary: true }
   ]
 };

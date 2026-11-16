@@ -7,9 +7,10 @@ import { SiteHeader } from './SiteHeader';
 
 export interface FallbackViewProps {
   reason?: string | null;
+  onNavigateRoute?: (path: string) => void;
 }
 
-export const FallbackView: React.FC<FallbackViewProps> = ({ reason }) => {
+export const FallbackView: React.FC<FallbackViewProps> = ({ reason, onNavigateRoute }) => {
   const brand = useBrand();
   const { tier } = useViewportTier();
   const isMobile = tier === 'mobile';
@@ -34,7 +35,7 @@ export const FallbackView: React.FC<FallbackViewProps> = ({ reason }) => {
         padding: isMobile ? '80px 24px' : '100px 40px',
       }}
     >
-      <SiteHeader />
+      <SiteHeader onNavigateRoute={onNavigateRoute} />
       <GradeOverlay />
 
       <main
@@ -87,7 +88,7 @@ export const FallbackView: React.FC<FallbackViewProps> = ({ reason }) => {
               textTransform: 'uppercase',
             }}
           >
-            [Static Mode Enabled — {reason}]
+            A still version of BAAGH. Our collections are ready to explore.
           </p>
         )}
       </main>

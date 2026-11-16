@@ -41,6 +41,8 @@ export interface ProductCardProps {
   onAdd?: (product: Product, quantity: number) => void;
   /** Mobile drops to a 3:2 landscape plate so one card fills the screen. */
   landscape?: boolean;
+  /** Cached portrait from the page's shared 3D renderer. */
+  portraitSrc?: string;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -48,6 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onOpen,
   onAdd,
   landscape,
+  portraitSrc,
 }) => {
   const [hover, setHover] = useState(false);
   const basket = useBasket();
@@ -118,11 +121,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         }}
       >
         <SpecimenPlate
-          tint={product.image.tint}
+          tint={portraitSrc || product.image.src ? '#16150f' : product.image.tint}
           ratio={landscape ? '3 / 2' : '4 / 5'}
           lift={lift}
-          label={product.image.note}
-        />
+          label={portraitSrc || product.image.src ? undefined : product.image.note}
+        >{(product.image.src || portraitSrc) && <img className="everyday-product-portrait" src={product.image.src ?? portraitSrc} alt={product.image.alt ?? `${product.name} fruit study`} />}</SpecimenPlate>
 
         {/* State mark — one word, top right. Absent by default. */}
         {mark.state !== 'steady' && (
@@ -356,7 +359,8 @@ export const CategoryTile: React.FC<{
   href?: string;
   /** Fixed width when the tile sits in the mobile scroll rail. */
   railWidth?: number;
-}> = ({ label, note, tint, onOpen, href, railWidth }) => {
+  portraitSrc?: string;
+}> = ({ label, note, tint, onOpen, href, railWidth, portraitSrc }) => {
   const [hover, setHover] = useState(false);
   const reduced = usePrefersReducedMotion();
   const hasPointer = useHasPointer();
@@ -391,19 +395,13 @@ export const CategoryTile: React.FC<{
         style={{
           position: 'absolute',
           inset: 0,
-          background: `radial-gradient(66% 54% at 46% 34%, ${tint} 0%, rgba(16,15,10,.6) 60%, ${c.color.deep} 100%)`,
+          background: `radial-gradient(66% 54% at 46% 34%, ${portraitSrc ? '#282316' : tint} 0%, rgba(16,15,10,.6) 60%, ${c.color.deep} 100%)`,
           transform: `scale(${1 + lift * 0.03})`,
           transition: `transform ${c.motion.l2.duration} ${c.motion.l2.ease}`,
         }}
       />
-      <div
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(180deg, rgba(16,15,10,0) 44%, rgba(16,15,10,.82) 100%)',
-        }}
-      />
+      {portraitSrc && <img className="everyday-product-portrait" src={portraitSrc} alt={`${label} fruit study`} style={{objectFit:'cover'}} />}
+      <div aria-hidden="true" style={{position:'absolute',inset:0,background:'linear-gradient(180deg, rgba(16,15,10,0) 44%, rgba(16,15,10,.82) 100%)'}} />
       <div
         style={{
           position: 'absolute',
@@ -455,7 +453,8 @@ export const CollectionCard: React.FC<{
   onOpen?: () => void;
   href?: string;
   ratio?: string;
-}> = ({ eyebrow, title, purpose, meta, tint, onOpen, href, ratio = '16 / 10' }) => {
+  portraitSrc?: string;
+}> = ({ eyebrow, title, purpose, meta, tint, onOpen, href, ratio = '16 / 10', portraitSrc }) => {
   const [hover, setHover] = useState(false);
   const reduced = usePrefersReducedMotion();
   const hasPointer = useHasPointer();
@@ -477,7 +476,7 @@ export const CollectionCard: React.FC<{
       style={{ display: 'block' }}
     >
       <div style={{ position: 'relative', width: '100%', aspectRatio: ratio, overflow: 'hidden' }}>
-        <SpecimenPlate tint={tint} ratio={ratio} lift={lift} />
+        <SpecimenPlate tint={portraitSrc ? '#201c13' : tint} ratio={ratio} lift={lift}>{portraitSrc && <img className="everyday-product-portrait" src={portraitSrc} alt={`${title} fruit study`} />}</SpecimenPlate>
         {eyebrow && (
           <span style={{ position: 'absolute', top: '14px', left: '15px', zIndex: 2 }}>
             <span

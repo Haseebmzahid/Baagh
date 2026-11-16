@@ -20,6 +20,7 @@ const SpecimenCardCanvas: React.FC<SpecimenCardCanvasProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<SpecimenEngine | null>(null);
+  const [failed,setFailed] = useState(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,7 +30,9 @@ const SpecimenCardCanvas: React.FC<SpecimenCardCanvasProps> = ({
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const engine = createSpecimenScene(canvas, fruitId, { prefersReducedMotion });
+    let engine: SpecimenEngine;
+    try { engine = createSpecimenScene(canvas, fruitId, { prefersReducedMotion }); }
+    catch { setFailed(true); return; }
     engineRef.current = engine;
 
     const onResize = () => {
@@ -56,6 +59,7 @@ const SpecimenCardCanvas: React.FC<SpecimenCardCanvasProps> = ({
     }
   }, [pointer]);
 
+  if (failed) return <div role="img" aria-label={`${fruitId} illustrated specimen`} style={{width:'100%',height:'100%',background:'radial-gradient(ellipse at 45% 40%, #8d7040 0%, #2b2416 40%, #100d0a 75%)'}} />;
   return (
     <canvas
       ref={canvasRef}

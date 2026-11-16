@@ -51,6 +51,9 @@ export interface SignatureProps {
 }
 
 export const Signature: React.FC<SignatureProps> = ({ onNavigateRoute }) => {
+  React.useEffect(() => {
+    if (window.location.hash === '#corporate') document.getElementById('corporate')?.scrollIntoView({behavior:'instant'});
+  },[]);
   const [quoteOpen, setQuoteOpen] = useState(false);
 
   const openQuote = () => {
@@ -687,7 +690,7 @@ const CorporateSection: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQ
   const stacked = isMobile || isTablet;
 
   return (
-    <Section eyebrow="Corporate gifting" title="Volume, dated delivery, one contact.">
+    <Section id="corporate" eyebrow="Corporate gifting" title="Volume, dated delivery, one contact.">
       <div
         style={{
           display: 'grid',
