@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { commercial as c } from './theme';
 import {
   Button,
@@ -39,6 +39,7 @@ import {
 import type { Product } from '../../data/catalogue';
 import { useBasket } from '../../context/BasketContext';
 import { isOrderable } from '../../data/catalogue';
+import { FruitPhoto, fruitPhotos } from './FruitPhoto';
 import { EverydayShowcase } from './EverydayShowcase';
 
 /**
@@ -64,17 +65,16 @@ export interface EverydayFreshProps {
 export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute }) => {
   const { isMobile, isTablet, gutter } = useCommercialLayout();
 
-  const [portraits, setPortraits] = useState<Record<string,string>>({});
-  const onPortrait = useCallback((id: string, source: string) => setPortraits((previous) => ({...previous,[id]:source})),[]);
+  const portraits = fruitPhotos;
 
   const openProduct = (product: Product) => onNavigateRoute(routeOf(product));
 
   return (
     <CommercialPage>
-      <EverydayShowcase onNavigateRoute={onNavigateRoute} onPortrait={onPortrait} />
+      <EverydayShowcase onNavigateRoute={onNavigateRoute} />
       <PageContainer>
 
-        <SeasonSection />
+        <p className="shopping-guide">1. Choose your fruit &nbsp; → &nbsp; 2. Select a pack &nbsp; → &nbsp; 3. <a href="/basket" onClick={(event) => { event.preventDefault(); onNavigateRoute('/basket'); }}>Review basket</a> &amp; request on WhatsApp.<br /><small>Our team confirms availability, final prices and delivery before your order is confirmed. Reference fruit photography; actual fruit and packaging may vary.</small></p>
 
         <CategoriesSection onNavigateRoute={onNavigateRoute} portraits={portraits} />
 
@@ -92,6 +92,8 @@ export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute })
         <SelectionsSection portraits={portraits} />
 
         <BoxesSection />
+
+        <SeasonSection />
 
         <FinalCtaSection onNavigateRoute={onNavigateRoute} />
 
@@ -241,7 +243,7 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; por
       label={cat.label}
       note={cat.note}
       tint={cat.tint}
-      portraitSrc={portraits[productsInCategory(cat.id)[0]?.id ?? boxes[0].productIds[0]]}
+      portraitSrc={portraits[productsInCategory(cat.id)[0]?.id ?? 'mixed']}
       href={`/everyday-fresh#${cat.slug}`}
       railWidth={isMobile ? 148 : undefined}
       onOpen={() => {
@@ -340,7 +342,7 @@ const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void; portr
             ratio={stacked ? '3 / 2' : '4 / 3'}
             drift
             label={portrait ? undefined : p.image.note}
-          >{portrait && <img className="everyday-product-portrait" src={portrait} alt={`${p.name} three-dimensional study`} />}</SpecimenPlate>
+          >{portrait && <img className="everyday-product-portrait" src={portrait} alt={`${p.name} reference fruit photograph`} />}</SpecimenPlate>
         </a>
 
         <div>
@@ -648,7 +650,7 @@ const BoxesSection: React.FC = () => {
       >
         {/* The lead box, given the wide cell. */}
         <div style={{ position: 'relative' }}>
-          <SpecimenPlate tint={primary.tint} ratio={isMobile ? '3 / 2' : '16 / 10'} />
+          <FruitPhoto fruit="mixed" ratio={isMobile ? '3 / 2' : '16 / 10'} />
           {primary.badge && (
             <span
               style={{
@@ -720,7 +722,7 @@ const BoxesSection: React.FC = () => {
                 borderBottom: `1px solid ${c.color.hair12}`,
               }}
             >
-              <SpecimenPlate tint={b.tint} ratio="1 / 1" />
+              <FruitPhoto fruit={b.productIds.length === 1 ? b.productIds[0] : 'mixed'} ratio="1 / 1" />
               <div>
                 <h3
                   style={{

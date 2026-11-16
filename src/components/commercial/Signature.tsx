@@ -10,16 +10,19 @@ import {
   PlaceholderNote,
   Price,
   Section,
-  SpecimenPlate,
   useCommercialLayout,
   useHasPointer,
   usePrefersReducedMotion,
   WhatsAppButton,
 } from './primitives';
 import { PageFooter } from './EverydayFresh';
+import { FruitPhoto } from './FruitPhoto';
+import { ProductCard } from './ProductCard';
 import { PresentationBox } from './PresentationBox';
 import {
   boxSpecification,
+  signatureProducts,
+  routeOf,
   corporateFacts,
   giftBoxes,
   PRICE_NOTE,
@@ -69,6 +72,12 @@ export const Signature: React.FC<SignatureProps> = ({ onNavigateRoute }) => {
       <SignatureHero onRequestQuote={openQuote} />
 
       <PageContainer>
+        <p className="shopping-guide">Choose fruit &amp; a pack below, add to your basket, then send a WhatsApp request. Our team confirms prices, availability and delivery.<br /><small>Reference fruit photography; actual fruit and packaging may vary. Gift boxes are available by enquiry.</small></p>
+        <Section id="signature-fruit" title="Choose your fruit" lead="Select a fruit to see pack sizes, or add the displayed pack straight to your basket.">
+          <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap:'28px'}}>
+            {signatureProducts().map(product => <ProductCard key={product.id} product={product} onOpen={entry => onNavigateRoute(routeOf(entry))} />)}
+          </div>
+        </Section>
         <CollectionsSection />
 
         <BoxSection />
@@ -112,6 +121,7 @@ const SignatureHero: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuot
         marginBottom: isMobile ? '0' : '20px',
       }}
     >
+      <div className="signature-photo-hero"><FruitPhoto fruit="mixed" ratio="auto" priority /></div>
       {/* The drifting plate. Mobile reduces the drift to a single slow zoom. */}
       <div
         aria-hidden="true"
@@ -119,7 +129,7 @@ const SignatureHero: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuot
           position: 'absolute',
           inset: 0,
           background:
-            'radial-gradient(62% 58% at 52% 36%, rgba(217,155,52,.30) 0%, rgba(24,18,11,.72) 54%, #100f0a 100%)',
+            'radial-gradient(62% 58% at 52% 36%, rgba(217,155,52,.05) 0%, rgba(24,18,11,.12) 54%, #100f0a 100%)',
           animation: reduced
             ? undefined
             : `baaghSignatureDrift ${isMobile ? 40 : c.motion.l1.signatureDriftSeconds}s ease-in-out infinite`,
@@ -195,13 +205,13 @@ const SignatureHero: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuot
         <div style={{ display: 'flex', gap: '14px', marginTop: '38px', flexWrap: 'wrap' }}>
           <Button
             variant="primary"
-            href="#collections"
+            href="#signature-fruit"
             onClick={(e) => {
               e.preventDefault();
-              document.getElementById('collections')?.scrollIntoView({ behavior: 'smooth' });
+              document.getElementById('signature-fruit')?.scrollIntoView({ behavior: reduced ? 'instant' : 'smooth' });
             }}
           >
-            View collections
+            Choose fruit & packs
           </Button>
           <Button variant="secondary" onClick={onRequestQuote}>
             Corporate gifting
@@ -271,9 +281,9 @@ const LeadCollection: React.FC<{ collection: Collection }> = ({ collection }) =>
     <article
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      style={{ position: 'relative' }}
+      style={{ position: 'relative', transform: lift ? 'translateY(-3px)' : undefined, transition: reduced ? 'none' : 'transform 450ms ease' }}
     >
-      <SpecimenPlate tint={collection.tint} ratio="4 / 3" lift={lift} drift />
+      <FruitPhoto fruit={collection.productIds.length > 1 ? 'mixed' : collection.productIds[0]} ratio="4 / 3" />
 
       <span style={{ position: 'absolute', top: '16px', left: '17px' }}>
         <span
@@ -324,7 +334,7 @@ const LeadCollection: React.FC<{ collection: Collection }> = ({ collection }) =>
               textWrap: 'pretty' as React.CSSProperties['textWrap'],
             }}
           >
-            {collection.purpose}
+            {collection.purpose}<br /><a className="collection-shop-link" href={whatsappHref(`Hello BAAGH — I would like to enquire about ${collection.title}. Please confirm contents, availability and price.`)} target="_blank" rel="noopener noreferrer">Enquire about this collection ↗</a>
           </p>
         </div>
 
@@ -345,7 +355,7 @@ const SmallCollection: React.FC<{ collection: Collection }> = ({ collection }) =
       borderBottom: `1px solid ${c.color.hair12}`,
     }}
   >
-    <SpecimenPlate tint={collection.tint} ratio="1 / 1" />
+    <FruitPhoto fruit={collection.productIds.length > 1 ? 'mixed' : collection.productIds[0]} ratio="1 / 1" />
     <div>
       <span
         style={{
@@ -370,6 +380,7 @@ const SmallCollection: React.FC<{ collection: Collection }> = ({ collection }) =
       >
         {collection.title}
       </h3>
+      <a className="collection-shop-link" href="#signature-fruit">Choose fruit &amp; packs ↑</a>
       <span style={{ display: 'block', marginTop: '9px' }}>
         <Fact quiet>from PKR {collection.fromPrice}</Fact>
       </span>
@@ -383,7 +394,7 @@ const FullBleedCollection: React.FC<{ collection: Collection; margin: number }> 
 }) => (
   <article>
     <div style={{ position: 'relative' }}>
-      <SpecimenPlate tint={collection.tint} ratio="4 / 5" drift />
+      <FruitPhoto fruit={collection.productIds.length > 1 ? 'mixed' : collection.productIds[0]} ratio="4 / 5" />
       <span style={{ position: 'absolute', top: '15px', left: `${margin}px` }}>
         <span
           style={{
@@ -412,6 +423,7 @@ const FullBleedCollection: React.FC<{ collection: Collection; margin: number }> 
       >
         {collection.title}
       </h3>
+      <a className="collection-shop-link" href="#signature-fruit">Choose fruit &amp; packs ↑</a>
       <p
         style={{
           fontFamily: c.font.serif,
@@ -423,7 +435,7 @@ const FullBleedCollection: React.FC<{ collection: Collection; margin: number }> 
           textWrap: 'pretty' as React.CSSProperties['textWrap'],
         }}
       >
-        {collection.purpose}
+        {collection.purpose}<br /><a className="collection-shop-link" href={whatsappHref(`Hello BAAGH — I would like to enquire about ${collection.title}. Please confirm contents, availability and price.`)} target="_blank" rel="noopener noreferrer">Enquire about this collection ↗</a>
       </p>
       <Price amount={collection.fromPrice} from note={PRICE_NOTE || undefined} />
     </div>
@@ -544,7 +556,7 @@ const GiftBoxCard: React.FC<{ box: (typeof giftBoxes)[number] }> = ({ box }) => 
       }}
     >
       <div style={{ position: 'relative' }}>
-        <SpecimenPlate tint={box.tint} ratio="4 / 5" lift={lift} label="Packaging placeholder" />
+        <FruitPhoto fruit={box.productIds.length > 1 ? 'mixed' : box.productIds[0]} ratio="4 / 5" />
         <span
           style={{
             position: 'absolute',
@@ -670,12 +682,7 @@ const SeasonalSection: React.FC = () => {
           </div>
         </div>
 
-        <SpecimenPlate
-          tint={seasonalClosure.tint}
-          ratio={stacked ? '3 / 2' : '4 / 3'}
-          drift
-          label={seasonalClosure.plateNote}
-        />
+        <FruitPhoto fruit="anaar" ratio={stacked ? '3 / 2' : '4 / 3'} />
       </div>
     </Section>
   );

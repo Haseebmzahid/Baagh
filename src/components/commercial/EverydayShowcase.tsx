@@ -1,17 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { availabilityLabel, commerce, defaultPack, everydayProducts, isOrderable, routeOf } from '../../data/catalogue';
-import { CommerceStage } from './CommerceStage';
-import type { CommerceStudy } from './commerceStageScene';
+import { FruitPhoto } from './FruitPhoto';
 import { Button } from './primitives';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import './everydayShowcase.css';
 
 export const EverydayShowcase: React.FC<{
   onNavigateRoute: (path: string) => void;
-  onPortrait: (id: string, source: string) => void;
-}> = ({ onNavigateRoute, onPortrait }) => {
+}> = ({ onNavigateRoute }) => {
   const products = useMemo(() => everydayProducts().filter((product) => product.fruitIntelligenceSlug),[]);
-  const studies = useMemo<CommerceStudy[]>(() => products.map((product) => ({id:product.id,fruit:product.fruitIntelligenceSlug!})),[products]);
   const [selected,setSelected] = useState(products[0].id);
   const reduced = useReducedMotion();
   const product = products.find((entry) => entry.id === selected) ?? products[0];
@@ -28,9 +25,9 @@ export const EverydayShowcase: React.FC<{
       <div className="everyday-showcase-copy">
         <p className="everyday-showcase-eyebrow">The everyday collection</p>
         <h1 id="everyday-showcase-title">Everyday.<br/><em>Exceptional.</em></h1>
-        <p className="everyday-showcase-description">A closer look at good fruit. Thoughtfully chosen for the everyday table.</p>
+        <p className="everyday-showcase-description">Good fruit, clearly chosen. Pick your fruit and pack, then send your order request on WhatsApp.</p>
         <div className="everyday-showcase-actions">
-          <Button variant="primary" href={routeOf(product)} onClick={(event) => navigate(event,routeOf(product))}>Explore {product.shortName}</Button>
+          <Button variant="primary" href={routeOf(product)} onClick={(event) => navigate(event,routeOf(product))}>Choose {product.shortName} pack</Button>
           <a className="everyday-showcase-shop" href="#ready-today" onClick={(event) => {
             event.preventDefault();
             document.getElementById('ready-today')?.scrollIntoView({behavior:reduced ? 'instant' : 'smooth'});
@@ -39,14 +36,14 @@ export const EverydayShowcase: React.FC<{
         <p className="everyday-showcase-assurance">Explore at your pace. Order on WhatsApp.</p>
       </div>
       <figure className="everyday-showcase-figure">
-        <CommerceStage product={product} studies={studies} onPortrait={onPortrait}/>
+        <FruitPhoto fruit={product.id} ratio="4 / 3" priority />
         <figcaption className="everyday-showcase-caption" aria-live="polite" aria-atomic="true">
           <div><span className="everyday-showcase-number">{String(index+1).padStart(2,'0')} / {String(products.length).padStart(2,'0')}</span><h2>{product.name}</h2><p>{product.variety} · {product.origin}</p></div>
-          <div className="everyday-showcase-price">{isOrderable(product) && pack.available ? <><span>{product.priceUnit} {pack.price}</span><small>{pack.label}{provisional ? ' · provisional price' : ''}</small></> : <><span className="everyday-showcase-closed">{availabilityLabel(product.availability)}</span><small>Explore the fruit study</small></>}</div>
+          <div className="everyday-showcase-price">{isOrderable(product) && pack.available ? <><span>{product.priceUnit} {pack.price}</span><small>{pack.label}{provisional ? ' · provisional price' : ''}</small></> : <><span className="everyday-showcase-closed">{availabilityLabel(product.availability)}</span><small>Ask us about availability</small></>}</div>
         </figcaption>
       </figure>
     </div>
-    <div className="everyday-showcase-selector" role="group" aria-label="Choose a fruit study">
+    <div className="everyday-showcase-selector" role="group" aria-label="Choose a fruit">
       {products.map((entry,i) => <button key={entry.id} type="button" aria-pressed={entry.id===product.id}
         onClick={() => setSelected(entry.id)} className={entry.id===product.id ? 'is-selected' : ''}>
         <span className="everyday-selector-index">{String(i+1).padStart(2,'0')}</span>

@@ -19,6 +19,8 @@ import {
   unavailableNote,
 } from '../../data/catalogue';
 import type { Product } from '../../data/catalogue';
+import { fruitPhotos } from './FruitPhoto';
+import './everydayShowcase.css';
 import { useBasket } from '../../context/BasketContext';
 
 /**
@@ -50,7 +52,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onOpen,
   onAdd,
   landscape,
-  portraitSrc,
+  portraitSrc = fruitPhotos[product.id],
 }) => {
   const [hover, setHover] = useState(false);
   const basket = useBasket();
@@ -125,7 +127,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           ratio={landscape ? '3 / 2' : '4 / 5'}
           lift={lift}
           label={portraitSrc || product.image.src ? undefined : product.image.note}
-        >{(product.image.src || portraitSrc) && <img className="everyday-product-portrait" src={product.image.src ?? portraitSrc} alt={product.image.alt ?? `${product.name} fruit study`} />}</SpecimenPlate>
+        >{(product.image.src || portraitSrc) && <img className="everyday-product-portrait" loading="lazy" decoding="async" src={product.image.src ?? portraitSrc} alt={product.image.alt ?? `${product.name} fruit photograph`} />}</SpecimenPlate>
 
         {/* State mark — one word, top right. Absent by default. */}
         {mark.state !== 'steady' && (
@@ -269,7 +271,7 @@ const AddAction: React.FC<{
           cursor: 'pointer',
         }}
       >
-        Add
+        Add to basket
       </button>
     );
   }
@@ -297,11 +299,11 @@ const AddAction: React.FC<{
         fontSize: '10px',
         letterSpacing: '.18em',
         textTransform: 'uppercase',
-        color: on ? c.color.goldHover : c.color.ink42,
+        color: on ? c.color.goldHover : c.color.gold80,
         transition: `color ${c.motion.l2.duration} ${c.motion.l2.ease}`,
       }}
     >
-      Add
+      Add to basket
       <span
         aria-hidden="true"
         style={{
@@ -400,7 +402,7 @@ export const CategoryTile: React.FC<{
           transition: `transform ${c.motion.l2.duration} ${c.motion.l2.ease}`,
         }}
       />
-      {portraitSrc && <img className="everyday-product-portrait" src={portraitSrc} alt={`${label} fruit study`} style={{objectFit:'cover'}} />}
+      {portraitSrc && <img className="everyday-product-portrait" loading="lazy" decoding="async" src={portraitSrc} alt={`${label} fruit photograph`} style={{objectFit:'cover'}} />}
       <div aria-hidden="true" style={{position:'absolute',inset:0,background:'linear-gradient(180deg, rgba(16,15,10,0) 44%, rgba(16,15,10,.82) 100%)'}} />
       <div
         style={{
@@ -476,7 +478,7 @@ export const CollectionCard: React.FC<{
       style={{ display: 'block' }}
     >
       <div style={{ position: 'relative', width: '100%', aspectRatio: ratio, overflow: 'hidden' }}>
-        <SpecimenPlate tint={portraitSrc ? '#201c13' : tint} ratio={ratio} lift={lift}>{portraitSrc && <img className="everyday-product-portrait" src={portraitSrc} alt={`${title} fruit study`} />}</SpecimenPlate>
+        <SpecimenPlate tint={portraitSrc ? '#201c13' : tint} ratio={ratio} lift={lift}>{portraitSrc && <img className="everyday-product-portrait" loading="lazy" decoding="async" src={portraitSrc} alt={`${title} fruit photograph`} />}</SpecimenPlate>
         {eyebrow && (
           <span style={{ position: 'absolute', top: '14px', left: '15px', zIndex: 2 }}>
             <span

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { fruitPhotos } from './FruitPhoto';
 import { commercial as c } from './theme';
 import { Label, usePrefersReducedMotion, useCommercialLayout } from './primitives';
 
@@ -55,7 +56,7 @@ function useSectionProgress(ref: React.RefObject<HTMLElement>): number {
   return progress;
 }
 
-export const PresentationBox: React.FC<{ tint?: string }> = ({ tint = '#d99b34' }) => {
+export const PresentationBox: React.FC<{ tint?: string }> = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const progress = useSectionProgress(wrapRef);
   const reduced = usePrefersReducedMotion();
@@ -136,7 +137,7 @@ export const PresentationBox: React.FC<{ tint?: string }> = ({ tint = '#d99b34' 
                   key={i}
                   style={{
                     borderRadius: '50%',
-                    background: `radial-gradient(60% 56% at 38% 32%, ${tint} 0%, rgba(90,60,22,.9) 62%, rgba(30,22,12,.95) 100%)`,
+                    background: `url(${fruitPhotos.chaunsa}) center / cover`,
                     boxShadow: 'inset 0 -3px 8px rgba(0,0,0,.5)',
                     // Fruit fade in behind the lid as it lifts.
                     opacity: 0.25 + open * 0.75,
