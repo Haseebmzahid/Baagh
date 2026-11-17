@@ -118,7 +118,19 @@ export const STATE_MARK: Record<Availability, ProductState> = {
  * One purchasable pack of a product. This is where price lives — the product
  * has no separate price field, so the two can never drift apart.
  */
+export interface PublishedProductReview {
+  id: string;
+  genuine: true;
+  approved: true;
+  author: string;
+  body: string;
+  rating: number;
+  datePublished?: string;
+}
+
 export interface Pack {
+  /** Explicit business verification; absent means unconfirmed. */
+  priceConfirmed?: boolean;
   id: string;
   /** Full selector label, e.g. "5 kg crate". */
   label: string;
@@ -193,6 +205,9 @@ export type ProvisionalField =
   | 'photography';
 
 export interface Product {
+  /** Set only after verifying the commercial availability state. */
+  availabilityVerified?: boolean;
+  reviews?: PublishedProductReview[];
   id: string;
   /** Route segment under the category. */
   slug: string;

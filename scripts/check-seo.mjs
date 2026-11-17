@@ -36,9 +36,13 @@ for (const page of pages) {
     assert(node['@type']);
     if (node['@type'] === 'Product') {
       assert(node.name && node.description && node.url);
-      for (const forbidden of ['offers', 'aggregateRating', 'review', 'availability', 'price']) assert(!(forbidden in node));
+      assert(node.offers?.length || node.review?.length, 'Incomplete Product entity');
     }
     if (node['@type'] === 'BreadcrumbList') node.itemListElement.forEach((item, index) => assert.equal(item.position, index + 1));
+  }
+  if (page.path.startsWith('/product/')) {
+    assert.equal(schema['@graph'].filter(node => node['@type'] === 'Product').length, 0, 'Current provisional catalogue must withhold Product');
+    for (const type of ['Organization', 'WebSite', 'WebPage', 'BreadcrumbList']) assert(schema['@graph'].some(node => node['@type'] === type));
   }
   const rewrite = config.rewrites.find(rule => rule.source === page.path);
   assert(rewrite, `Missing Vercel rewrite: ${page.path}`);

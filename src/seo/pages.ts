@@ -2,6 +2,7 @@ import { categoryLabel, getProduct, products, routeOf } from '../data/catalogue'
 import { sitePageMeta, type SitePageId } from '../data/sitePageRegistry';
 import { resolveRoute, type ResolvedRoute } from '../navigation/route';
 import { absoluteUrl } from './config';
+import { buildProductSchema } from './product';
 
 export interface SeoPage {
   path: string;
@@ -37,7 +38,8 @@ export function seoForRoute(route: ResolvedRoute): SeoPage {
     const product = getProduct(route.product.categorySlug, route.product.slug);
     if (product) {
       const result = page(routeOf(product), product.name, `${product.name} — Everyday Fresh | BAAGH`, `Explore ${product.name} in the BAAGH Everyday Fresh collection. Review fruit details and pack options, and discover its Fruit Intelligence guide.`);
-      result.schema.push({ '@type': 'Product', '@id': absoluteUrl(`${result.path}#product`), name: product.name, description: product.shortDescription, url: absoluteUrl(result.path), brand: { '@type': 'Brand', name: 'BAAGH' }, ...(product.image.src ? { image: absoluteUrl(product.image.src) } : {}) });
+      const productSchema = buildProductSchema(product);
+      if (productSchema) result.schema.push(productSchema);
       result.schema.push(breadcrumbs([{ name: 'Everyday Fresh', path: '/everyday-fresh' }, { name: categoryLabel(product.category), path: '/everyday-fresh' }, { name: product.name, path: result.path }]));
       return result;
     }
