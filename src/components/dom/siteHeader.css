@@ -1,0 +1,23 @@
+.site-header { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:24px 40px; pointer-events:auto; transition:background .35s ease,backdrop-filter .35s ease; }
+.site-header-brand { display:flex; align-items:baseline; gap:11px; }
+.site-header-wordmark { font-family:Newsreader,Georgia,serif; font-size:21px; font-weight:300; letter-spacing:.34em; color:#f4eee2; text-shadow:0 1px 14px rgba(0,0,0,.5); text-transform:uppercase; text-decoration:none; padding-block:12px; margin-block:-12px; }
+.site-header-established { font-family:'IBM Plex Mono',monospace; font-size:8px; font-weight:400; letter-spacing:.20em; color:rgba(244,238,226,.42); text-transform:uppercase; }
+.site-header-nav { display:flex; align-items:center; gap:28px; font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:400; letter-spacing:.17em; text-transform:uppercase; color:rgba(244,238,226,.78); }
+.site-header-mobile-label { display:none; }
+.site-header-link { color:rgba(244,238,226,.78); text-decoration:none; transition:color .2s ease; }
+.site-header-link:hover { color:#e8b45c; }
+.site-header-order { padding:8px 15px; border:1px solid rgba(244,238,226,.32); border-radius:2px; color:rgba(244,238,226,.9); text-decoration:none; }
+.site-header-cabinet { background:transparent; border:1px solid rgba(244,238,226,.25); border-radius:2px; padding:7px 14px; color:rgba(244,238,226,.9); font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.17em; text-transform:uppercase; cursor:pointer; display:flex; align-items:center; gap:8px; transition:all .25s ease; }
+.site-header-cabinet:hover { border-color:rgba(232,180,92,.6); }
+.site-header-arrow { display:inline-block; font-size:7px; transition:transform .3s ease; }
+.site-header[data-cabinet-open="true"] .site-header-cabinet { background:rgba(232,180,92,.12); border-color:#e8b45c; color:#e8b45c; }
+.site-header[data-cabinet-open="true"] .site-header-arrow { transform:rotate(180deg); }
+@media(max-width:1279px) {
+  .site-header { padding:16px 20px; }
+  .site-header-established,.site-header-desktop-label,.site-header-link { display:none; }
+  .site-header-mobile-label { display:inline; }
+  .site-header-nav { gap:10px; }
+  .site-header-cabinet { font-size:9.5px; font-weight:400; letter-spacing:.18em; padding:8px 12px; min-height:44px; border-color:rgba(244,238,226,.32); color:rgba(244,238,226,.85); gap:6px; }
+  .site-header-order { font-size:9.5px; font-weight:400; letter-spacing:.17em; padding:6px 12px; min-height:44px; display:inline-flex; align-items:center; color:rgba(244,238,226,.78); }
+  .site-header[data-cabinet-open="true"] .site-header-cabinet { background:rgba(232,180,92,.1); }
+}

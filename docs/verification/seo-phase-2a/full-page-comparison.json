@@ -1,0 +1,66 @@
+[
+  {
+    "width": 1440,
+    "baselineSize": [
+      1440,
+      2897
+    ],
+    "finalSize": [
+      1440,
+      2897
+    ],
+    "noJsSize": [
+      1440,
+      2897
+    ],
+    "noJsVersusHydratedOver8": 0
+  },
+  {
+    "width": 768,
+    "baselineSize": [
+      768,
+      3942
+    ],
+    "finalSize": [
+      768,
+      3942
+    ],
+    "noJsSize": [
+      768,
+      3942
+    ],
+    "noJsVersusHydratedOver8": 0
+  },
+  {
+    "width": 375,
+    "baselineSize": [
+      375,
+      4070
+    ],
+    "finalSize": [
+      375,
+      3934
+    ],
+    "noJsSize": [
+      375,
+      3934
+    ],
+    "noJsVersusHydratedOver8": 0
+  },
+  {
+    "width": 390,
+    "baselineSize": [
+      390,
+      4111
+    ],
+    "finalSize": [
+      390,
+      3975
+    ],
+    "noJsSize": [
+      390,
+      3975
+    ],
+    "noJsVersusHydratedOver8": 0
+  }
+]

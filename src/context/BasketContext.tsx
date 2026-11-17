@@ -38,8 +38,10 @@ function loadBasket() {
   }
 }
 
-export const BasketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [initial] = useState(loadBasket);
+export const BasketProvider: React.FC<{ children: React.ReactNode; anonymous?: boolean }> = ({ children, anonymous = false }) => {
+  const [initial] = useState(() => anonymous
+    ? { lines: [] as BasketLine[], recovered: false, failed: false }
+    : loadBasket());
   const [selections, setSelections] = useState(initial.lines);
   // Updated synchronously as well as through React, so rapid adds see the latest quantity.
   const current = useRef(selections);
@@ -48,6 +50,19 @@ export const BasketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [storageNotice, setStorageNotice] = useState(initial.failed
     ? 'Browser storage is unavailable. Your basket will only last for this visit.'
     : initial.recovered ? 'Some saved basket data could not be restored. Please review your selection.' : '');
+
+  const restored = useRef(false);
+  useEffect(() => {
+    if (!anonymous || restored.current) return;
+    restored.current = true;
+    const saved = loadBasket();
+    current.current = saved.lines;
+    setSelections(saved.lines);
+    setStorageNotice(saved.failed
+      ? 'Browser storage is unavailable. Your basket will only last for this visit.'
+      : saved.recovered ? 'Some saved basket data could not be restored. Please review your selection.' : '');
+    // Restoration is read-only: never persist the empty hydration snapshot.
+  }, [anonymous]);
 
   const commit = useCallback((next: BasketLine[]) => {
     current.current = next;

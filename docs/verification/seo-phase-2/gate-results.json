@@ -1,0 +1,5 @@
+{
+  "passed": false,
+  "productionEnabled": false,
+  "reason": "Unchanged responsive components do not preserve mobile no-JavaScript layout or matching hydration. Stop before expanding."
+}

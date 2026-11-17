@@ -19,6 +19,8 @@ import { BasketProvider, useBasket } from './context/BasketContext';
 import { BasketAnnouncements, BasketDrawer, BasketLauncher, BasketReview } from './components/commercial/Basket';
 import { collectionFromHash, resolveRoute } from './navigation/route';
 import { gridFilters } from './data/catalogue';
+import type { PrerenderBootstrap } from './seo/bootstrap';
+import type { ProductDetailProps } from './components/commercial/ProductDetail';
 import type { ViewMode, ProductRoute } from './navigation/route';
 
 const CinemaStage = lazy(() => import('./components/canvas/CinemaStage').then((module) => ({default:module.CinemaStage})));
@@ -40,16 +42,24 @@ if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
   }
 }
 
-export const AppContent: React.FC = () => {
+interface AppProps {
+  bootstrap?: PrerenderBootstrap;
+  ProductPage?: React.ComponentType<ProductDetailProps>;
+}
+const ExperienceBoundary: React.FC<{ ready: boolean; children: React.ReactNode }> = ({ ready, children }) => ready
+  ? <>{children}</>
+  : <Suspense fallback={<div role="status" style={{minHeight:'100vh',padding:'140px 40px',color:'#e8cfa0',fontFamily:'Newsreader,serif'}}>Preparing your experience…</div>}>{children}</Suspense>;
+export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = ProductDetail }) => {
+  const startingRoute = () => bootstrap?.route ?? initialRoute();
   const { closeBasket } = useBasket();
   const { isSupported, errorMessage } = useWebGLCapability();
   const [forceFallback, setForceFallback] = useState<boolean>(false);
-  const [viewMode, setViewMode] = useState<ViewMode>(() => initialRoute().view);
-  const [routeHash, setRouteHash] = useState(() => window.location.hash.toLowerCase());
-  const [informationPage, setInformationPage] = useState<SitePageId>(() => initialRoute().page ?? 'our-story');
-  const [activeFruit, setActiveFruit] = useState<string>(() => initialRoute().fruit ?? 'chaunsa');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => startingRoute().view);
+  const [routeHash, setRouteHash] = useState(() => bootstrap ? bootstrap.hash : window.location.hash.toLowerCase());
+  const [informationPage, setInformationPage] = useState<SitePageId>(() => startingRoute().page ?? 'our-story');
+  const [activeFruit, setActiveFruit] = useState<string>(() => startingRoute().fruit ?? 'chaunsa');
   // Which product the /product/:category/:slug route resolved to.
-  const [productRoute, setProductRoute] = useState<ProductRoute>(() => initialRoute().product ?? {categorySlug:'mangoes',slug:'chaunsa'});
+  const [productRoute, setProductRoute] = useState<ProductRoute>(() => startingRoute().product ?? {categorySlug:'mangoes',slug:'chaunsa'});
 
   // Always reflects the current view, so a late context-loss callback cannot
   // act on the view that was active when it was registered.
@@ -183,7 +193,7 @@ export const AppContent: React.FC = () => {
         onNavigateRoute={handleNavigateRoute}
       />
 
-      <Suspense fallback={<div role="status" style={{minHeight:'100vh',padding:'140px 40px',color:'#e8cfa0',fontFamily:'Newsreader,serif'}}>Preparing your experience…</div>}>
+      <ExperienceBoundary ready={!!bootstrap && viewMode === 'product'}>
       {viewMode === 'information' ? (
         <InformationPage key={informationPage} page={informationPage} onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'not-found' ? (
@@ -193,7 +203,7 @@ export const AppContent: React.FC = () => {
       ) : viewMode === 'everyday-fresh' ? (
         <EverydayFresh onNavigateRoute={handleNavigateRoute} collectionHash={routeHash} />
       ) : viewMode === 'product' ? (
-        <ProductDetail
+        <ProductPage
           categorySlug={productRoute.categorySlug}
           slug={productRoute.slug}
           onNavigateRoute={handleNavigateRoute}
@@ -226,7 +236,7 @@ export const AppContent: React.FC = () => {
           <ScrollSpacer />
         </>
       )}
-      </Suspense>
+      </ExperienceBoundary>
       {(viewMode === 'basket' || viewMode === 'not-found') && <div style={{maxWidth:'1440px',margin:'0 auto',padding:'0 clamp(22px,5vw,80px)'}}><SiteFooter onNavigateRoute={handleNavigateRoute} /></div>}
       {(viewMode === 'everyday-fresh' || viewMode === 'product' || viewMode === 'signature') && (
         <BasketLauncher productPage={viewMode === 'product'} />
@@ -237,11 +247,11 @@ export const AppContent: React.FC = () => {
   );
 };
 
-export const App: React.FC = () => {
+export const App: React.FC<AppProps> = ({ bootstrap, ProductPage }) => {
   return (
     <BrandProvider>
       <ScrollProvider>
-        <BasketProvider><AppContent /></BasketProvider>
+        <BasketProvider anonymous={!!bootstrap}><AppContent bootstrap={bootstrap} ProductPage={ProductPage} /></BasketProvider>
       </ScrollProvider>
     </BrandProvider>
   );

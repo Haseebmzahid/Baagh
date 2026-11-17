@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useSyncExternalStore } from 'react';
 import { commercial as c, layoutFor } from './theme';
 import type { ProductState } from './theme';
 import { useViewportTier } from '../../hooks/useViewportTier';
@@ -28,21 +28,14 @@ export function useCommercialLayout() {
 }
 
 /** True where a fine pointer can hover — tilt is disabled on touch. */
+const pointerQuery = '(hover: hover) and (pointer: fine)';
+function subscribePointer(update: () => void) {
+  const mq = window.matchMedia(pointerQuery);
+  mq.addEventListener('change', update);
+  return () => mq.removeEventListener('change', update);
+}
 export function useHasPointer(): boolean {
-  const [has, setHas] = useState<boolean>(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return true;
-    return window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-  });
-
-  React.useEffect(() => {
-    if (!window.matchMedia) return;
-    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const onChange = () => setHas(mq.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
-
-  return has;
+  return useSyncExternalStore(subscribePointer, () => window.matchMedia(pointerQuery).matches, () => false);
 }
 
 // ---------------------------------------------------------------------------
@@ -55,7 +48,7 @@ export const PageContainer: React.FC<{
 }> = ({ children, wide }) => {
   const { margin } = useCommercialLayout();
   return (
-    <div
+    <div className="baagh-page-container"
       style={{
         position: 'relative',
         zIndex: 1,
@@ -103,7 +96,7 @@ export const CommercialPage: React.FC<{
 }> = ({ children, deep }) => {
   const { isMobile } = useCommercialLayout();
   return (
-    <div
+    <div className="baagh-commercial-page"
       style={{
         position: 'relative',
         width: '100%',
@@ -152,7 +145,7 @@ export const Section: React.FC<SectionProps> = ({
   const { section, margin, isMobile } = useCommercialLayout();
 
   return (
-    <section id={id} style={{ padding: `${section}px 0 0` }}>
+    <section className="baagh-commercial-section" id={id} style={{ padding: `${section}px 0 0` }}>
       {eyebrow && (
         <span
           style={{
@@ -170,7 +163,7 @@ export const Section: React.FC<SectionProps> = ({
       )}
 
       {(index || title || action) && (
-        <div
+        <div className="baagh-section-heading"
           style={{
             display: 'flex',
             alignItems: 'baseline',
@@ -375,7 +368,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   if (href && !disabled) {
     return (
-      <a href={href} onClick={onClick} style={style} aria-label={ariaLabel} {...handlers}>
+      <a className={`baagh-button baagh-button--${variant}${compact ? ' baagh-button--compact' : ''}`} href={href} onClick={onClick} style={style} aria-label={ariaLabel} {...handlers}>
         {content}
       </a>
     );
@@ -383,6 +376,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button
+      className={`baagh-button baagh-button--${variant}${compact ? ' baagh-button--compact' : ''}`}
       type="button"
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
@@ -624,7 +618,7 @@ export const SpecimenPlate: React.FC<{
   const animate = drift && !reduced;
 
   return (
-    <div
+    <div className="baagh-specimen-plate"
       style={{
         position: 'relative',
         width: '100%',

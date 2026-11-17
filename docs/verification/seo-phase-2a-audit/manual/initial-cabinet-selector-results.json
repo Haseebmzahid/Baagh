@@ -1,0 +1,58 @@
+{
+  "baseline": false,
+  "area": "cabinet",
+  "reducedHome": false,
+  "cases": [
+    {
+      "name": "1440-cabinet-pointer-keyboard",
+      "status": "FAIL",
+      "ms": 49474,
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Enter Anaar Fruit Intelligence inspection', exact: true })\u001b[22m\n",
+      "diagnostics": {
+        "scroll": 0,
+        "max": 1997,
+        "visibility": "visible",
+        "cues": []
+      }
+    },
+    {
+      "name": "1440-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "768-cabinet-pointer-keyboard",
+      "status": "FAIL",
+      "ms": 47017,
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Enter Anaar Fruit Intelligence inspection', exact: true })\u001b[22m\n",
+      "diagnostics": {
+        "scroll": 0,
+        "max": 2918,
+        "visibility": "visible",
+        "cues": []
+      }
+    },
+    {
+      "name": "768-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "375-cabinet-pointer-keyboard",
+      "status": "FAIL",
+      "ms": 43406,
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Enter Anaar Fruit Intelligence inspection', exact: true })\u001b[22m\n",
+      "diagnostics": {
+        "scroll": 0,
+        "max": 3122,
+        "visibility": "visible",
+        "cues": []
+      }
+    },
+    {
+      "name": "375-console-runtime",
+      "status": "PASS",
+      "detail": []
+    }
+  ]
+}

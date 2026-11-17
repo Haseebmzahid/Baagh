@@ -1,0 +1,244 @@
+{
+  "baseline": false,
+  "area": "homepage",
+  "reducedHome": true,
+  "cases": [
+    {
+      "name": "1440-homepage-nine-station-journey",
+      "status": "FAIL",
+      "ms": 49157,
+      "error": "page.screenshot: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n",
+      "diagnostics": {
+        "scroll": 227,
+        "max": 7561,
+        "visibility": "visible",
+        "cues": [
+          {
+            "text": "One fruit, before anyone else has seen it.",
+            "opacity": "1"
+          },
+          {
+            "text": "Chosen at source.",
+            "opacity": "0"
+          },
+          {
+            "text": "This fruit came from somewhere real.",
+            "opacity": "0"
+          },
+          {
+            "text": "Chosen by people who know fruit.",
+            "opacity": "0"
+          },
+          {
+            "text": "Not everything that looks good is good enough.",
+            "opacity": "0"
+          },
+          {
+            "text": "Handled with care.",
+            "opacity": "0"
+          },
+          {
+            "text": "Delivered with confidence.",
+            "opacity": "0"
+          },
+          {
+            "text": "IT ARRIVES THE WAY IT LEFT.",
+            "opacity": "0"
+          },
+          {
+            "text": "Fruit you never have to doubt.",
+            "opacity": "0"
+          }
+        ]
+      }
+    },
+    {
+      "name": "1440-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "768-homepage-nine-station-journey",
+      "status": "FAIL",
+      "ms": 32463,
+      "error": "Expected values to be strictly equal:\n\n'Fruit' !== 'Crate'\n",
+      "diagnostics": {
+        "scroll": 1290,
+        "max": 8603,
+        "visibility": "visible",
+        "cues": [
+          {
+            "text": "One fruit, before anyone else has seen it.",
+            "opacity": "0"
+          },
+          {
+            "text": "Chosen at source.",
+            "opacity": "1"
+          },
+          {
+            "text": "This fruit came from somewhere real.",
+            "opacity": "0"
+          },
+          {
+            "text": "Chosen by people who know fruit.",
+            "opacity": "0"
+          },
+          {
+            "text": "Not everything that looks good is good enough.",
+            "opacity": "0"
+          },
+          {
+            "text": "Handled with care.",
+            "opacity": "0"
+          },
+          {
+            "text": "Delivered with confidence.",
+            "opacity": "0"
+          },
+          {
+            "text": "IT ARRIVES THE WAY IT LEFT.",
+            "opacity": "0"
+          },
+          {
+            "text": "Fruit you never have to doubt.",
+            "opacity": "0"
+          }
+        ]
+      }
+    },
+    {
+      "name": "768-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "375-homepage-nine-station-journey",
+      "status": "PASS",
+      "ms": 81629,
+      "detail": [
+        {
+          "station": 1,
+          "requested": 0.03,
+          "text": "One fruit, before anyone else has seen it.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 2,
+          "requested": 0.15,
+          "text": "Chosen at source.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 3,
+          "requested": 0.28,
+          "text": "This fruit came from somewhere real.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 4,
+          "requested": 0.415,
+          "text": "Chosen by people who know fruit.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 5,
+          "requested": 0.535,
+          "text": "Not everything that looks good is good enough.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 6,
+          "requested": 0.65,
+          "text": "Handled with care.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 7,
+          "requested": 0.775,
+          "text": "Delivered with confidence.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 8,
+          "requested": 0.88,
+          "text": "IT ARRIVES THE WAY IT LEFT.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 9,
+          "requested": 0.98,
+          "text": "Fruit you never have to doubt.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        }
+      ]
+    },
+    {
+      "name": "375-console-runtime",
+      "status": "PASS",
+      "detail": []
+    }
+  ]
+}

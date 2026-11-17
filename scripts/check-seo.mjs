@@ -9,6 +9,18 @@ const descriptions = new Set();
 for (const page of pages) {
   const file = page.path === '/' ? 'dist/index.html' : `dist${page.path}/index.html`;
   const html = await readFile(file, 'utf8');
+  if (page.path === '/product/mangoes/chaunsa') {
+    assert.equal((html.match(/<h1(?:\s|>)/g) ?? []).length, 1);
+    assert(html.includes('Graded by hand into one tier only.'));
+    assert(html.includes('href="/fruit-intelligence/chaunsa"'));
+    assert.equal((html.match(/class="product-primary-action"/g) ?? []).length, 1);
+    assert.equal((html.match(/aria-label="Pack size"/g) ?? []).length, 1);
+    const bootstrap = JSON.parse(html.match(/id="baagh-prerender" type="application\/json">(.*?)<\/script>/s)[1]);
+    assert.equal(bootstrap.pathname, page.path);
+    assert(html.includes('assets/ProductDetail-') && html.includes('.css'));
+  } else {
+    assert(!html.includes('id="baagh-prerender"'), `Unexpected prerender rollout: ${page.path}`);
+  }
   assert(!titles.has(page.title), `Duplicate title: ${page.path}`);
   assert(!descriptions.has(page.description), `Duplicate description: ${page.path}`);
   titles.add(page.title); descriptions.add(page.description);

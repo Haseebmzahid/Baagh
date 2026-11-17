@@ -1,0 +1,24 @@
+ M scripts/build-seo.mjs
+ M scripts/check-seo.mjs
+ M src/App.tsx
+ M src/components/commercial/ProductDetail.tsx
+ M src/components/commercial/primitives.tsx
+ M src/components/dom/SiteHeader.tsx
+ M src/context/BasketContext.tsx
+ M src/hooks/useReducedMotion.ts
+ M src/hooks/useViewportTier.ts
+ M src/main.tsx
+ M vite.config.ts
+?? docs/SEO_PHASE_2.md
+?? docs/SEO_PHASE_2A_REGRESSION_AUDIT.md
+?? docs/verification/seo-phase-2/
+?? docs/verification/seo-phase-2a-audit/
+?? docs/verification/seo-phase-2a/
+?? scripts/check-prerender-probe.mjs
+?? scripts/probe-prerender.mjs
+?? scripts/verify-chaunsa.mjs
+?? src/components/commercial/productDetail.css
+?? src/components/dom/siteHeader.css
+?? src/seo/bootstrap.ts
+?? src/seo/prerender.tsx
+?? tests/prerender/

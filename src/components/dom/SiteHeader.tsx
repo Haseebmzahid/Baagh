@@ -1,284 +1,57 @@
-import React, { lazy, Suspense, useState, useCallback } from 'react';
+import React, { lazy, Suspense, useState, useCallback, useRef } from 'react';
 import { useBrand } from '../../context/BrandContext';
-import { useViewportTier } from '../../hooks/useViewportTier';
-const FruitCabinet = lazy(() => import('../navigation/FruitCabinet').then((module) => ({default:module.FruitCabinet})));
-
+import './siteHeader.css';
+const FruitCabinet = lazy(() => import('../navigation/FruitCabinet').then(module => ({ default: module.FruitCabinet })));
 interface SiteHeaderProps {
   onNavigateFruit?: (fruitId: string) => void;
   onNavigateBrand?: () => void;
   onNavigateRoute?: (path: string) => void;
 }
-
-export const SiteHeader: React.FC<SiteHeaderProps> = ({
-  onNavigateFruit,
-  onNavigateBrand,
-  onNavigateRoute,
-}) => {
+export const SiteHeader: React.FC<SiteHeaderProps> = ({ onNavigateFruit, onNavigateBrand, onNavigateRoute }) => {
   const brand = useBrand();
-  const { tier } = useViewportTier();
-  const [cabinetOpen, setCabinetOpen] = useState<boolean>(false);
-
-  // Keep the six-link desktop navigation from overflowing tablet widths.
-  const isMobile = tier !== 'desktop';
+  const [cabinetOpen, setCabinetOpen] = useState(false);
+  const cabinetTrigger = useRef<HTMLButtonElement>(null);
+  const closeCabinet = useCallback(() => {
+    setCabinetOpen(false);
+    cabinetTrigger.current?.focus();
+  }, []);
   const navigate = (event: React.MouseEvent, path: string) => {
     if (!onNavigateRoute || !path.startsWith('/') || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-    event.preventDefault();
-    setCabinetOpen(false);
-    onNavigateRoute(path);
+    event.preventDefault(); setCabinetOpen(false); onNavigateRoute(path);
   };
-
-  const handleFruitSelect = useCallback(
-    (fruitId: string) => {
-      setCabinetOpen(false);
-      if (onNavigateFruit) {
-        onNavigateFruit(fruitId);
-      } else {
-        window.location.hash = `#${fruitId}`;
-      }
-    },
-    [onNavigateFruit]
-  );
-
-  const handleBrandClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      if (onNavigateBrand) {
-        e.preventDefault();
-        setCabinetOpen(false);
-        onNavigateBrand();
-      }
-    },
-    [onNavigateBrand]
-  );
-
-  return (
-    <>
-      <header
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 100,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: isMobile ? '16px 20px' : '24px 40px',
-          pointerEvents: 'auto',
-          background: cabinetOpen
-            ? 'rgba(13, 10, 8, 0.85)'
-            : 'linear-gradient(180deg, rgba(13, 10, 8, 0.6) 0%, rgba(13, 10, 8, 0) 100%)',
-          backdropFilter: cabinetOpen ? 'blur(16px)' : 'none',
-          WebkitBackdropFilter: cabinetOpen ? 'blur(16px)' : 'none',
-          transition: 'background 0.35s ease, backdrop-filter 0.35s ease',
-        }}
-      >
-        {/* Brand Cluster */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'baseline',
-            gap: '11px',
-          }}
-        >
-          <a
-            href="/"
-            onClick={handleBrandClick}
-            style={{
-              fontFamily: 'Newsreader, Georgia, serif',
-              fontSize: '21px',
-              fontWeight: 300,
-              letterSpacing: '0.34em',
-              color: '#f4eee2',
-              textShadow: '0 1px 14px rgba(0,0,0,.5)',
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-              paddingBlock: '12px',
-              marginBlock: '-12px',
-            }}
-          >
-            {brand.name}
-          </a>
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '8px',
-              fontWeight: 400,
-              letterSpacing: '0.20em',
-              color: 'rgba(244,238,226,.42)',
-              textTransform: 'uppercase',
-              display: isMobile ? 'none' : undefined,
-            }}
-          >
-            est. {brand.establishedYear}
-          </span>
-        </div>
-
-        {/* Navigation Cluster */}
-        {isMobile ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <button
-              data-cabinet-trigger="true"
-              aria-expanded={cabinetOpen}
-              aria-haspopup="dialog"
-              aria-controls="fruit-intelligence-cabinet"
-              onClick={() => setCabinetOpen((prev) => !prev)}
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '9.5px',
-                fontWeight: 400,
-                letterSpacing: '0.18em',
-                textTransform: 'uppercase',
-                padding: '8px 12px',
-                minHeight: '44px',
-                border: cabinetOpen
-                  ? '1px solid #e8b45c'
-                  : '1px solid rgba(244,238,226,.32)',
-                borderRadius: '2px',
-                color: cabinetOpen ? '#e8b45c' : 'rgba(244,238,226,.85)',
-                background: cabinetOpen ? 'rgba(232,180,92,0.1)' : 'transparent',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-              }}
-            >
-              <span>FRUIT GUIDE</span>
-              <span style={{ fontSize: '7px' }}>{cabinetOpen ? '▲' : '▼'}</span>
-            </button>
-
-            <a
-              href="/basket"
-              onClick={(event) => navigate(event,'/basket')}
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontSize: '9.5px',
-                fontWeight: 400,
-                letterSpacing: '0.17em',
-                textTransform: 'uppercase',
-                padding: '6px 12px',
-                border: '1px solid rgba(244,238,226,.32)',
-                borderRadius: '2px',
-                color: 'rgba(244,238,226,.78)',
-                textDecoration: 'none',
-                minHeight: '44px',
-                display: 'inline-flex',
-                alignItems: 'center',
-              }}
-            >
-              Order
-            </a>
-          </div>
-        ) : (
-          <nav
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '28px',
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '10px',
-              fontWeight: 400,
-              letterSpacing: '0.17em',
-              textTransform: 'uppercase',
-              color: 'rgba(244,238,226,.78)',
-            }}
-          >
-            {brand.navLinks.map((link, index) => {
-              if (link.label === 'Fruit Intelligence') {
-                return (
-                  <button
-                    key={index}
-                    data-cabinet-trigger="true"
-                    aria-expanded={cabinetOpen}
-                    aria-haspopup="dialog"
-                    aria-controls="fruit-intelligence-cabinet"
-                    onClick={() => setCabinetOpen((prev) => !prev)}
-                    style={{
-                      background: cabinetOpen ? 'rgba(232,180,92,0.12)' : 'transparent',
-                      border: cabinetOpen
-                        ? '1px solid #e8b45c'
-                        : '1px solid rgba(244,238,226,.25)',
-                      borderRadius: '2px',
-                      padding: '7px 14px',
-                      color: cabinetOpen ? '#e8b45c' : 'rgba(244,238,226,.9)',
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontSize: '10px',
-                      letterSpacing: '0.17em',
-                      textTransform: 'uppercase',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      transition: 'all 0.25s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!cabinetOpen) (e.currentTarget as HTMLElement).style.borderColor = 'rgba(232,180,92,0.6)';
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!cabinetOpen) (e.currentTarget as HTMLElement).style.borderColor = 'rgba(244,238,226,.25)';
-                    }}
-                  >
-                    <span>FRUIT INTELLIGENCE</span>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        fontSize: '7px',
-                        transform: cabinetOpen ? 'rotate(180deg)' : 'none',
-                        transition: 'transform 0.3s ease',
-                      }}
-                    >
-                      ▼
-                    </span>
-                  </button>
-                );
-              }
-
-              if (link.primary) {
-                return (
-                  <a
-                    key={index}
-                    href={link.href}
-                    onClick={(event) => navigate(event,link.href)}
-                    style={{
-                      padding: '8px 15px',
-                      border: '1px solid rgba(244,238,226,.32)',
-                      borderRadius: '2px',
-                      color: 'rgba(244,238,226,.9)',
-                      textDecoration: 'none',
-                    }}
-                  >
-                    {link.label}
-                  </a>
-                );
-              }
-
-              return (
-                <a
-                  key={index}
-                  href={link.href}
-                  onClick={(event) => navigate(event,link.href)}
-                  style={{
-                    color: 'rgba(244,238,226,.78)',
-                    textDecoration: 'none',
-                    transition: 'color 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => ((e.target as HTMLElement).style.color = '#e8b45c')}
-                  onMouseLeave={(e) => ((e.target as HTMLElement).style.color = 'rgba(244,238,226,.78)')}
-                >
-                  {link.label}
-                </a>
-              );
-            })}
-          </nav>
-        )}
-      </header>
-
-      {/* 3D Specimen Exhibition Cabinet Dropdown */}
-      {cabinetOpen && <Suspense fallback={null}><FruitCabinet
-        isOpen={cabinetOpen}
-        onClose={() => setCabinetOpen(false)}
-        onSelectFruit={handleFruitSelect}
-      /></Suspense>}
-    </>
-  );
+  const handleFruitSelect = useCallback((fruitId: string) => {
+    setCabinetOpen(false);
+    if (onNavigateFruit) onNavigateFruit(fruitId);
+    else window.location.hash = `#${fruitId}`;
+  }, [onNavigateFruit]);
+  const handleBrandClick = useCallback((event: React.MouseEvent) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (onNavigateBrand) { event.preventDefault(); setCabinetOpen(false); onNavigateBrand(); }
+  }, [onNavigateBrand]);
+  return <>
+    <header className="site-header" data-cabinet-open={cabinetOpen} style={{
+      background: cabinetOpen ? 'rgba(13, 10, 8, 0.85)' : 'linear-gradient(180deg, rgba(13, 10, 8, 0.6) 0%, rgba(13, 10, 8, 0) 100%)',
+      backdropFilter: cabinetOpen ? 'blur(16px)' : 'none', WebkitBackdropFilter: cabinetOpen ? 'blur(16px)' : 'none',
+    }}>
+      <div className="site-header-brand">
+        <a className="site-header-wordmark" href="/" onClick={handleBrandClick}>{brand.name}</a>
+        <span className="site-header-established">est. {brand.establishedYear}</span>
+      </div>
+      <nav className="site-header-nav">
+        {brand.navLinks.map((link, index) => link.label === 'Fruit Intelligence' ? <button
+          key={index} ref={cabinetTrigger} className="site-header-cabinet" data-cabinet-trigger="true"
+          aria-expanded={cabinetOpen} aria-haspopup="dialog" aria-controls="fruit-intelligence-cabinet"
+          onClick={() => setCabinetOpen(previous => !previous)}>
+          <span className="site-header-desktop-label">FRUIT INTELLIGENCE</span>
+          <span className="site-header-mobile-label">FRUIT GUIDE</span>
+          <span className="site-header-arrow" aria-hidden="true">▼</span>
+        </button> : <a key={index} className={link.primary ? 'site-header-order' : 'site-header-link'}
+          href={link.href} onClick={event => navigate(event, link.href)}>
+          {link.primary ? <><span className="site-header-desktop-label">{link.label}</span><span className="site-header-mobile-label">Order</span></> : link.label}
+        </a>)}
+      </nav>
+    </header>
+    {cabinetOpen && <Suspense fallback={null}><FruitCabinet isOpen={cabinetOpen}
+      onClose={closeCabinet} onSelectFruit={handleFruitSelect} /></Suspense>}
+  </>;
 };

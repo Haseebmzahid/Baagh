@@ -1,0 +1,59 @@
+{
+  "baseline": false,
+  "area": "cabinet",
+  "reducedHome": false,
+  "screenshots": true,
+  "cases": [
+    {
+      "name": "1440-cabinet-pointer-keyboard",
+      "status": "PASS",
+      "ms": 37123,
+      "detail": {
+        "checks": "Header logo → homepage → Back; 4 cabinet canvases, pointer close, Enter/Tab/ArrowRight/Escape, focus return, Anaar selection and history",
+        "entry": {
+          "progress": 0,
+          "scroll": 0
+        }
+      }
+    },
+    {
+      "name": "1440-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "768-cabinet-pointer-keyboard",
+      "status": "PASS",
+      "ms": 38563,
+      "detail": {
+        "checks": "Header logo → homepage → Back; 4 cabinet canvases, pointer close, Enter/Tab/ArrowRight/Escape, focus return, Anaar selection and history",
+        "entry": {
+          "progress": 0,
+          "scroll": 0
+        }
+      }
+    },
+    {
+      "name": "768-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "375-cabinet-pointer-keyboard",
+      "status": "PASS",
+      "ms": 29404,
+      "detail": {
+        "checks": "Header logo → homepage → Back; 4 cabinet canvases, pointer close, Enter/Tab/ArrowRight/Escape, focus return, Anaar selection and history",
+        "entry": {
+          "progress": 0,
+          "scroll": 0
+        }
+      }
+    },
+    {
+      "name": "375-console-runtime",
+      "status": "PASS",
+      "detail": []
+    }
+  ]
+}

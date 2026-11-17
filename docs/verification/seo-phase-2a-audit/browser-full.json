@@ -1,0 +1,760 @@
+{
+  "config": {
+    "argv": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "D:\\karamat\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--reporter=json",
+      "--output=test-results/seo-phase2a-audit/browser"
+    ],
+    "configFile": "D:\\karamat\\playwright.config.ts",
+    "rootDir": "D:/karamat/tests/browser",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/karamat/test-results/seo-phase2a-audit/browser",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "desktop",
+        "name": "desktop",
+        "testDir": "D:/karamat/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      },
+      {
+        "outputDir": "D:/karamat/test-results/seo-phase2a-audit/browser",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "mobile",
+        "name": "mobile",
+        "testDir": "D:/karamat/tests/browser",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 180000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\karamat\\test-results\\seo-phase2a-audit\\browser",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "desktop",
+        "testDir": "D:\\karamat\\tests\\browser",
+        "snapshotDir": "D:\\karamat\\tests\\browser",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4194",
+          "launchOptions": {
+            "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-webgl"
+            ]
+          },
+          "viewport": {
+            "width": 1440,
+            "height": 900
+          }
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "desktop"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\karamat\\test-results\\seo-phase2a-audit\\browser",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "mobile",
+        "testDir": "D:\\karamat\\tests\\browser",
+        "snapshotDir": "D:\\karamat\\tests\\browser",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 180000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4194",
+          "launchOptions": {
+            "executablePath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+            "args": [
+              "--use-angle=swiftshader",
+              "--enable-webgl"
+            ]
+          },
+          "viewport": {
+            "width": 375,
+            "height": 812
+          },
+          "isMobile": true,
+          "hasTouch": true,
+          "deviceScaleFactor": 2
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "mobile"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.65.1",
+    "workers": 1,
+    "webServer": {
+      "command": "npm run preview -- --host 127.0.0.1 --port 4194",
+      "url": "http://127.0.0.1:4194",
+      "reuseExistingServer": false
+    }
+  },
+  "suites": [
+    {
+      "title": "production.spec.ts",
+      "file": "production.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "chaunsa: selected engine, scroll completion and scene cleanup",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 59345,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:14:33.867Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 18831,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:21:09.339Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ed69554c53210704c98c-7bdc1f594c8eabb7223c",
+          "file": "production.spec.ts",
+          "line": 8,
+          "column": 3
+        },
+        {
+          "title": "kinnow: selected engine, scroll completion and scene cleanup",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 65341,
+                  "error": {
+                    "message": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded.",
+                    "stack": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded.\n    at D:\\karamat\\tests\\browser\\production.spec.ts:28:20",
+                    "location": {
+                      "file": "D:\\karamat\\tests\\browser\\production.spec.ts",
+                      "column": 20,
+                      "line": 28
+                    },
+                    "snippet": " \u001b[90m 26 |\u001b[39m       \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(p \u001b[33m=>\u001b[39m window\u001b[33m.\u001b[39mscrollTo(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m (document\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollHeight \u001b[33m-\u001b[39m innerHeight) \u001b[33m*\u001b[39m p)\u001b[33m,\u001b[39m progress)\u001b[33m;\u001b[39m\n \u001b[90m 27 |\u001b[39m       \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 28 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForFunction(p \u001b[33m=>\u001b[39m \u001b[33mMath\u001b[39m\u001b[33m.\u001b[39mabs((window \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m__fruitScene\u001b[33m.\u001b[39mgetDiagnostics()\u001b[33m.\u001b[39mprogress \u001b[33m-\u001b[39m p) \u001b[33m<\u001b[39m \u001b[35m.015\u001b[39m\u001b[33m,\u001b[39m progress\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m20000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 29 |\u001b[39m       } \u001b[36mcatch\u001b[39m (error) {\n \u001b[90m 30 |\u001b[39m         console\u001b[33m.\u001b[39merror(\u001b[32m'Stage failure'\u001b[39m\u001b[33m,\u001b[39m fruit\u001b[33m,\u001b[39m progress\u001b[33m,\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m ({ diagnostics\u001b[33m:\u001b[39m (window \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m__fruitScene\u001b[33m?.\u001b[39mgetDiagnostics()\u001b[33m,\u001b[39m scroll\u001b[33m:\u001b[39m scrollY\u001b[33m,\u001b[39m max\u001b[33m:\u001b[39m document\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollHeight \u001b[33m-\u001b[39m innerHeight }))\u001b[33m,\u001b[39m errors)\u001b[33m;\u001b[39m\n \u001b[90m 31 |\u001b[39m         \u001b[36mthrow\u001b[39m error\u001b[33m;\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\karamat\\tests\\browser\\production.spec.ts",
+                        "column": 20,
+                        "line": 28
+                      },
+                      "message": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded.\n\n  26 |       await page.evaluate(p => window.scrollTo(0, (document.documentElement.scrollHeight - innerHeight) * p), progress);\n  27 |       try {\n> 28 |         await page.waitForFunction(p => Math.abs((window as any).__fruitScene.getDiagnostics().progress - p) < .015, progress, { timeout: 20000 });\n     |                    ^\n  29 |       } catch (error) {\n  30 |         console.error('Stage failure', fruit, progress, await page.evaluate(() => ({ diagnostics: (window as any).__fruitScene?.getDiagnostics(), scroll: scrollY, max: document.documentElement.scrollHeight - innerHeight })), errors);\n  31 |         throw error;\n    at D:\\karamat\\tests\\browser\\production.spec.ts:28:20"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "Stage failure kinnow \u001b[33m0.57\u001b[39m {\n  diagnostics: {\n    geometries: \u001b[33m25\u001b[39m,\n    textures: \u001b[33m14\u001b[39m,\n    drawCalls: \u001b[33m25\u001b[39m,\n    triangles: \u001b[33m61858\u001b[39m,\n    progress: \u001b[33m0.5541779617436068\u001b[39m,\n    contextLost: \u001b[33mfalse\u001b[39m\n  },\n  scroll: \u001b[33m3694\u001b[39m,\n  max: \u001b[33m6481\u001b[39m\n} []\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:15:33.662Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\karamat\\test-results\\seo-phase2a-audit\\browser\\production-kinnow-selected-27baa-ompletion-and-scene-cleanup-desktop\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\karamat\\tests\\browser\\production.spec.ts",
+                    "column": 20,
+                    "line": 28
+                  }
+                }
+              ],
+              "status": "unexpected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 32657,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:21:28.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ed69554c53210704c98c-0b9976bb1f27694c40bf",
+          "file": "production.spec.ts",
+          "line": 8,
+          "column": 3
+        },
+        {
+          "title": "apple: selected engine, scroll completion and scene cleanup",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 74484,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:16:45.650Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 35046,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:22:01.496Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ed69554c53210704c98c-8092c9dc23e53ea01572",
+          "file": "production.spec.ts",
+          "line": 8,
+          "column": 3
+        },
+        {
+          "title": "anaar: selected engine, scroll completion and scene cleanup",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 86029,
+                  "error": {
+                    "message": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded.",
+                    "stack": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded.\n    at D:\\karamat\\tests\\browser\\production.spec.ts:28:20",
+                    "location": {
+                      "file": "D:\\karamat\\tests\\browser\\production.spec.ts",
+                      "column": 20,
+                      "line": 28
+                    },
+                    "snippet": " \u001b[90m 26 |\u001b[39m       \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(p \u001b[33m=>\u001b[39m window\u001b[33m.\u001b[39mscrollTo(\u001b[35m0\u001b[39m\u001b[33m,\u001b[39m (document\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollHeight \u001b[33m-\u001b[39m innerHeight) \u001b[33m*\u001b[39m p)\u001b[33m,\u001b[39m progress)\u001b[33m;\u001b[39m\n \u001b[90m 27 |\u001b[39m       \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 28 |\u001b[39m         \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForFunction(p \u001b[33m=>\u001b[39m \u001b[33mMath\u001b[39m\u001b[33m.\u001b[39mabs((window \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m__fruitScene\u001b[33m.\u001b[39mgetDiagnostics()\u001b[33m.\u001b[39mprogress \u001b[33m-\u001b[39m p) \u001b[33m<\u001b[39m \u001b[35m.015\u001b[39m\u001b[33m,\u001b[39m progress\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m20000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 29 |\u001b[39m       } \u001b[36mcatch\u001b[39m (error) {\n \u001b[90m 30 |\u001b[39m         console\u001b[33m.\u001b[39merror(\u001b[32m'Stage failure'\u001b[39m\u001b[33m,\u001b[39m fruit\u001b[33m,\u001b[39m progress\u001b[33m,\u001b[39m \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mevaluate(() \u001b[33m=>\u001b[39m ({ diagnostics\u001b[33m:\u001b[39m (window \u001b[36mas\u001b[39m any)\u001b[33m.\u001b[39m__fruitScene\u001b[33m?.\u001b[39mgetDiagnostics()\u001b[33m,\u001b[39m scroll\u001b[33m:\u001b[39m scrollY\u001b[33m,\u001b[39m max\u001b[33m:\u001b[39m document\u001b[33m.\u001b[39mdocumentElement\u001b[33m.\u001b[39mscrollHeight \u001b[33m-\u001b[39m innerHeight }))\u001b[33m,\u001b[39m errors)\u001b[33m;\u001b[39m\n \u001b[90m 31 |\u001b[39m         \u001b[36mthrow\u001b[39m error\u001b[33m;\u001b[39m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\karamat\\tests\\browser\\production.spec.ts",
+                        "column": 20,
+                        "line": 28
+                      },
+                      "message": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded.\n\n  26 |       await page.evaluate(p => window.scrollTo(0, (document.documentElement.scrollHeight - innerHeight) * p), progress);\n  27 |       try {\n> 28 |         await page.waitForFunction(p => Math.abs((window as any).__fruitScene.getDiagnostics().progress - p) < .015, progress, { timeout: 20000 });\n     |                    ^\n  29 |       } catch (error) {\n  30 |         console.error('Stage failure', fruit, progress, await page.evaluate(() => ({ diagnostics: (window as any).__fruitScene?.getDiagnostics(), scroll: scrollY, max: document.documentElement.scrollHeight - innerHeight })), errors);\n  31 |         throw error;\n    at D:\\karamat\\tests\\browser\\production.spec.ts:28:20"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [
+                    {
+                      "text": "Stage failure anaar \u001b[33m0.75\u001b[39m {\n  diagnostics: {\n    geometries: \u001b[33m77\u001b[39m,\n    textures: \u001b[33m15\u001b[39m,\n    drawCalls: \u001b[33m68\u001b[39m,\n    triangles: \u001b[33m204606\u001b[39m,\n    progress: \u001b[33m0.7367684298308318\u001b[39m,\n    contextLost: \u001b[33mfalse\u001b[39m\n  },\n  scroll: \u001b[33m6076\u001b[39m,\n  max: \u001b[33m8101\u001b[39m\n} []\n"
+                    }
+                  ],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:18:00.591Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\karamat\\test-results\\seo-phase2a-audit\\browser\\production-anaar-selected--d9e1b-ompletion-and-scene-cleanup-desktop\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\karamat\\tests\\browser\\production.spec.ts",
+                    "column": 20,
+                    "line": 28
+                  }
+                }
+              ],
+              "status": "unexpected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 30954,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:22:36.597Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ed69554c53210704c98c-2d596bedec115012051f",
+          "file": "production.spec.ts",
+          "line": 8,
+          "column": 3
+        },
+        {
+          "title": "information pages, contact links and mobile widths",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9422,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:19:28.046Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7231,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:23:07.635Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ed69554c53210704c98c-9bad3aa9f3dfe513a147",
+          "file": "production.spec.ts",
+          "line": 52,
+          "column": 1
+        },
+        {
+          "title": "reduced motion, graphics fallback and basket access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 20455,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:19:37.959Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 16487,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:23:14.909Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "ed69554c53210704c98c-d889fc7d9d2a3cfd60c0",
+          "file": "production.spec.ts",
+          "line": 76,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "seo.spec.ts",
+      "file": "seo.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "public routes: initial metadata, direct access, refresh and mobile layout",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 64958,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:19:58.582Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 50440,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:23:31.501Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "265a6ee67c94b2ef6801-6499f6b22a3134b58830",
+          "file": "seo.spec.ts",
+          "line": 12,
+          "column": 1
+        },
+        {
+          "title": "client navigation updates product metadata and removes stale schema",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4109,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:21:03.595Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 5708,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:24:21.993Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "265a6ee67c94b2ef6801-22029ddc0c2cce315f22",
+          "file": "seo.spec.ts",
+          "line": 42,
+          "column": 1
+        },
+        {
+          "title": "crawler resources return actual files",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "desktop",
+              "projectName": "desktop",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 121,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:21:07.902Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            },
+            {
+              "timeout": 180000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "mobile",
+              "projectName": "mobile",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 82,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-16T23:24:27.735Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "265a6ee67c94b2ef6801-cb60be074f3e4a755dc0",
+          "file": "seo.spec.ts",
+          "line": 58,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-16T23:14:31.242Z",
+    "duration": 597009.157,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

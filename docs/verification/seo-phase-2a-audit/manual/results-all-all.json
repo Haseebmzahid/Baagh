@@ -1,0 +1,1267 @@
+{
+  "baseline": false,
+  "area": "all",
+  "cases": [
+    {
+      "name": "1440-direct-_everyday-fresh",
+      "status": "PASS",
+      "ms": 4912,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Everyday.Exceptional."
+      }
+    },
+    {
+      "name": "1440-direct-_signature",
+      "status": "PASS",
+      "ms": 3154,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Fruit chosen to be given."
+      }
+    },
+    {
+      "name": "1440-direct-_product_mangoes_chaunsa",
+      "status": "PASS",
+      "ms": 2794,
+      "detail": {
+        "status": 200,
+        "mode": "hydrate",
+        "h1": "Chaunsa Mango"
+      }
+    },
+    {
+      "name": "1440-direct-_product_citrus_kinnow",
+      "status": "PASS",
+      "ms": 2155,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Kinnow Mandarin"
+      }
+    },
+    {
+      "name": "1440-direct-_product_apples_apple",
+      "status": "PASS",
+      "ms": 1886,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Apple"
+      }
+    },
+    {
+      "name": "1440-direct-_product_seasonal_anaar",
+      "status": "PASS",
+      "ms": 1861,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Anaar"
+      }
+    },
+    {
+      "name": "1440-direct-_our-story",
+      "status": "PASS",
+      "ms": 2012,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Good fruit.\nConsidered judgement."
+      }
+    },
+    {
+      "name": "1440-navigation-history",
+      "status": "PASS",
+      "ms": 2775,
+      "detail": "Everyday Fresh → Signature → Our Story → Everyday Fresh → header Order → Basket → Back/Forward"
+    },
+    {
+      "name": "1440-basket-mutations-restoration",
+      "status": "PASS",
+      "ms": 3251,
+      "detail": [
+        {
+          "productId": "chaunsa",
+          "packId": "2kg",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "name": "1440-cabinet-pointer-keyboard",
+      "status": "FAIL",
+      "ms": 23189,
+      "error": "expect(locator).toHaveCount(expected) failed\n\nLocator:  getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas')\nExpected: 3\nReceived: 4\nTimeout:  20000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas') with timeout 20000ms\n  - waiting for getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas')\n    40 × locator resolved to 4 elements\n       - unexpected value \"4\"\n"
+    },
+    {
+      "name": "1440-homepage-nine-station-journey",
+      "status": "FAIL",
+      "ms": 72211,
+      "error": "page.waitForFunction: Timeout 30000ms exceeded."
+    },
+    {
+      "name": "1440-chaunsa-reduced-gradual",
+      "status": "PASS",
+      "ms": 31269,
+      "detail": {
+        "initial": {
+          "geometries": 14,
+          "textures": 8,
+          "drawCalls": 3,
+          "triangles": 18866,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.02499614257059096
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.04999228514118192
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.09998457028236384
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.19996914056472767
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.3499459959882734
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5000771485881809
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6500540040117266
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.8000308594352723
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9500077148588181
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 1440,
+          "height": 900,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "1440-kinnow-reduced-gradual",
+      "status": "PASS",
+      "ms": 30007,
+      "detail": {
+        "initial": {
+          "geometries": 15,
+          "textures": 8,
+          "drawCalls": 4,
+          "triangles": 17138,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.02499614257059096
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.04999228514118192
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.09998457028236384
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.19996914056472767
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.3499459959882734
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5000771485881809
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6500540040117266
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.8000308594352723
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9500077148588181
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 1440,
+          "height": 900,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "1440-apple-reduced-gradual",
+      "status": "PASS",
+      "ms": 29834,
+      "detail": {
+        "initial": {
+          "geometries": 16,
+          "textures": 8,
+          "drawCalls": 4,
+          "triangles": 20526,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.024996528259963895
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.04999305651992779
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.09998611303985558
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.19997222607971116
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.3499513956394945
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5000694348007221
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6500486043605055
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.8000277739202889
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9500069434800722
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 1440,
+          "height": 900,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "1440-anaar-reduced-gradual",
+      "status": "PASS",
+      "ms": 29850,
+      "detail": {
+        "initial": {
+          "geometries": 21,
+          "textures": 7,
+          "drawCalls": 11,
+          "triangles": 20910,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.02505863473645229
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.04999382792247871
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.09998765584495742
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.19997531168991484
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.3499567954573509
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5000617207752129
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6500432045426491
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.8000246883100852
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9500061720775212
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 1440,
+          "height": 900,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "1440-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "768-direct-_everyday-fresh",
+      "status": "PASS",
+      "ms": 2309,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Everyday.Exceptional."
+      }
+    },
+    {
+      "name": "768-direct-_signature",
+      "status": "PASS",
+      "ms": 1719,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Fruit chosen to be given."
+      }
+    },
+    {
+      "name": "768-direct-_product_mangoes_chaunsa",
+      "status": "PASS",
+      "ms": 1441,
+      "detail": {
+        "status": 200,
+        "mode": "hydrate",
+        "h1": "Chaunsa Mango"
+      }
+    },
+    {
+      "name": "768-direct-_product_citrus_kinnow",
+      "status": "PASS",
+      "ms": 1328,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Kinnow Mandarin"
+      }
+    },
+    {
+      "name": "768-direct-_product_apples_apple",
+      "status": "PASS",
+      "ms": 1476,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Apple"
+      }
+    },
+    {
+      "name": "768-direct-_product_seasonal_anaar",
+      "status": "PASS",
+      "ms": 1530,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Anaar"
+      }
+    },
+    {
+      "name": "768-direct-_our-story",
+      "status": "PASS",
+      "ms": 1351,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Good fruit.\nConsidered judgement."
+      }
+    },
+    {
+      "name": "768-navigation-history",
+      "status": "PASS",
+      "ms": 1996,
+      "detail": "Everyday Fresh → Signature → Our Story → Everyday Fresh → header Order → Basket → Back/Forward"
+    },
+    {
+      "name": "768-basket-mutations-restoration",
+      "status": "PASS",
+      "ms": 2866,
+      "detail": [
+        {
+          "productId": "chaunsa",
+          "packId": "2kg",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "name": "768-cabinet-pointer-keyboard",
+      "status": "FAIL",
+      "ms": 24563,
+      "error": "expect(locator).toHaveCount(expected) failed\n\nLocator:  getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas')\nExpected: 3\nReceived: 4\nTimeout:  20000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas') with timeout 20000ms\n  - waiting for getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas')\n    40 × locator resolved to 4 elements\n       - unexpected value \"4\"\n"
+    },
+    {
+      "name": "768-homepage-nine-station-journey",
+      "status": "FAIL",
+      "ms": 57177,
+      "error": "page.waitForFunction: Timeout 30000ms exceeded."
+    },
+    {
+      "name": "768-chaunsa-reduced-gradual",
+      "status": "PASS",
+      "ms": 21823,
+      "detail": {
+        "initial": {
+          "geometries": 14,
+          "textures": 8,
+          "drawCalls": 3,
+          "triangles": 18866,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.024952535937076213
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.0500406834825061
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.09994575535665853
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.20002712232167075
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.3500135611608354
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6499864388391646
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.7999728776783293
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9499593165174939
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 768,
+          "height": 1024,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "768-kinnow-reduced-gradual",
+      "status": "PASS",
+      "ms": 24828,
+      "detail": {
+        "initial": {
+          "geometries": 15,
+          "textures": 8,
+          "drawCalls": 4,
+          "triangles": 17138,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.024952535937076213
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.0500406834825061
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.09994575535665853
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.20002712232167075
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.3500135611608354
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6499864388391646
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.7999728776783293
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9499593165174939
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 768,
+          "height": 1024,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "768-apple-reduced-gradual",
+      "status": "PASS",
+      "ms": 29385,
+      "detail": {
+        "initial": {
+          "geometries": 16,
+          "textures": 8,
+          "drawCalls": 4,
+          "triangles": 20526,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.025021359697302577
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.050042719394605154
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.09996338337605273
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.20004882216526304
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.3500549249359209
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5000610277065788
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6499450750640791
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.799951177834737
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9499572806053949
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 768,
+          "height": 1024,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "768-anaar-reduced-gradual",
+      "status": "PASS",
+      "ms": 26306,
+      "detail": {
+        "initial": {
+          "geometries": 21,
+          "textures": 7,
+          "drawCalls": 11,
+          "triangles": 20910,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.02495388955191494
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.05001627427579473
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.10003254855158945
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.19995660193121406
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.35000542475859825
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5000542475859824
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6499945752414018
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.800043398068786
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9499837257242053
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 768,
+          "height": 1024,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "768-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "375-direct-_everyday-fresh",
+      "status": "PASS",
+      "ms": 2486,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Everyday.Exceptional."
+      }
+    },
+    {
+      "name": "375-direct-_signature",
+      "status": "PASS",
+      "ms": 1254,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Fruit chosen to be given."
+      }
+    },
+    {
+      "name": "375-direct-_product_mangoes_chaunsa",
+      "status": "PASS",
+      "ms": 1297,
+      "detail": {
+        "status": 200,
+        "mode": "hydrate",
+        "h1": "Chaunsa Mango"
+      }
+    },
+    {
+      "name": "375-direct-_product_citrus_kinnow",
+      "status": "PASS",
+      "ms": 941,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Kinnow Mandarin"
+      }
+    },
+    {
+      "name": "375-direct-_product_apples_apple",
+      "status": "PASS",
+      "ms": 897,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Apple"
+      }
+    },
+    {
+      "name": "375-direct-_product_seasonal_anaar",
+      "status": "PASS",
+      "ms": 996,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Anaar"
+      }
+    },
+    {
+      "name": "375-direct-_our-story",
+      "status": "PASS",
+      "ms": 819,
+      "detail": {
+        "status": 200,
+        "mode": "createRoot",
+        "h1": "Good fruit.\nConsidered judgement."
+      }
+    },
+    {
+      "name": "375-navigation-history",
+      "status": "PASS",
+      "ms": 1519,
+      "detail": "Everyday Fresh → Signature → Our Story → Everyday Fresh → header Order → Basket → Back/Forward"
+    },
+    {
+      "name": "375-basket-mutations-restoration",
+      "status": "PASS",
+      "ms": 2104,
+      "detail": [
+        {
+          "productId": "chaunsa",
+          "packId": "2kg",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "name": "375-cabinet-pointer-keyboard",
+      "status": "FAIL",
+      "ms": 22255,
+      "error": "expect(locator).toHaveCount(expected) failed\n\nLocator:  getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas')\nExpected: 3\nReceived: 4\nTimeout:  20000ms\n\nCall log:\n  - Expect \"toHaveCount\" getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas') with timeout 20000ms\n  - waiting for getByRole('dialog', { name: 'Fruit Intelligence 3D Specimen Cabinet' }).locator('canvas')\n    40 × locator resolved to 4 elements\n       - unexpected value \"4\"\n"
+    },
+    {
+      "name": "375-homepage-nine-station-journey",
+      "status": "PASS",
+      "ms": 163080,
+      "detail": [
+        {
+          "station": 1,
+          "requested": 0.03,
+          "text": "One fruit, before anyone else has seen it.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 2,
+          "requested": 0.15,
+          "text": "Chosen at source.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 3,
+          "requested": 0.28,
+          "text": "This fruit came from somewhere real.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 4,
+          "requested": 0.415,
+          "text": "Chosen by people who know fruit.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 5,
+          "requested": 0.535,
+          "text": "Not everything that looks good is good enough.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 6,
+          "requested": 0.65,
+          "text": "Handled with care.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 7,
+          "requested": 0.775,
+          "text": "Delivered with confidence.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 8,
+          "requested": 0.88,
+          "text": "IT ARRIVES THE WAY IT LEFT.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 9,
+          "requested": 0.98,
+          "text": "Fruit you never have to doubt.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        }
+      ]
+    },
+    {
+      "name": "375-chaunsa-reduced-gradual",
+      "status": "PASS",
+      "ms": 14427,
+      "detail": {
+        "initial": {
+          "geometries": 14,
+          "textures": 8,
+          "drawCalls": 3,
+          "triangles": 6194,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.024970070121429794
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.04994014024285959
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.10005130836326322
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.19993158884898238
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.34992303745510517
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.500085513938772
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6500769625448948
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.8000684111510176
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9500598597571405
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 375,
+          "height": 812,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "375-kinnow-reduced-gradual",
+      "status": "PASS",
+      "ms": 14473,
+      "detail": {
+        "initial": {
+          "geometries": 15,
+          "textures": 8,
+          "drawCalls": 4,
+          "triangles": 7026,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.024970070121429794
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.04994014024285959
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.10005130836326322
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.19993158884898238
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.34992303745510517
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.500085513938772
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6500769625448948
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.8000684111510176
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9500598597571405
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 375,
+          "height": 812,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "375-apple-reduced-gradual",
+      "status": "PASS",
+      "ms": 21484,
+      "detail": {
+        "initial": {
+          "geometries": 16,
+          "textures": 8,
+          "drawCalls": 4,
+          "triangles": 7278,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.024934585193166076
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.05002308757888256
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.10004617515776512
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.19993843312297985
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.35000769585962754
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5000769585962752
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6499923041403725
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.8000615668770201
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9499769124211175
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 375,
+          "height": 812,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "375-anaar-reduced-gradual",
+      "status": "PASS",
+      "ms": 13298,
+      "detail": {
+        "initial": {
+          "geometries": 21,
+          "textures": 7,
+          "drawCalls": 11,
+          "triangles": 9710,
+          "progress": 0,
+          "contextLost": false,
+          "scroll": 0
+        },
+        "samples": [
+          {
+            "requested": 0,
+            "actual": 0
+          },
+          {
+            "requested": 0.025,
+            "actual": 0.025037624846080176
+          },
+          {
+            "requested": 0.05,
+            "actual": 0.04993843207005062
+          },
+          {
+            "requested": 0.1,
+            "actual": 0.10001368176221097
+          },
+          {
+            "requested": 0.2,
+            "actual": 0.20002736352442194
+          },
+          {
+            "requested": 0.35,
+            "actual": 0.34997947735668355
+          },
+          {
+            "requested": 0.5,
+            "actual": 0.5000684088110549
+          },
+          {
+            "requested": 0.65,
+            "actual": 0.6500205226433164
+          },
+          {
+            "requested": 0.8,
+            "actual": 0.799972636475578
+          },
+          {
+            "requested": 0.95,
+            "actual": 0.9500615679299493
+          },
+          {
+            "requested": 1,
+            "actual": 1
+          }
+        ],
+        "gl": {
+          "canvases": 1,
+          "valid": true,
+          "width": 375,
+          "height": 812,
+          "program": true
+        }
+      }
+    },
+    {
+      "name": "375-console-runtime",
+      "status": "PASS",
+      "detail": []
+    }
+  ]
+}

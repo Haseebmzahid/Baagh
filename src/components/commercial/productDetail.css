@@ -1,0 +1,50 @@
+/* Exact existing 1280 / 768 breakpoints and commercial measurements.
+   Scoped to product pages; other commercial layouts keep their current rules. */
+.product-detail-page { --product-margin:56px; --product-gutter:28px; --product-section:140px; }
+.product-detail-page .baagh-page-container { padding-inline:var(--product-margin) !important; }
+.product-detail-page .baagh-commercial-page { padding-top:86px !important; }
+.product-detail-page .baagh-commercial-section { padding-top:var(--product-section) !important; }
+.product-composition { display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:64px; align-items:start; padding-top:32px; }
+.product-quality-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:var(--product-gutter) 64px; }
+.product-related { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:var(--product-gutter); }
+.product-signature-link { margin-top:72px; }
+.product-order-panel { position:relative; isolation:isolate; z-index:4; }
+.product-order-panel::before { content:''; display:none; position:absolute; inset:0; z-index:-1; backdrop-filter:blur(18px) saturate(115%); -webkit-backdrop-filter:blur(18px) saturate(115%); pointer-events:none; }
+.product-order-actions { display:contents; }
+.product-primary-action { flex:1 1 180px; }
+.product-whatsapp-action { flex:1 1 100%; }
+.product-mobile-label,.product-sticky-price { display:none; }
+@media(min-width:768px) { .product-detail-page .baagh-button:not(.baagh-button--compact):not(.baagh-button--tertiary) { height:52px !important; } }
+@media(max-width:1279px) {
+  .product-detail-page { --product-margin:40px; --product-gutter:22px; --product-section:104px; }
+  .product-composition { grid-template-columns:1fr; gap:36px; }
+  .product-composition > div:first-child .fruit-photo { aspect-ratio:4 / 3 !important; }
+  .product-quality-grid { grid-template-columns:1fr; gap:28px; }
+  .product-related { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:767px) {
+  .product-detail-page { --product-margin:22px; --product-gutter:14px; --product-section:76px; }
+  .product-detail-page .baagh-commercial-page { padding-top:64px !important; }
+  .product-composition { padding-top:20px; }
+  .product-related { grid-template-columns:1fr; row-gap:40px; }
+  .product-related .baagh-specimen-plate { aspect-ratio:3 / 2 !important; }
+  .product-related button[aria-label^="Add "] { height:44px !important; padding:0 22px !important; background:#f6f1e6 !important; color:#1d2419 !important; border:none !important; border-radius:2px; }
+  .product-related button[aria-label^="Add "] > span { display:none; }
+  .product-detail-page .baagh-section-heading { gap:16px !important; }
+  .product-detail-page .baagh-button:not(.baagh-button--compact):not(.baagh-button--tertiary) { height:56px !important; }
+  .product-signature-link { margin-top:48px; }
+  /* Keep the rail above the original grain, just as the former sibling rail.
+     Neither the container nor the panel may trap its fixed stacking level. */
+  .product-detail-page .baagh-page-container { z-index:auto !important; }
+  .product-order-panel { isolation:auto; z-index:auto; }
+  .product-order-panel > div { position:relative; backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+  .product-order-panel::before { display:block; z-index:0; border-radius:2px; }
+  .product-desktop-label { display:none; }
+  .product-mobile-label { display:inline; }
+  .product-order-actions { position:fixed; left:0; right:0; bottom:0; z-index:40; padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px)); backdrop-filter:blur(22px) saturate(120%); -webkit-backdrop-filter:blur(22px) saturate(120%); background:rgba(18,17,12,.74); border-top:1px solid rgba(244,238,226,.12); display:flex; align-items:center; gap:12px; }
+  .product-primary-action,.product-whatsapp-action { flex:none; }
+  .product-detail-page .product-order-actions .baagh-button:not(.baagh-button--compact):not(.baagh-button--tertiary) { height:44px !important; min-height:44px; padding:0 22px !important; width:auto !important; }
+  .product-sticky-price { display:block; min-width:0; flex:1 1 auto; }
+  .product-sticky-price > span:first-child { display:block; font:8.5px 'IBM Plex Mono',monospace; letter-spacing:.18em; text-transform:uppercase; color:rgba(244,238,226,.42); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .product-sticky-price > span + span { display:block; margin-top:3px; font:300 17px Newsreader,Georgia,serif; color:#f4efe4; }
+}

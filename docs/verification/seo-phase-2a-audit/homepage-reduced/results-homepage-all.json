@@ -1,0 +1,1061 @@
+{
+  "baseline": false,
+  "area": "homepage",
+  "reducedHome": true,
+  "screenshots": false,
+  "cases": [
+    {
+      "name": "1440-homepage-nine-station-journey",
+      "status": "PASS",
+      "ms": 173606,
+      "detail": [
+        {
+          "station": 1,
+          "requested": 0.03,
+          "text": "One fruit, before anyone else has seen it.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 1
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 2,
+          "requested": 0.15,
+          "text": "Chosen at source.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 1
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 3,
+          "requested": 0.28,
+          "text": "This fruit came from somewhere real.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 1
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 4,
+          "requested": 0.415,
+          "text": "Chosen by people who know fruit.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 1
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 5,
+          "requested": 0.535,
+          "text": "Not everything that looks good is good enough.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 1
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 6,
+          "requested": 0.65,
+          "text": "Handled with care.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 1
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 7,
+          "requested": 0.775,
+          "text": "Delivered with confidence.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 1
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 8,
+          "requested": 0.88,
+          "text": "IT ARRIVES THE WAY IT LEFT.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 1
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 9,
+          "requested": 0.98,
+          "text": "Fruit you never have to doubt.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 1440,
+            "height": 900,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "1440-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "768-homepage-nine-station-journey",
+      "status": "PASS",
+      "ms": 114302,
+      "detail": [
+        {
+          "station": 1,
+          "requested": 0.03,
+          "text": "One fruit, before anyone else has seen it.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 1
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 2,
+          "requested": 0.15,
+          "text": "Chosen at source.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 1
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 3,
+          "requested": 0.28,
+          "text": "This fruit came from somewhere real.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 1
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 4,
+          "requested": 0.415,
+          "text": "Chosen by people who know fruit.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 1
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 5,
+          "requested": 0.535,
+          "text": "Not everything that looks good is good enough.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 1
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 6,
+          "requested": 0.65,
+          "text": "Handled with care.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 1
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 7,
+          "requested": 0.775,
+          "text": "Delivered with confidence.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 1
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 8,
+          "requested": 0.88,
+          "text": "IT ARRIVES THE WAY IT LEFT.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 1
+            },
+            {
+              "text": "Home",
+              "opacity": 0.28
+            }
+          ]
+        },
+        {
+          "station": 9,
+          "requested": 0.98,
+          "text": "Fruit you never have to doubt.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 768,
+            "height": 1024,
+            "program": true
+          },
+          "chapters": [
+            {
+              "text": "Fruit",
+              "opacity": 0.28
+            },
+            {
+              "text": "Crate",
+              "opacity": 0.28
+            },
+            {
+              "text": "Source",
+              "opacity": 0.28
+            },
+            {
+              "text": "Hands",
+              "opacity": 0.28
+            },
+            {
+              "text": "Selection",
+              "opacity": 0.28
+            },
+            {
+              "text": "Packing",
+              "opacity": 0.28
+            },
+            {
+              "text": "Journey",
+              "opacity": 0.28
+            },
+            {
+              "text": "Arrival",
+              "opacity": 0.28
+            },
+            {
+              "text": "Home",
+              "opacity": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "768-console-runtime",
+      "status": "PASS",
+      "detail": []
+    },
+    {
+      "name": "375-homepage-nine-station-journey",
+      "status": "PASS",
+      "ms": 36530,
+      "detail": [
+        {
+          "station": 1,
+          "requested": 0.03,
+          "text": "One fruit, before anyone else has seen it.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 2,
+          "requested": 0.15,
+          "text": "Chosen at source.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 3,
+          "requested": 0.28,
+          "text": "This fruit came from somewhere real.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 4,
+          "requested": 0.415,
+          "text": "Chosen by people who know fruit.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 5,
+          "requested": 0.535,
+          "text": "Not everything that looks good is good enough.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 6,
+          "requested": 0.65,
+          "text": "Handled with care.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 7,
+          "requested": 0.775,
+          "text": "Delivered with confidence.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 8,
+          "requested": 0.88,
+          "text": "IT ARRIVES THE WAY IT LEFT.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        },
+        {
+          "station": 9,
+          "requested": 0.98,
+          "text": "Fruit you never have to doubt.",
+          "gl": {
+            "canvases": 1,
+            "valid": true,
+            "width": 375,
+            "height": 812,
+            "program": true
+          },
+          "chapters": []
+        }
+      ]
+    },
+    {
+      "name": "375-console-runtime",
+      "status": "PASS",
+      "detail": []
+    }
+  ]
+}

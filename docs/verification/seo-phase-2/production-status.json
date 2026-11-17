@@ -1,0 +1,30 @@
+[
+  {
+    "path": "/seo-phase-2-missing",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "title": "Page not found | BAAGH",
+    "robots": "noindex, follow"
+  },
+  {
+    "path": "/product/mangoes/not-there",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "title": "Page not found | BAAGH",
+    "robots": "noindex, follow"
+  },
+  {
+    "path": "/about-us",
+    "status": 200,
+    "contentType": "text/html; charset=utf-8",
+    "title": "Our Story | BAAGH",
+    "robots": "index, follow, max-image-preview:large",
+    "canonical": "https://baagh.vercel.app/our-story"
+  },
+  {
+    "path": "/llms.txt",
+    "status": 200,
+    "contentType": "text/plain; charset=utf-8",
+    "excerpt": "# BAAGH\n\n> Fruit collection, gifting and educational Fruit Intelligence experiences.\n\nThis is a supplementary navigation resource. Refer to each page for curren"
+  }
+]

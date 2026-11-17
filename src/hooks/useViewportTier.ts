@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useSyncExternalStore } from 'react';
 import { tokens } from '../config/tokens';
 
 export type ViewportTier = 'mobile' | 'tablet' | 'desktop';
@@ -11,27 +11,21 @@ export interface ViewportState {
   maxPixelRatioCap: number;
 }
 
+const serverViewport = calculateViewport(1440, 900, 1);
+let browserViewport: ViewportState | undefined;
+function readViewport(): ViewportState {
+  const w = window.innerWidth, h = window.innerHeight, dpr = window.devicePixelRatio || 1;
+  if (!browserViewport || browserViewport.width !== w || browserViewport.height !== h || browserViewport.pixelRatio !== Math.min(dpr, browserViewport.maxPixelRatioCap)) {
+    browserViewport = calculateViewport(w, h, dpr);
+  }
+  return browserViewport;
+}
+function subscribeViewport(update: () => void) {
+  window.addEventListener('resize', update, { passive: true });
+  return () => window.removeEventListener('resize', update);
+}
 export function useViewportTier(): ViewportState {
-  const [viewport, setViewport] = useState<ViewportState>(() => {
-    const w = typeof window !== 'undefined' ? window.innerWidth : 1440;
-    const h = typeof window !== 'undefined' ? window.innerHeight : 900;
-    const dpr = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1;
-    return calculateViewport(w, h, dpr);
-  });
-
-  useEffect(() => {
-    function handleResize() {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const dpr = window.devicePixelRatio || 1;
-      setViewport(calculateViewport(w, h, dpr));
-    }
-
-    window.addEventListener('resize', handleResize, { passive: true });
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  return viewport;
+  return useSyncExternalStore(subscribeViewport, readViewport, () => serverViewport);
 }
 
 function calculateViewport(w: number, h: number, dpr: number): ViewportState {

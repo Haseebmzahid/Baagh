@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import vercel from './vercel.json';
 
 export default defineConfig({
+  build: { manifest: true },
   plugins: [react(), {
     name: 'preview-vercel-routing',
     configurePreviewServer(server) {

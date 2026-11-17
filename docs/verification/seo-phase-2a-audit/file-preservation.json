@@ -1,0 +1,20 @@
+{
+  "originalFilesChecked": 406,
+  "differences": [],
+  "originalPerformanceEvidenceRestored": true,
+  "auditCreatedPerformanceFilesArchivedThenRemoved": [
+    "anaar-tablet-metrics.json",
+    "anaar-tablet.jpg",
+    "apple-finish-tablet.jpg",
+    "apple-tablet-metrics.json",
+    "apple-tablet.jpg",
+    "chaunsa-finish-tablet.jpg",
+    "chaunsa-tablet-metrics.json",
+    "chaunsa-tablet.jpg",
+    "contact-tablet.jpg",
+    "kinnow-tablet-metrics.json",
+    "kinnow-tablet.jpg",
+    "our-story-tablet.jpg",
+    "privacy-policy-tablet.jpg"
+  ]
+}

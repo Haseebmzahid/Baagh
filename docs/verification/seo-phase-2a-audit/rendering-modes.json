@@ -1,0 +1,116 @@
+[
+  {
+    "path": "/",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/everyday-fresh",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/signature",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/product/mangoes/chaunsa",
+    "marker": true,
+    "emptyRoot": false,
+    "h1Count": 1
+  },
+  {
+    "path": "/product/citrus/kinnow",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/product/apples/apple",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/product/seasonal/anaar",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/fruit-intelligence/chaunsa",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/fruit-intelligence/kinnow",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/fruit-intelligence/apple",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/fruit-intelligence/anaar",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/our-story",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/contact",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/privacy-policy",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/cookies",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/terms",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/delivery",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/returns",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  },
+  {
+    "path": "/help",
+    "marker": false,
+    "emptyRoot": true,
+    "h1Count": 0
+  }
+]

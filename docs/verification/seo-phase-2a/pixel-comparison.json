@@ -1,0 +1,128 @@
+[
+  {
+    "width": 1440,
+    "mode": "no-js",
+    "changedPixels": 0,
+    "over8": 0,
+    "maximumChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "width": 1440,
+    "mode": "before-hydration",
+    "changedPixels": 0,
+    "over8": 0,
+    "maximumChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "width": 1440,
+    "mode": "hydrated",
+    "changedPixels": 0,
+    "over8": 0,
+    "maximumChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "width": 768,
+    "mode": "no-js",
+    "changedPixels": 0,
+    "over8": 0,
+    "maximumChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "width": 768,
+    "mode": "before-hydration",
+    "changedPixels": 0,
+    "over8": 0,
+    "maximumChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "width": 768,
+    "mode": "hydrated",
+    "changedPixels": 0,
+    "over8": 0,
+    "maximumChannelDifference": 0,
+    "bounds": null
+  },
+  {
+    "width": 375,
+    "mode": "no-js",
+    "changedPixels": 190,
+    "over8": 0,
+    "maximumChannelDifference": 1,
+    "bounds": [
+      16,
+      644,
+      353,
+      772
+    ]
+  },
+  {
+    "width": 375,
+    "mode": "before-hydration",
+    "changedPixels": 190,
+    "over8": 0,
+    "maximumChannelDifference": 1,
+    "bounds": [
+      16,
+      644,
+      353,
+      772
+    ]
+  },
+  {
+    "width": 375,
+    "mode": "hydrated",
+    "changedPixels": 190,
+    "over8": 0,
+    "maximumChannelDifference": 1,
+    "bounds": [
+      16,
+      644,
+      353,
+      772
+    ]
+  },
+  {
+    "width": 390,
+    "mode": "no-js",
+    "changedPixels": 190,
+    "over8": 0,
+    "maximumChannelDifference": 2,
+    "bounds": [
+      16,
+      656,
+      368,
+      804
+    ]
+  },
+  {
+    "width": 390,
+    "mode": "before-hydration",
+    "changedPixels": 190,
+    "over8": 0,
+    "maximumChannelDifference": 2,
+    "bounds": [
+      16,
+      656,
+      368,
+      804
+    ]
+  },
+  {
+    "width": 390,
+    "mode": "hydrated",
+    "changedPixels": 190,
+    "over8": 0,
+    "maximumChannelDifference": 2,
+    "bounds": [
+      16,
+      656,
+      368,
+      804
+    ]
+  }
+]

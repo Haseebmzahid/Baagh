@@ -13,7 +13,6 @@ import {
   QuantityStepper,
   Section,
   StateMark,
-  useCommercialLayout,
   WhatsAppButton,
 } from './primitives';
 import { ProductCard } from './ProductCard';
@@ -35,6 +34,7 @@ import {
   unavailableNote,
 } from '../../data/catalogue';
 import type { Pack, Product } from '../../data/catalogue';
+import './productDetail.css';
 import { useBasket } from '../../context/BasketContext';
 
 /**
@@ -78,8 +78,6 @@ const ProductDetailView: React.FC<{
   product: Product;
   onNavigateRoute: (path: string) => void;
 }> = ({ product, onNavigateRoute }) => {
-  const { isMobile, isTablet, gutter } = useCommercialLayout();
-  const stacked = isMobile || isTablet;
 
   const packs: Pack[] = product.packs;
 
@@ -125,22 +123,14 @@ const ProductDetailView: React.FC<{
   );
 
   return (
-    <CommercialPage>
+    <div className="product-detail-page"><CommercialPage>
       <PageContainer>
         <Breadcrumb product={product} onNavigateRoute={onNavigateRoute} />
 
         {/* ---- Specimen + order ------------------------------------------- */}
-        <section
-          style={{
-            display: 'grid',
-            gridTemplateColumns: stacked ? '1fr' : 'minmax(0,1.05fr) minmax(0,1fr)',
-            gap: stacked ? '36px' : '64px',
-            alignItems: 'start',
-            paddingTop: isMobile ? '20px' : '32px',
-          }}
-        >
+        <section className="product-composition">
           <div style={{ position: 'relative' }}>
-            <ProductSpecimen product={product} ratio={stacked ? '4 / 3' : '1 / 1'} />
+            <ProductSpecimen product={product} ratio="1 / 1" />
           </div>
 
           <div>
@@ -195,25 +185,15 @@ const ProductDetailView: React.FC<{
               </p>
             )}
 
-            {/* Desktop and tablet keep the order block in the column. Mobile
-                moves it to the sticky bar at the foot of the viewport. */}
-            {!isMobile && <div style={{ marginTop: '36px' }}>{orderBlock}</div>}
+            {/* The panel has one parent at every width. CSS places its one
+                action group in the existing mobile viewport rail. */}
+            <div style={{ marginTop: '36px' }}>{orderBlock}</div>
           </div>
         </section>
 
-        {/* Mobile: the order block lives inline as well, so the reader can act
-            without waiting for the sticky bar to be noticed. */}
-        {isMobile && <div style={{ marginTop: '36px' }}>{orderBlock}</div>}
-
         {/* ---- Quality standard ------------------------------------------- */}
         <Section eyebrow="How this fruit is chosen" title={product.selection.title}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: stacked ? '1fr' : 'minmax(0,1fr) minmax(0,1fr)',
-              gap: stacked ? '28px' : `${gutter}px 64px`,
-            }}
-          >
+          <div className="product-quality-grid">
             <p
               style={{
                 fontFamily: c.font.serif,
@@ -280,22 +260,12 @@ const ProductDetailView: React.FC<{
             </Button>
           }
         >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: isMobile
-                ? '1fr'
-                : isTablet
-                  ? 'repeat(2, minmax(0, 1fr))'
-                  : 'repeat(3, minmax(0, 1fr))',
-              gap: `${isMobile ? 40 : gutter}px ${gutter}px`,
-            }}
-          >
+          <div className="product-related">
             {related.map((r) => (
               <ProductCard
                 key={r.id}
                 product={r}
-                landscape={isMobile}
+                landscape={false}
                 onOpen={(p) => onNavigateRoute(routeOf(p))}
               />
             ))}
@@ -310,19 +280,7 @@ const ProductDetailView: React.FC<{
         />
       </PageContainer>
 
-      {/* Mobile sticky order bar, on G3 glass. Order actions never scroll out
-          of reach — the approved mobile recomposition. */}
-      {isMobile && (
-        <MobileOrderBar
-          product={product}
-          pack={pack}
-          orderMessage={orderMessage}
-          added={added}
-          onAdd={addToBasket}
-          orderable={orderable}
-        />
-      )}
-    </CommercialPage>
+    </CommercialPage></div>
   );
 };
 
@@ -423,7 +381,7 @@ const OrderBlock: React.FC<{
   orderMessage,
   orderable,
 }) => (
-  <Glass
+  <div className="product-order-panel"><Glass
     tier="vitrine"
     style={{
       padding: '26px 26px 24px',
@@ -467,8 +425,8 @@ const OrderBlock: React.FC<{
       </div>
     )}
 
-    {/* Quantity + add */}
-    <div
+    {/* One action group: inline on desktop, viewport rail on mobile. */}
+    <div className="product-quantity-row"
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -482,22 +440,24 @@ const OrderBlock: React.FC<{
         onChange={onQuantity}
         ariaLabel={`Quantity of ${product.name}`}
       />
-      <div style={{ flex: '1 1 180px' }}>
-        <Button variant="primary" full disabled={!orderable} onClick={onAdd}>
-          {!orderable
-            ? availabilityLabel(product.availability)
-            : added
-              ? 'Added to basket'
-              : 'Add to basket'}
-        </Button>
-      </div>
-    </div>
-
-    {/* WhatsApp is a peer of primary, never louder. */}
-    <div style={{ marginTop: '12px' }}>
-      <WhatsAppButton full message={orderMessage}>
-            Order this on WhatsApp
+      <div className="product-order-actions">
+        <div className="product-sticky-price" aria-hidden="true">
+          <span>{orderable ? pack.label : unavailableNote(product)}</span>
+          {orderable && <span>PKR {pack.price}</span>}
+        </div>
+        <div className="product-primary-action">
+          <Button variant="primary" full disabled={!orderable} onClick={onAdd}>
+            <span className="product-desktop-label">{!orderable ? availabilityLabel(product.availability) : added ? 'Added to basket' : 'Add to basket'}</span>
+            <span className="product-mobile-label">{added ? 'Added' : 'Add'}</span>
+          </Button>
+        </div>
+        <div className="product-whatsapp-action">
+          <WhatsAppButton full message={orderMessage}>
+            <span className="product-desktop-label">Order this on WhatsApp</span>
+            <span className="product-mobile-label">WhatsApp</span>
           </WhatsAppButton>
+        </div>
+      </div>
     </div>
 
     {/* Handling and delivery — explicitly unconfirmed. */}
@@ -528,7 +488,7 @@ const OrderBlock: React.FC<{
         <PlaceholderNote>Operational details are placeholders</PlaceholderNote>
       </div>
     </div>
-  </Glass>
+  </Glass></div>
 );
 
 const PackButton: React.FC<{
@@ -568,87 +528,16 @@ const PackButton: React.FC<{
 };
 
 // ===========================================================================
-// Mobile sticky order bar — G3 rail
-// ===========================================================================
-
-const MobileOrderBar: React.FC<{
-  product: Product;
-  pack: Pack;
-  orderMessage: string;
-  added: boolean;
-  onAdd: () => void;
-  orderable: boolean;
-}> = ({ product, pack, orderMessage, added, onAdd, orderable }) => (
-  <div
-    style={{
-      position: 'fixed',
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 40,
-      padding: '12px 16px calc(12px + env(safe-area-inset-bottom, 0px))',
-      ...(c.glass.rail as React.CSSProperties),
-      borderBottom: 'none',
-      borderTop: `1px solid ${c.color.hair12}`,
-      display: 'flex',
-      alignItems: 'center',
-      gap: '12px',
-    }}
-  >
-    <div style={{ minWidth: 0, flex: '1 1 auto' }}>
-      <span
-        style={{
-          display: 'block',
-          fontFamily: c.font.mono,
-          fontSize: '8.5px',
-          letterSpacing: '.18em',
-          textTransform: 'uppercase',
-          color: c.color.ink42,
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        }}
-      >
-        {orderable ? pack.label : unavailableNote(product)}
-      </span>
-      {orderable && (
-        <span
-          style={{
-            display: 'block',
-            marginTop: '3px',
-            fontFamily: c.font.serif,
-            fontSize: '17px',
-            fontWeight: 300,
-            color: c.color.paperWarm,
-          }}
-        >
-          PKR {pack.price}
-        </span>
-      )}
-    </div>
-
-    <Button variant="primary" compact disabled={!orderable} onClick={onAdd}>
-      {added ? 'Added' : 'Add'}
-    </Button>
-    <WhatsAppButton compact message={orderMessage}>
-            WhatsApp
-          </WhatsAppButton>
-  </div>
-);
-
-// ===========================================================================
 // Signature cross-link
 // ===========================================================================
 
 const SignatureCrossLink: React.FC<{ onNavigateRoute: (path: string) => void }> = ({
   onNavigateRoute,
 }) => {
-  const { isMobile } = useCommercialLayout();
 
   return (
-    <div
+    <div className="product-signature-link"
       style={{
-        marginTop: isMobile ? '48px' : '72px',
         paddingTop: '30px',
         borderTop: `1px solid ${c.color.hair14}`,
         display: 'flex',

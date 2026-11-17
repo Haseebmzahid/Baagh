@@ -1,0 +1,12 @@
+{
+  "fixtureOnly": true,
+  "appError": "ReferenceError: window is not defined",
+  "renderMs": 31.15390000000025,
+  "bodyBytes": 29762,
+  "h1Count": 1,
+  "hasName": true,
+  "hasDescription": true,
+  "hasSelectionBody": true,
+  "hasFruitIntelligenceLink": true,
+  "canvasCount": 0
+}

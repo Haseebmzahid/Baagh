@@ -1,0 +1,122 @@
+[
+  {
+    "width": 1440,
+    "noJs": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "headingCount": 1,
+      "h1": "Chaunsa Mango",
+      "headingRect": {
+        "x": 765.9375,
+        "y": 199,
+        "width": 558.046875,
+        "height": 65.71875
+      },
+      "packSelectors": 1,
+      "canvasCount": 0,
+      "canonical": "https://baagh.vercel.app/product/mangoes/chaunsa",
+      "headingPreserved": null,
+      "hydrationErrors": []
+    },
+    "hydrated": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "headingCount": 1,
+      "h1": "Chaunsa Mango",
+      "headingRect": {
+        "x": 765.9375,
+        "y": 199,
+        "width": 558.046875,
+        "height": 65.71875
+      },
+      "packSelectors": 1,
+      "canvasCount": 0,
+      "canonical": "https://baagh.vercel.app/product/mangoes/chaunsa",
+      "headingPreserved": true,
+      "hydrationErrors": []
+    },
+    "existing": {
+      "width": 1440,
+      "scrollWidth": 1440,
+      "headingCount": 1,
+      "h1": "Chaunsa Mango",
+      "headingRect": {
+        "x": 765.9375,
+        "y": 199,
+        "width": 558.046875,
+        "height": 65.71875
+      },
+      "packSelectors": 1,
+      "canvasCount": 0,
+      "canonical": "https://baagh.vercel.app/product/mangoes/chaunsa",
+      "headingPreserved": null,
+      "hydrationErrors": []
+    },
+    "consoleErrors": []
+  },
+  {
+    "width": 375,
+    "noJs": {
+      "width": 375,
+      "scrollWidth": 375,
+      "headingCount": 1,
+      "h1": "Chaunsa Mango",
+      "headingRect": {
+        "x": 221.921875,
+        "y": 243,
+        "width": 97.078125,
+        "height": 80.53125
+      },
+      "packSelectors": 1,
+      "canvasCount": 0,
+      "canonical": "https://baagh.vercel.app/product/mangoes/chaunsa",
+      "headingPreserved": null,
+      "hydrationErrors": []
+    },
+    "hydrated": {
+      "width": 375,
+      "scrollWidth": 375,
+      "headingCount": 1,
+      "h1": "Chaunsa Mango",
+      "headingRect": {
+        "x": 22,
+        "y": 449.25,
+        "width": 331,
+        "height": 40.265625
+      },
+      "packSelectors": 1,
+      "canvasCount": 0,
+      "canonical": "https://baagh.vercel.app/product/mangoes/chaunsa",
+      "headingPreserved": false,
+      "hydrationErrors": [
+        "Error: Hydration failed because the initial UI does not match what was rendered on the server.",
+        "Error: Hydration failed because the initial UI does not match what was rendered on the server.",
+        "Error: Hydration failed because the initial UI does not match what was rendered on the server.",
+        "Error: Hydration failed because the initial UI does not match what was rendered on the server.",
+        "Error: There was an error while hydrating. Because the error happened outside of a Suspense boundary, the entire root will switch to client rendering."
+      ]
+    },
+    "existing": {
+      "width": 375,
+      "scrollWidth": 375,
+      "headingCount": 1,
+      "h1": "Chaunsa Mango",
+      "headingRect": {
+        "x": 22,
+        "y": 449.25,
+        "width": 331,
+        "height": 40.265625
+      },
+      "packSelectors": 1,
+      "canvasCount": 0,
+      "canonical": "https://baagh.vercel.app/product/mangoes/chaunsa",
+      "headingPreserved": null,
+      "hydrationErrors": []
+    },
+    "consoleErrors": [
+      "Warning: Prop `%s` did not match. Server: %s Client: %s%s style \"font-family:'IBM Plex Mono', monospace;font-size:8px;font-weight:400;letter-spacing:0.20em;color:rgba(244,238,226,.42);text-transform:uppercase\" \"font-family:'IBM Plex Mono', monospace;font-size:8px;font-weight:400;letter-spacing:0.20em;color:rgba(244,238,226,.42);text-transform:uppercase;display:none\" \n    at span\n    at div\n    at header\n    at uw (http://127.0.0.1:57900/probe/assets/ChaunsaProbe-C5PnlEnD.js:204:20567)\n    at div\n    at aw (http://127.0.0.1:57900/probe/assets/ChaunsaProbe-C5PnlEnD.js:204:15831)\n    at L1 (http://127.0.0.1:57900/probe/assets/ChaunsaProbe-C5PnlEnD.js:204:2472)\n    at M1 (http://127.0.0.1:57900/probe/assets/ChaunsaProbe-C5PnlEnD.js:204:1443)\n    at $w",
+      "Hydration failed because the initial UI does not match what was rendered on the server.",
+      "Warning: An error occurred during hydration. The server HTML was replaced with client content in <%s>. div"
+    ]
+  }
+]
