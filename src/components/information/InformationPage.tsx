@@ -5,6 +5,7 @@ import { FruitPhoto } from '../commercial/FruitPhoto';
 import { whatsappHref } from '../../data/catalogue';
 import { SiteFooter } from './SiteFooter';
 import './information.css';
+import '../commercial/responsivePages.css';
 
 export const InformationPage: React.FC<{ page: SitePageId; onNavigateRoute: (path: string) => void }> = ({ page, onNavigateRoute }) => {
   const content = sitePages[page];
@@ -15,7 +16,7 @@ export const InformationPage: React.FC<{ page: SitePageId; onNavigateRoute: (pat
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     event.preventDefault(); onNavigateRoute(path);
   };
-  return <CommercialPage>
+  return <CommercialPage className={story ? 'our-story-page responsive-commercial' : undefined}>
     <PageContainer>
       <main id="page-content" className={`information-page ${story ? 'information-story' : ''}`}>
         <div className="information-breadcrumb"><a href="/everyday-fresh" onClick={event => internal(event, '/everyday-fresh')}>BAAGH</a><span aria-hidden="true"> / </span><span>{content.label}</span></div>

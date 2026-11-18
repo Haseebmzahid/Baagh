@@ -93,10 +93,11 @@ export const CommercialGrain: React.FC = () => (
 export const CommercialPage: React.FC<{
   children: React.ReactNode;
   deep?: boolean;
-}> = ({ children, deep }) => {
+  className?: string;
+}> = ({ children, deep, className }) => {
   const { isMobile } = useCommercialLayout();
   return (
-    <div className="baagh-commercial-page"
+    <div className={className ? `baagh-commercial-page ${className}` : 'baagh-commercial-page'}
       style={{
         position: 'relative',
         width: '100%',

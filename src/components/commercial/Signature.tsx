@@ -1,3 +1,4 @@
+import './responsivePages.css';
 import React, { useState } from 'react';
 import { commercial as c } from './theme';
 import {
@@ -10,7 +11,6 @@ import {
   PlaceholderNote,
   Price,
   Section,
-  useCommercialLayout,
   useHasPointer,
   usePrefersReducedMotion,
   WhatsAppButton,
@@ -68,14 +68,14 @@ export const Signature: React.FC<SignatureProps> = ({ onNavigateRoute }) => {
   };
 
   return (
-    <CommercialPage deep>
+    <CommercialPage deep className="signature-page responsive-commercial">
       <SignatureHero onRequestQuote={openQuote} />
 
       <PageContainer>
         <p className="shopping-guide">Choose fruit &amp; a pack below, add to your basket, then send a WhatsApp request. Our team confirms prices, availability and delivery.<br /><small>Reference fruit photography; actual fruit and packaging may vary. Gift boxes are available by enquiry.</small></p>
         <Section id="signature-fruit" title="Choose your fruit" lead="Select a fruit to see pack sizes, or add the displayed pack straight to your basket.">
           <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(min(100%, 240px), 1fr))', gap:'28px'}}>
-            {signatureProducts().map(product => <ProductCard key={product.id} product={product} onOpen={entry => onNavigateRoute(routeOf(entry))} />)}
+            {signatureProducts().map(product => <ProductCard responsive key={product.id} product={product} onOpen={entry => onNavigateRoute(routeOf(entry))} />)}
           </div>
         </Section>
         <CollectionsSection />
@@ -106,24 +106,23 @@ export const Signature: React.FC<SignatureProps> = ({ onNavigateRoute }) => {
 // ===========================================================================
 
 const SignatureHero: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuote }) => {
-  const { isMobile, margin } = useCommercialLayout();
   const reduced = usePrefersReducedMotion();
 
   return (
-    <section
+    <section className="signature-hero"
       style={{
         position: 'relative',
         width: '100%',
-        minHeight: isMobile ? '78vh' : '86vh',
+        minHeight: '86vh',
         display: 'flex',
         alignItems: 'flex-end',
         overflow: 'hidden',
-        marginBottom: isMobile ? '0' : '20px',
+        marginBottom: '20px',
       }}
     >
       <div className="signature-photo-hero"><FruitPhoto fruit="mixed" ratio="auto" priority /></div>
       {/* The drifting plate. Mobile reduces the drift to a single slow zoom. */}
-      <div
+      <div className="signature-hero-drift"
         aria-hidden="true"
         style={{
           position: 'absolute',
@@ -132,13 +131,13 @@ const SignatureHero: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuot
             'radial-gradient(62% 58% at 52% 36%, rgba(217,155,52,.05) 0%, rgba(24,18,11,.12) 54%, #100f0a 100%)',
           animation: reduced
             ? undefined
-            : `baaghSignatureDrift ${isMobile ? 40 : c.motion.l1.signatureDriftSeconds}s ease-in-out infinite`,
+            : `baaghSignatureDrift ${c.motion.l1.signatureDriftSeconds}s ease-in-out infinite`,
         }}
       />
 
       {/* Sheen — removed on mobile, per the approved recomposition. */}
-      {!isMobile && !reduced && (
-        <div
+      {(
+        <div className="signature-hero-sheen"
           aria-hidden="true"
           style={{
             position: 'absolute',
@@ -158,14 +157,14 @@ const SignatureHero: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuot
         }}
       />
 
-      <div
+      <div className="signature-hero-copy"
         style={{
           position: 'relative',
           zIndex: 2,
           width: '100%',
           maxWidth: `${c.layout.maxWidth}px`,
           margin: '0 auto',
-          padding: `0 ${margin}px ${isMobile ? 56 : 84}px`,
+          padding: '0 56px 84px',
         }}
       >
         <Label gold>Signature</Label>
@@ -227,236 +226,47 @@ const SignatureHero: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuot
 // Mobile takes them full-bleed, one per screen.
 // ===========================================================================
 
-const CollectionsSection: React.FC = () => {
-  const { isMobile, isTablet, gutter, margin } = useCommercialLayout();
-  const [lead, ...rest] = signatureCollections;
-
-  return (
-    <Section
-      id="collections"
-      eyebrow="Collections"
-      title="Three, and only three at a time."
-      lead="Each collection closes when its fruit does. Nothing is carried over."
-      bleed={isMobile}
-    >
-      {isMobile ? (
-        // Full-bleed, one collection per screen.
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '48px' }}>
-          {signatureCollections.map((s) => (
-            <FullBleedCollection key={s.id} collection={s} margin={margin} />
-          ))}
-        </div>
-      ) : (
-        <div
-          style={{
-            display: 'grid',
-            // Tablet stacks 1 + 2; desktop gives the lead collection the wide cell.
-            gridTemplateColumns: isTablet ? '1fr' : 'minmax(0,1.45fr) minmax(0,1fr)',
-            gap: `${gutter}px`,
-          }}
-        >
-          <LeadCollection collection={lead} />
-
-          <div style={{ display: 'grid', gap: `${gutter}px`, alignContent: 'start' }}>
-            {rest.map((s) => (
-              <SmallCollection key={s.id} collection={s} />
-            ))}
-            <PlaceholderNote />
-          </div>
-        </div>
-      )}
-    </Section>
-  );
-};
-
+const CollectionsSection: React.FC = () => (
+  <Section id="collections" eyebrow="Collections" title="Three, and only three at a time."
+    lead="Each collection closes when its fruit does. Nothing is carried over.">
+    <div className="signature-collections">
+      {signatureCollections.map((collection, index) => <UnifiedCollection key={collection.id} collection={collection} lead={index === 0} />)}
+      <div className="signature-collection-placeholder"><PlaceholderNote /></div>
+    </div>
+  </Section>
+);
 type Collection = (typeof signatureCollections)[number];
-
-const LeadCollection: React.FC<{ collection: Collection }> = ({ collection }) => {
+const UnifiedCollection: React.FC<{ collection: Collection; lead: boolean }> = ({ collection, lead }) => {
   const [hover, setHover] = useState(false);
   const hasPointer = useHasPointer();
   const reduced = usePrefersReducedMotion();
-  const lift = hover && hasPointer && !reduced ? 1 : 0;
-
-  return (
-    <article
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      style={{ position: 'relative', transform: lift ? 'translateY(-3px)' : undefined, transition: reduced ? 'none' : 'transform 450ms ease' }}
-    >
-      <FruitPhoto fruit={collection.productIds.length > 1 ? 'mixed' : collection.productIds[0]} ratio="4 / 3" />
-
-      <span style={{ position: 'absolute', top: '16px', left: '17px' }}>
-        <span
-          style={{
-            fontFamily: c.font.mono,
-            fontSize: '8.5px',
-            letterSpacing: c.type.u2.letterSpacing,
-            textTransform: 'uppercase',
-            color: c.color.gold80,
-          }}
-        >
-          {collection.index}
-          {collection.status ? ` · ${collection.status}` : ''}
-        </span>
-      </span>
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'flex-end',
-          gap: '24px',
-          flexWrap: 'wrap',
-          marginTop: '22px',
-        }}
-      >
-        <div>
-          <h3
-            style={{
-              fontFamily: c.font.serif,
-              fontSize: 'clamp(21px, 2vw, 26px)',
-              fontWeight: 300,
-              color: c.color.paperWarm,
-              margin: 0,
-            }}
-          >
-            {collection.title}
-          </h3>
-          <p
-            style={{
-              fontFamily: c.font.serif,
-              fontSize: '16px',
-              fontWeight: 300,
-              lineHeight: 1.6,
-              color: c.color.ink62,
-              margin: '11px 0 0',
-              maxWidth: '38ch',
-              textWrap: 'pretty' as React.CSSProperties['textWrap'],
-            }}
-          >
-            {collection.purpose}<br /><a className="collection-shop-link" href={whatsappHref(`Hello BAAGH — I would like to enquire about ${collection.title}. Please confirm contents, availability and price.`)} target="_blank" rel="noopener noreferrer">Enquire about this collection ↗</a>
-          </p>
-        </div>
-
-        <Price amount={collection.fromPrice} from note={PRICE_NOTE || undefined} />
-      </div>
-    </article>
-  );
+  return <article className={`signature-collection ${lead ? 'signature-collection-lead' : 'signature-collection-secondary'}`}
+    onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+    style={{ transform: lead && hover && hasPointer && !reduced ? 'translateY(-3px)' : undefined, transition: reduced ? 'none' : 'transform 450ms ease' }}>
+    <div className="signature-collection-image"><FruitPhoto fruit={collection.productIds.length > 1 ? 'mixed' : collection.productIds[0]} ratio="4 / 3" /></div>
+    <div className="signature-collection-body"><div className="signature-collection-copy">
+    <span className="signature-collection-index" data-closing={collection.closing || undefined}>{collection.index}{collection.status ? ` · ${collection.status}` : ''}</span>
+      <h3>{collection.title}</h3>
+      <a className="collection-shop-link signature-collection-choose" href="#signature-fruit">Choose fruit &amp; packs &#8593;</a>
+      <p>{collection.purpose}<br /><a className="collection-shop-link" href={whatsappHref(`Hello BAAGH — I would like to enquire about ${collection.title}. Please confirm contents, availability and price.`)} target="_blank" rel="noopener noreferrer">Enquire about this collection &#8599;</a></p>
+    </div>
+    <div className="signature-collection-price"><Price amount={collection.fromPrice} from note={PRICE_NOTE || undefined} /></div></div>
+  </article>;
 };
-
-const SmallCollection: React.FC<{ collection: Collection }> = ({ collection }) => (
-  <article
-    style={{
-      display: 'grid',
-      gridTemplateColumns: '108px minmax(0,1fr)',
-      gap: '18px',
-      alignItems: 'center',
-      paddingBottom: '22px',
-      borderBottom: `1px solid ${c.color.hair12}`,
-    }}
-  >
-    <FruitPhoto fruit={collection.productIds.length > 1 ? 'mixed' : collection.productIds[0]} ratio="1 / 1" />
-    <div>
-      <span
-        style={{
-          fontFamily: c.font.mono,
-          fontSize: '8.5px',
-          letterSpacing: c.type.u2.letterSpacing,
-          textTransform: 'uppercase',
-          color: collection.closing ? c.color.emberText : c.color.ink42,
-        }}
-      >
-        {collection.index}
-        {collection.status ? ` · ${collection.status}` : ''}
-      </span>
-      <h3
-        style={{
-          fontFamily: c.font.serif,
-          fontSize: '19px',
-          fontWeight: 300,
-          color: c.color.paperWarm,
-          margin: '9px 0 0',
-        }}
-      >
-        {collection.title}
-      </h3>
-      <a className="collection-shop-link" href="#signature-fruit">Choose fruit &amp; packs ↑</a>
-      <span style={{ display: 'block', marginTop: '9px' }}>
-        <Fact quiet>from PKR {collection.fromPrice}</Fact>
-      </span>
-    </div>
-  </article>
-);
-
-const FullBleedCollection: React.FC<{ collection: Collection; margin: number }> = ({
-  collection,
-  margin,
-}) => (
-  <article>
-    <div style={{ position: 'relative' }}>
-      <FruitPhoto fruit={collection.productIds.length > 1 ? 'mixed' : collection.productIds[0]} ratio="4 / 5" />
-      <span style={{ position: 'absolute', top: '15px', left: `${margin}px` }}>
-        <span
-          style={{
-            fontFamily: c.font.mono,
-            fontSize: '8.5px',
-            letterSpacing: c.type.u2.letterSpacing,
-            textTransform: 'uppercase',
-            color: collection.closing ? c.color.emberText : c.color.gold80,
-          }}
-        >
-          {collection.index}
-          {collection.status ? ` · ${collection.status}` : ''}
-        </span>
-      </span>
-    </div>
-
-    <div style={{ padding: `20px ${margin}px 0` }}>
-      <h3
-        style={{
-          fontFamily: c.font.serif,
-          fontSize: '23px',
-          fontWeight: 300,
-          color: c.color.paperWarm,
-          margin: 0,
-        }}
-      >
-        {collection.title}
-      </h3>
-      <a className="collection-shop-link" href="#signature-fruit">Choose fruit &amp; packs ↑</a>
-      <p
-        style={{
-          fontFamily: c.font.serif,
-          fontSize: '16px',
-          fontWeight: 300,
-          lineHeight: 1.6,
-          color: c.color.ink62,
-          margin: '11px 0 16px',
-          textWrap: 'pretty' as React.CSSProperties['textWrap'],
-        }}
-      >
-        {collection.purpose}<br /><a className="collection-shop-link" href={whatsappHref(`Hello BAAGH — I would like to enquire about ${collection.title}. Please confirm contents, availability and price.`)} target="_blank" rel="noopener noreferrer">Enquire about this collection ↗</a>
-      </p>
-      <Price amount={collection.fromPrice} from note={PRICE_NOTE || undefined} />
-    </div>
-  </article>
-);
 
 // ===========================================================================
 // The box — packaging story, L1 lid lift
 // ===========================================================================
 
 const BoxSection: React.FC = () => {
-  const { isMobile, isTablet, gutter } = useCommercialLayout();
-  const stacked = isMobile || isTablet;
 
   return (
     <Section eyebrow="The box" title="Built for one journey, then kept.">
-      <div
+      <div className="signature-box-layout"
         style={{
           display: 'grid',
-          gridTemplateColumns: stacked ? '1fr' : 'minmax(0,1.2fr) minmax(0,1fr)',
-          gap: stacked ? '32px' : `${gutter}px 64px`,
+          gridTemplateColumns: 'minmax(0,1.2fr) minmax(0,1fr)',
+          gap: '28px 64px',
           alignItems: 'center',
         }}
       >
@@ -515,19 +325,14 @@ const BoxSection: React.FC = () => {
 // ===========================================================================
 
 const GiftBoxesSection: React.FC = () => {
-  const { isMobile, isTablet, gutter } = useCommercialLayout();
 
   return (
     <Section title="Gift boxes" lead="Three sizes. A hand-written card is included with each.">
-      <div
+      <div className="signature-gift-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: isMobile
-            ? '1fr'
-            : isTablet
-              ? 'repeat(2, minmax(0, 1fr))'
-              : 'repeat(3, minmax(0, 1fr))',
-          gap: `${isMobile ? 40 : gutter}px ${gutter}px`,
+          gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+          gap: `28px 28px`,
         }}
       >
         {giftBoxes.map((g) => (
@@ -619,16 +424,14 @@ const GiftBoxCard: React.FC<{ box: (typeof giftBoxes)[number] }> = ({ box }) => 
 // ===========================================================================
 
 const SeasonalSection: React.FC = () => {
-  const { isMobile, isTablet } = useCommercialLayout();
-  const stacked = isMobile || isTablet;
 
   return (
     <Section>
-      <div
+      <div className="signature-season-layout"
         style={{
           display: 'grid',
-          gridTemplateColumns: stacked ? '1fr' : 'minmax(0,1fr) minmax(0,1fr)',
-          gap: stacked ? '30px' : '64px',
+          gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
+          gap: '64px',
           alignItems: 'center',
         }}
       >
@@ -682,7 +485,7 @@ const SeasonalSection: React.FC = () => {
           </div>
         </div>
 
-        <FruitPhoto fruit="anaar" ratio={stacked ? '3 / 2' : '4 / 3'} />
+        <FruitPhoto fruit="anaar" ratio={'4 / 3'} />
       </div>
     </Section>
   );
@@ -693,16 +496,14 @@ const SeasonalSection: React.FC = () => {
 // ===========================================================================
 
 const CorporateSection: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuote }) => {
-  const { isMobile, isTablet } = useCommercialLayout();
-  const stacked = isMobile || isTablet;
 
   return (
     <Section id="corporate" eyebrow="Corporate gifting" title="Volume, dated delivery, one contact.">
-      <div
+      <div className="signature-corporate-layout"
         style={{
           display: 'grid',
-          gridTemplateColumns: stacked ? '1fr' : 'minmax(0,1fr) minmax(0,1fr)',
-          gap: stacked ? '32px' : '64px',
+          gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
+          gap: '64px',
           alignItems: 'start',
         }}
       >
@@ -771,7 +572,6 @@ const CorporateSection: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQ
 // ===========================================================================
 
 const QuotePanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
-  const { isMobile } = useCommercialLayout();
   const [recipients, setRecipients] = useState('');
   const [date, setDate] = useState('');
   const [notes, setNotes] = useState('');
@@ -786,11 +586,11 @@ const QuotePanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     .join('\n');
 
   return (
-    <div id="quote" style={{ paddingTop: isMobile ? '48px' : '64px' }}>
+    <div id="quote" className="signature-quote" style={{ paddingTop: '64px' }}>
       <Glass
         tier="shelf"
         style={{
-          padding: isMobile ? '24px 20px' : '34px 36px',
+          padding: '34px 36px',
           borderRadius: c.radius.plate,
           maxWidth: '680px',
         }}
@@ -938,11 +738,10 @@ const QuoteField: React.FC<{
 // ===========================================================================
 
 const ClosingSection: React.FC<{ onRequestQuote: () => void }> = ({ onRequestQuote }) => {
-  const { isMobile } = useCommercialLayout();
 
   return (
     <Section>
-      <div style={{ borderTop: `1px solid ${c.color.hair14}`, paddingTop: isMobile ? '44px' : '64px' }}>
+      <div className="responsive-closing" style={{ borderTop: `1px solid ${c.color.hair14}`, paddingTop: '64px' }}>
         <h2
           style={{
             fontFamily: c.font.serif,

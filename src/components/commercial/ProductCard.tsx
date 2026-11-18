@@ -44,6 +44,7 @@ export interface ProductCardProps {
   onAdd?: (product: Product, quantity: number) => void;
   /** Mobile drops to a 3:2 landscape plate so one card fills the screen. */
   landscape?: boolean;
+  responsive?: boolean;
   /** Cached portrait from the page's shared 3D renderer. */
   portraitSrc?: string;
 }
@@ -53,6 +54,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onOpen,
   onAdd,
   landscape,
+  responsive,
   portraitSrc = fruitPhotos[product.id],
 }) => {
   const [hover, setHover] = useState(false);
@@ -87,7 +89,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <article
+    <article className={responsive ? 'responsive-product-card' : undefined}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
@@ -231,7 +233,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             ariaLabel={`Quantity of ${product.name}`}
           />
         ) : (
-          <AddAction hovered={lift === 1} onClick={handleAdd} name={product.name} mobile={isMobile} />
+          <AddAction hovered={lift === 1} onClick={handleAdd} name={product.name} mobile={responsive ? false : isMobile} />
         )}
       </div>
     </article>

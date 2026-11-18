@@ -1,0 +1,21 @@
+{
+  "prerenderedCanonicalRoutes": [
+    "/product/mangoes/chaunsa"
+  ],
+  "h1Count": 1,
+  "packSelectorCount": 1,
+  "primaryActionCount": 1,
+  "canvasCount": 0,
+  "hasSelectionBody": true,
+  "hasIntelligenceLink": true,
+  "canonical": "https://baagh.vercel.app/product/mangoes/chaunsa",
+  "initialProductStylesheet": true,
+  "htmlBytes": 33819,
+  "htmlGzipBytes": 6095,
+  "resourceBytesUnchanged": {
+    "robots.txt": true,
+    "sitemap.xml": true,
+    "llms.txt": true
+  },
+  "threeJsByteIdentical": true
+}

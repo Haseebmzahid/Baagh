@@ -1,0 +1,30 @@
+{
+  "protectedPaths": [
+    "src/seo",
+    "src/data",
+    "src/context",
+    "src/hooks",
+    "src/App.tsx",
+    "src/main.tsx",
+    "src/components/canvas",
+    "src/components/fruit-intelligence",
+    "src/navigation",
+    "scripts/build-seo.mjs",
+    "src/config",
+    "package.json",
+    "package-lock.json",
+    "vercel.json"
+  ],
+  "protectedDiffEmpty": true,
+  "prerenderedDocuments": [
+    "dist\\product\\mangoes\\chaunsa\\index.html"
+  ],
+  "threeSha256": "e534bdf4b582ac9a9af07288af7ab9bf0fdb31a05bc6634d65f3cf6066cbb483",
+  "newScopedCssBytes": 10937,
+  "newScopedCssGzipBytes": 2208,
+  "crawlFilesMatchPreservedPhase1": {
+    "robots.txt": true,
+    "sitemap.xml": true,
+    "llms.txt": true
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "date": "2026-11-18",
+  "implementation": "Existing Batch 1A implementation verified; application source unchanged during revalidation",
+  "build": "PASS",
+  "types": "PASS",
+  "seo": "PASS",
+  "unit": {
+    "passed": 35,
+    "failed": 0
+  },
+  "responsive": {
+    "total": 12,
+    "passed": 12
+  },
+  "functional": [
+    {
+      "width": 1440,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 768,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 390,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 375,
+      "status": "PASS",
+      "errors": []
+    }
+  ],
+  "prerenderedDocuments": [
+    "D:\\karamat\\dist\\product\\mangoes\\chaunsa\\index.html"
+  ],
+  "protectedDiffEmpty": true,
+  "fullBrowserSuite": "Existing Batch 1A run retained: 16 passed, 2 known desktop Kinnow/Anaar failures; not rerun during revalidation",
+  "baselineEvidence": "Preserved",
+  "deployment": false
+}

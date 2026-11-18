@@ -1,0 +1,54 @@
+{
+  "node": [
+    {
+      "path": "/everyday-fresh",
+      "status": "NODE_RENDER_PASS",
+      "bytes": 60550,
+      "h1": 1,
+      "desktopSixColumnGrid": true,
+      "mobileRail": false
+    },
+    {
+      "path": "/signature",
+      "status": "NODE_RENDER_PASS",
+      "bytes": 42167,
+      "h1": 1,
+      "desktopSixColumnGrid": false,
+      "mobileRail": false
+    },
+    {
+      "path": "/our-story",
+      "status": "NODE_RENDER_PASS",
+      "bytes": 6058,
+      "h1": 1,
+      "desktopSixColumnGrid": false,
+      "mobileRail": false
+    }
+  ],
+  "mobileNoJavaScript": [
+    {
+      "name": "EverydayFresh",
+      "width": 375,
+      "h1": "Everyday.Exceptional.",
+      "sixColumnGrids": 1,
+      "mobileCategoryRails": 0,
+      "containerInlinePadding": "position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 56px"
+    },
+    {
+      "name": "Signature",
+      "width": 375,
+      "h1": "Fruit chosen to be given.",
+      "sixColumnGrids": 0,
+      "mobileCategoryRails": 0,
+      "containerInlinePadding": "position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 56px"
+    },
+    {
+      "name": "InformationPage",
+      "width": 375,
+      "h1": "Good fruit.\nConsidered judgement.",
+      "sixColumnGrids": 0,
+      "mobileCategoryRails": 0,
+      "containerInlinePadding": "position:relative;z-index:1;max-width:1320px;margin:0 auto;padding:0 56px"
+    }
+  ]
+}

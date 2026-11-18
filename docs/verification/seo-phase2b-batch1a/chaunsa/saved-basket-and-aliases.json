@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "lines": [
+    {
+      "productId": "chaunsa",
+      "packId": "10kg",
+      "quantity": 3
+    },
+    {
+      "productId": "anaar",
+      "packId": "3kg",
+      "quantity": 2
+    }
+  ],
+  "errors": []
+}

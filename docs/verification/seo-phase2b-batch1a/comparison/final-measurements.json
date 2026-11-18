@@ -1,0 +1,86 @@
+[
+  {
+    "path": "/everyday-fresh",
+    "width": 1440,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/signature",
+    "width": 1440,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/our-story",
+    "width": 1440,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/everyday-fresh",
+    "width": 768,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/signature",
+    "width": 768,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/our-story",
+    "width": 768,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/everyday-fresh",
+    "width": 390,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/signature",
+    "width": 390,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/our-story",
+    "width": 390,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/everyday-fresh",
+    "width": 375,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/signature",
+    "width": 375,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  },
+  {
+    "path": "/our-story",
+    "width": 375,
+    "h1GeometryEqual": true,
+    "paddingEqual": true,
+    "overflow": false
+  }
+]

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { fruitPhotos } from './FruitPhoto';
 import { commercial as c } from './theme';
-import { Label, usePrefersReducedMotion, useCommercialLayout } from './primitives';
+import { Label, usePrefersReducedMotion } from './primitives';
 
 /**
  * The Signature presentation box.
@@ -60,25 +60,20 @@ export const PresentationBox: React.FC<{ tint?: string }> = () => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const progress = useSectionProgress(wrapRef);
   const reduced = usePrefersReducedMotion();
-  const { isMobile } = useCommercialLayout();
 
   // Manual frame control on touch, where scroll-linked 3D reads poorly.
   const [frame, setFrame] = useState(1);
 
   // The lid travels through the middle of the section, not its whole length.
   const scrollOpen = Math.min(1, Math.max(0, (progress - 0.22) / 0.42));
-  const open = reduced ? 1 : isMobile ? frame : scrollOpen;
-
-  const lidLift = open * 78;
-  const lidTilt = open * -26;
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative' }}>
-      <div
+    <div ref={wrapRef} className="presentation-box" style={{ position: 'relative', '--box-scroll': scrollOpen, '--box-frame': frame } as React.CSSProperties}>
+      <div className="presentation-box-well"
         style={{
           position: 'relative',
           width: '100%',
-          aspectRatio: isMobile ? '4 / 3' : '16 / 11',
+          aspectRatio: '16 / 11',
           background: c.color.deep,
           overflow: 'hidden',
           display: 'flex',
@@ -104,7 +99,7 @@ export const PresentationBox: React.FC<{ tint?: string }> = () => {
             width: '52%',
             maxWidth: '360px',
             transformStyle: 'preserve-3d',
-            transform: `rotateX(${58 - open * 8}deg) rotateZ(-24deg)`,
+            transform: 'rotateX(calc(58deg - var(--box-open) * 8deg)) rotateZ(-24deg)',
             transition: reduced ? 'none' : `transform 600ms ${c.motion.ease}`,
           }}
         >
@@ -140,7 +135,7 @@ export const PresentationBox: React.FC<{ tint?: string }> = () => {
                     background: `url(${fruitPhotos.chaunsa}) center / cover`,
                     boxShadow: 'inset 0 -3px 8px rgba(0,0,0,.5)',
                     // Fruit fade in behind the lid as it lifts.
-                    opacity: 0.25 + open * 0.75,
+                    opacity: 'calc(.25 + var(--box-open) * .75)',
                     transition: reduced ? 'none' : `opacity 600ms ${c.motion.ease}`,
                   }}
                 />
@@ -154,7 +149,7 @@ export const PresentationBox: React.FC<{ tint?: string }> = () => {
               position: 'absolute',
               inset: 0,
               transformOrigin: 'top center',
-              transform: `translate3d(0, ${-lidLift}px, ${open * 40}px) rotateX(${lidTilt}deg)`,
+              transform: 'translate3d(0, calc(var(--box-open) * -78px), calc(var(--box-open) * 40px)) rotateX(calc(var(--box-open) * -26deg))',
               transition: reduced ? 'none' : `transform 600ms ${c.motion.ease}`,
               background: 'linear-gradient(150deg, #2b241b 0%, #1d1811 58%, #14100b 100%)',
               border: `1px solid ${c.color.hair22}`,
@@ -191,17 +186,14 @@ export const PresentationBox: React.FC<{ tint?: string }> = () => {
             color: 'rgba(244,238,226,.34)',
           }}
         >
-          {reduced
-            ? 'Packaging placeholder'
-            : isMobile
-              ? 'Packaging placeholder'
-              : 'Scroll to open · L1'}
+          <span className="presentation-caption-static">Packaging placeholder</span>
+          <span className="presentation-caption-scroll">Scroll to open · L1</span>
         </span>
       </div>
 
       {/* Mobile: a swipeable two-frame sequence rather than scroll-linked 3D. */}
-      {isMobile && !reduced && (
-        <div
+      {(
+        <div className="presentation-box-controls" role="group" aria-label="Presentation box frames"
           style={{
             display: 'flex',
             alignItems: 'center',

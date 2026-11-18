@@ -1,3 +1,4 @@
+import './responsivePages.css';
 import React, { useEffect, useMemo, useState } from 'react';
 import { commercial as c } from './theme';
 import {
@@ -12,7 +13,6 @@ import {
   Price,
   Section,
   SpecimenPlate,
-  useCommercialLayout,
   WhatsAppButton,
 } from './primitives';
 import { CategoryTile, CollectionCard, ProductCard } from './ProductCard';
@@ -72,14 +72,12 @@ export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute, c
     const frame = requestAnimationFrame(() => document.getElementById(selection.target!)?.scrollIntoView({ behavior: 'instant' }));
     return () => cancelAnimationFrame(frame);
   }, [collectionHash, selection.target]);
-  const { isMobile, isTablet, gutter } = useCommercialLayout();
-
   const portraits = fruitPhotos;
 
   const openProduct = (product: Product) => onNavigateRoute(routeOf(product));
 
   return (
-    <CommercialPage>
+    <CommercialPage className="everyday-fresh-page responsive-commercial">
       <EverydayShowcase onNavigateRoute={onNavigateRoute} />
       <PageContainer>
 
@@ -93,9 +91,6 @@ export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute, c
           onOpen={openProduct}
           filter={selection.filter}
           onNavigateRoute={onNavigateRoute}
-          isMobile={isMobile}
-          isTablet={isTablet}
-          gutter={gutter}
           portraits={portraits}
         />
 
@@ -118,28 +113,27 @@ export const EverydayFresh: React.FC<EverydayFreshProps> = ({ onNavigateRoute, c
 // ===========================================================================
 
 const SeasonSection: React.FC = () => {
-  const { isMobile } = useCommercialLayout();
 
   return (
     <Section
-      index="02"
+      id="everyday-season" index="02"
       title="What the year looks like"
       note="Indicative harvest windows. Availability and timing are confirmed by our team when you enquire."
     >
       <Glass
         tier="shelf"
         style={{
-          padding: isMobile ? '20px 16px' : '28px 30px',
+          padding: '28px 30px',
           borderRadius: c.radius.plate,
           overflowX: 'auto',
         }}
       >
-        <div style={{ minWidth: isMobile ? '460px' : 'auto' }}>
+        <div className="everyday-calendar" style={{ minWidth: 'auto' }}>
           {/* Month header */}
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: `${isMobile ? 66 : 92}px repeat(12, 1fr)`,
+              gridTemplateColumns: `92px repeat(12, 1fr)`,
               gap: '4px',
               alignItems: 'center',
               paddingBottom: '12px',
@@ -173,7 +167,7 @@ const SeasonSection: React.FC = () => {
               key={cat.id}
               style={{
                 display: 'grid',
-                gridTemplateColumns: `${isMobile ? 66 : 92}px repeat(12, 1fr)`,
+                gridTemplateColumns: `92px repeat(12, 1fr)`,
                 gap: '4px',
                 alignItems: 'center',
                 padding: '13px 0',
@@ -245,7 +239,6 @@ const LegendKey: React.FC<{ swatch: string; label: string }> = ({ swatch, label 
 // ===========================================================================
 
 const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; portraits: Record<string,string> }> = ({ portraits, onNavigateRoute }) => {
-  const { isMobile, isTablet, gutter, margin } = useCommercialLayout();
 
   const tiles = categories.map((cat) => (
     <CategoryTile
@@ -255,7 +248,7 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; por
       tint={cat.tint}
       portraitSrc={portraits[productsInCategory(cat.id)[0]?.id ?? 'mixed']}
       href={`/everyday-fresh#${cat.slug}`}
-      railWidth={isMobile ? 148 : undefined}
+      railWidth={undefined}
       onOpen={() => {
         onNavigateRoute(`/everyday-fresh#${cat.slug}`);
       }}
@@ -266,7 +259,7 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; por
     <Section
       index="03"
       title="Six ways in"
-      bleed={isMobile}
+      bleed={false}
       action={
         <Button
           variant="tertiary"
@@ -280,33 +273,7 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; por
         </Button>
       }
     >
-      {isMobile ? (
-        <div
-          className="baagh-rail"
-          style={{
-            display: 'flex',
-            gap: `${gutter}px`,
-            overflowX: 'auto',
-            scrollSnapType: 'x mandatory',
-            padding: `0 ${margin}px`,
-            WebkitOverflowScrolling: 'touch',
-          }}
-        >
-          {tiles}
-        </div>
-      ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: isTablet
-              ? 'repeat(3, minmax(0, 1fr))'
-              : 'repeat(6, minmax(0, 1fr))',
-            gap: `${gutter}px`,
-          }}
-        >
-          {tiles}
-        </div>
-      )}
+      <div className="everyday-categories">{tiles}</div>
     </Section>
   );
 };
@@ -319,20 +286,18 @@ const CategoriesSection: React.FC<{ onNavigateRoute: (path: string) => void; por
 const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void; portrait?: string }> = ({
   onNavigateRoute, portrait,
 }) => {
-  const { isMobile, isTablet } = useCommercialLayout();
   const p = featuredProduct();
   const copy = featureCopyFor(p);
   const pack = defaultPack(p);
   const basket = useBasket();
-  const stacked = isMobile || isTablet;
 
   return (
     <Section index="04" eyebrow="Featured this week">
-      <div
+      <div className="everyday-featured"
         style={{
           display: 'grid',
-          gridTemplateColumns: stacked ? '1fr' : 'minmax(0,1fr) minmax(0,1fr)',
-          gap: stacked ? '28px' : '56px',
+          gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)',
+          gap: '56px',
           alignItems: 'center',
         }}
       >
@@ -347,7 +312,7 @@ const FeaturedSection: React.FC<{ onNavigateRoute: (path: string) => void; portr
         >
           <SpecimenPlate
             tint={portrait ? '#16150f' : p.image.tint}
-            ratio={stacked ? '3 / 2' : '4 / 3'}
+            ratio={'4 / 3'}
             drift
             label={portrait ? undefined : p.image.note}
           >{portrait && <img className="everyday-product-portrait" src={portrait} alt={`${p.name} reference fruit photograph`} />}</SpecimenPlate>
@@ -442,18 +407,15 @@ const GridSection: React.FC<{
   onOpen: (p: Product) => void;
   filter: string;
   onNavigateRoute: (path: string) => void;
-  isMobile: boolean;
-  isTablet: boolean;
-  gutter: number;
   portraits: Record<string,string>;
-}> = ({ onOpen, filter, onNavigateRoute, isMobile, isTablet, gutter, portraits }) => {
+}> = ({ onOpen, filter, onNavigateRoute, portraits }) => {
 
   // Both the chips and the products they filter come from the catalogue, so
   // adding a product to a new category adds its chip with no code change.
   const filters = useMemo(() => gridFilters(), []);
   const visible = useMemo(() => filterProducts(filter), [filter]);
 
-  const columns = isMobile ? 1 : isTablet ? 2 : 3;
+
 
   return (
     <Section
@@ -476,21 +438,14 @@ const GridSection: React.FC<{
       <p role="status" aria-live="polite" style={{ color: c.color.ink70, fontFamily: c.font.serif, margin: '0 0 22px' }}>
         {visible.length} {visible.length === 1 ? 'fruit' : 'fruits'} · {filters.find(entry => entry.id === filter)?.label ?? 'All'}
       </p>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
-          gap: `${isMobile ? 40 : gutter}px ${gutter}px`,
-          alignItems: 'stretch',
-        }}
-      >
+      <div className="everyday-product-grid">
         {visible.map((p: Product, i: number) => (
           <React.Fragment key={p.id}>
-            <ProductCard product={p} onOpen={onOpen} landscape={isMobile} portraitSrc={portraits[p.id]} />
+            <ProductCard product={p} onOpen={onOpen} landscape={false} responsive portraitSrc={portraits[p.id]} />
 
             {/* The text cell that breaks the matrix — desktop only, after the
                 first row, exactly as the approved composition sets it. */}
-            {!isMobile && !isTablet && i === 2 && <GridNoteCell />}
+            {i === 2 && <div className="everyday-grid-note"><GridNoteCell /></div>}
           </React.Fragment>
         ))}
 
@@ -606,7 +561,6 @@ const BoxesPromptCell: React.FC<{ onNavigateRoute: (path: string) => void }> = (
 // ===========================================================================
 
 const SelectionsSection: React.FC<{ portraits: Record<string,string> }> = ({ portraits }) => {
-  const { isMobile, isTablet, gutter } = useCommercialLayout();
 
   return (
     <Section
@@ -614,15 +568,11 @@ const SelectionsSection: React.FC<{ portraits: Record<string,string> }> = ({ por
       eyebrow="Curated"
       title="Chosen for a reason, not for a shelf."
     >
-      <div
+      <div className="everyday-selections"
         style={{
           display: 'grid',
-          gridTemplateColumns: isMobile
-            ? '1fr'
-            : isTablet
-              ? 'repeat(2, minmax(0, 1fr))'
-              : 'repeat(3, minmax(0, 1fr))',
-          gap: `${isMobile ? 40 : gutter}px ${gutter}px`,
+          gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+          gap: `28px 28px`,
         }}
       >
         {selections.map((s) => (
@@ -647,21 +597,20 @@ const SelectionsSection: React.FC<{ portraits: Record<string,string> }> = ({ por
 // ===========================================================================
 
 const BoxesSection: React.FC = () => {
-  const { isMobile, isTablet, gutter } = useCommercialLayout();
   const [primary, ...rest] = boxes;
 
   return (
     <Section id="boxes" index="07" title="Boxes for the week" lead="Weekly or one-off.">
-      <div
+      <div className="everyday-boxes"
         style={{
           display: 'grid',
-          gridTemplateColumns: isMobile || isTablet ? '1fr' : 'minmax(0,1.4fr) minmax(0,1fr)',
-          gap: `${gutter}px`,
+          gridTemplateColumns: 'minmax(0,1.4fr) minmax(0,1fr)',
+          gap: `28px`,
         }}
       >
         {/* The lead box, given the wide cell. */}
         <div style={{ position: 'relative' }}>
-          <FruitPhoto fruit="mixed" ratio={isMobile ? '3 / 2' : '16 / 10'} />
+          <FruitPhoto fruit="mixed" ratio={'16 / 10'} />
           {primary.badge && (
             <span
               style={{
@@ -720,7 +669,7 @@ const BoxesSection: React.FC = () => {
         </div>
 
         {/* The two remaining boxes, stacked. */}
-        <div style={{ display: 'grid', gap: `${gutter}px`, alignContent: 'start' }}>
+        <div style={{ display: 'grid', gap: `28px`, alignContent: 'start' }}>
           {rest.map((b) => (
             <div
               key={b.id}
@@ -729,7 +678,7 @@ const BoxesSection: React.FC = () => {
                 gridTemplateColumns: '96px minmax(0,1fr)',
                 gap: '18px',
                 alignItems: 'center',
-                paddingBottom: `${gutter}px`,
+                paddingBottom: `28px`,
                 borderBottom: `1px solid ${c.color.hair12}`,
               }}
             >
@@ -767,14 +716,13 @@ const BoxesSection: React.FC = () => {
 // ===========================================================================
 
 const FinalCtaSection: React.FC<{ onNavigateRoute: (path: string) => void }> = () => {
-  const { isMobile } = useCommercialLayout();
 
   return (
     <Section index="08">
-      <div
+      <div className="responsive-closing"
         style={{
           borderTop: `1px solid ${c.color.hair14}`,
-          paddingTop: isMobile ? '44px' : '64px',
+          paddingTop: '64px',
         }}
       >
         <h2

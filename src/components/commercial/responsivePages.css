@@ -1,0 +1,126 @@
+/* The three opt-in scopes retain the existing commercial breakpoints/measurements. */
+.responsive-commercial { --page-margin:56px; --page-gutter:28px; --page-section:140px; padding-top:86px !important; }
+.responsive-commercial .baagh-page-container { padding-inline:var(--page-margin) !important; }
+.responsive-commercial .baagh-commercial-section { padding-top:var(--page-section) !important; }
+.responsive-commercial .baagh-section-heading { gap:32px !important; }
+.responsive-commercial .baagh-section-heading > div:first-child { gap:22px !important; }
+.responsive-commercial .baagh-button:not(.baagh-button--compact):not(.baagh-button--tertiary) { height:52px !important; }
+.everyday-categories { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:var(--page-gutter); }
+.everyday-featured { grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; gap:56px !important; }
+.everyday-featured .baagh-specimen-plate { aspect-ratio:4 / 3 !important; }
+.everyday-product-grid,.everyday-selections,.signature-gift-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)) !important; gap:var(--page-gutter) !important; }
+.everyday-boxes { grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) !important; gap:var(--page-gutter) !important; }
+.everyday-boxes > div:first-child .fruit-photo { aspect-ratio:16 / 10 !important; }
+.responsive-commercial .responsive-closing { padding-top:64px !important; }
+.signature-hero { min-height:86vh !important; margin-bottom:20px !important; }
+.signature-hero-copy { padding:0 var(--page-margin) 84px !important; }
+.signature-hero-drift { animation-duration:32s !important; }
+.signature-box-layout { grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) !important; gap:var(--page-gutter) 64px !important; }
+.signature-season-layout,.signature-corporate-layout { grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; gap:64px !important; }
+.signature-season-layout > .fruit-photo { aspect-ratio:4 / 3 !important; }
+.signature-quote { padding-top:64px !important; }
+.signature-quote > div { padding:34px 36px !important; }
+.signature-collections { display:grid; grid-template-columns:minmax(0,1.45fr) minmax(0,1fr); column-gap:var(--page-gutter); row-gap:var(--page-gutter); grid-template-rows:auto auto 1fr; align-items:start; }
+.signature-collection { position:relative; }
+.signature-collection-lead { grid-column:1; grid-row:1 / span 3; display:grid; grid-template-columns:minmax(0,1fr) auto; column-gap:24px; }
+.signature-collection-image { grid-column:1 / -1; }
+.signature-collection-lead .signature-collection-copy { margin-top:22px; }
+.signature-collection-lead .signature-collection-price { margin-top:22px; align-self:end; }
+.signature-collection-index { font:8.5px/1.5 'IBM Plex Mono',monospace; letter-spacing:.22em; text-transform:uppercase; color:rgba(232,207,160,.8); }
+.signature-collection-lead .signature-collection-index { position:absolute; top:16px; left:17px; }
+.signature-collection h3 { font:300 clamp(21px,2vw,26px) Newsreader,Georgia,serif; color:#f4efe4; margin:0; }
+.signature-collection p { font:300 16px/1.6 Newsreader,Georgia,serif; color:rgba(242,236,224,.62); margin:11px 0 0; max-width:38ch; text-wrap:pretty; }
+.signature-collection-lead .signature-collection-choose { display:none; }
+.signature-collection-secondary { grid-column:2; display:grid; grid-template-columns:108px minmax(0,1fr); column-gap:18px; align-items:center; padding-bottom:22px; border-bottom:1px solid rgba(244,238,226,.12); }
+.signature-collection-secondary .signature-collection-image { grid-column:1; grid-row:1 / span 3; }
+.signature-collection-secondary .fruit-photo { aspect-ratio:1 !important; }
+.signature-collection-secondary .signature-collection-index { grid-column:2; color:rgba(242,236,224,.42); }
+.signature-collection-secondary .signature-collection-index[data-closing] { color:#c08356; }
+.signature-collection-secondary .signature-collection-copy,.signature-collection-secondary .signature-collection-price { grid-column:2; }
+.signature-collection-secondary h3 { font-size:19px; margin-top:9px; }
+.signature-collection-secondary p { display:none; }
+.signature-collection-secondary .signature-collection-price { margin-top:9px; }
+.signature-collection-secondary .signature-collection-price > div > span:first-child { gap:6px !important; }
+.signature-collection-secondary .signature-collection-price span span { font:10px/1.7 'IBM Plex Mono',monospace !important; letter-spacing:.18em !important; color:rgba(242,236,224,.42) !important; }
+.signature-collection-secondary .signature-collection-price > div > span + span { display:none !important; }
+.signature-collection-placeholder { grid-column:2; }
+.presentation-box { --box-open:var(--box-scroll,0); }
+.presentation-box-controls,.presentation-caption-static { display:none !important; }
+@media(max-width:1279px) {
+  .responsive-commercial { --page-margin:40px; --page-gutter:22px; --page-section:104px; }
+  .everyday-categories { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .everyday-featured,.everyday-boxes,.signature-box-layout,.signature-season-layout,.signature-corporate-layout { grid-template-columns:1fr !important; }
+  .everyday-featured { gap:28px !important; }
+  .everyday-featured .baagh-specimen-plate,.signature-season-layout > .fruit-photo { aspect-ratio:3 / 2 !important; }
+  .everyday-product-grid,.everyday-selections,.signature-gift-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; }
+  .signature-box-layout,.signature-corporate-layout { gap:32px !important; }
+  .signature-season-layout { gap:30px !important; }
+  .signature-collections { grid-template-columns:1fr; }
+  .signature-collection-lead { grid-column:1; grid-row:auto; }
+  .signature-collection-secondary,.signature-collection-placeholder { grid-column:1; }
+}
+@media(max-width:767px) {
+  .responsive-commercial { --page-margin:22px; --page-gutter:14px; --page-section:76px; padding-top:64px !important; }
+  .responsive-commercial .baagh-section-heading { gap:16px !important; }
+  .responsive-commercial .baagh-section-heading > div:first-child { gap:14px !important; }
+  .responsive-commercial .baagh-button:not(.baagh-button--compact):not(.baagh-button--tertiary) { height:56px !important; }
+  .everyday-categories { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding-inline:22px; margin-inline:-22px; -webkit-overflow-scrolling:touch; }
+  .everyday-categories > * { width:148px !important; flex:0 0 148px !important; scroll-snap-align:start; }
+  .everyday-product-grid,.everyday-selections,.signature-gift-grid { grid-template-columns:1fr !important; gap:40px 14px !important; }
+  .everyday-product-grid .baagh-specimen-plate { aspect-ratio:3 / 2 !important; }
+  .responsive-product-card button[aria-label^="Add "] { height:44px; padding:0 22px !important; background:#f6f1e6 !important; color:#1d2419 !important; border-radius:2px; }
+  .responsive-product-card button[aria-label^="Add "] > span { display:none; }
+  .everyday-boxes > div:first-child .fruit-photo { aspect-ratio:3 / 2 !important; }
+  .responsive-commercial .responsive-closing { padding-top:44px !important; }
+  .signature-hero { min-height:78vh !important; margin-bottom:0 !important; }
+  .signature-hero-copy { padding-bottom:56px !important; }
+  .signature-hero-drift { animation-duration:40s !important; }
+  .signature-hero-sheen { display:none; }
+  .signature-quote { padding-top:48px !important; }
+  .signature-quote > div { padding:24px 20px !important; }
+  .signature-collections { display:flex; flex-direction:column; gap:48px; margin-inline:-22px; }
+  .signature-collection { display:block; border:0; padding:0; }
+  .signature-collection .fruit-photo { aspect-ratio:4 / 5 !important; }
+  .signature-collection .signature-collection-index { position:absolute; top:15px; left:22px; color:rgba(232,207,160,.8); }
+  .signature-collection .signature-collection-copy { margin:0; padding:20px 22px 0; }
+  .signature-collection h3 { font-size:23px; margin:0; }
+  .signature-collection .signature-collection-choose { display:inline-flex; }
+  .signature-collection p { display:block; margin:11px 0 16px; max-width:none; }
+  .signature-collection .signature-collection-price { margin:0; padding:0 22px; }
+  .signature-collection-secondary .signature-collection-price > div > span:first-child { gap:8px !important; }
+  .signature-collection-secondary .signature-collection-price span span:first-child { font:9px 'IBM Plex Mono',monospace !important; letter-spacing:.18em !important; }
+  .signature-collection-secondary .signature-collection-price span span + span { font:300 22px/1 Newsreader,Georgia,serif !important; letter-spacing:normal !important; color:#f4efe4 !important; }
+  .signature-collection-secondary .signature-collection-price > div > span + span { display:block !important; }
+  .signature-collection-placeholder { display:none; }
+  .presentation-box { --box-open:var(--box-frame,1); }
+  .presentation-box-well { aspect-ratio:4 / 3 !important; }
+  .presentation-box-controls { display:flex !important; }
+  .presentation-caption-static { display:inline !important; }
+  .presentation-caption-scroll { display:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .presentation-box { --box-open:1; }
+  .presentation-box-controls,.presentation-caption-scroll,.signature-hero-sheen { display:none !important; }
+  .presentation-caption-static { display:inline !important; }
+  .signature-hero-drift { animation:none !important; }
+}
+
+.everyday-boxes > div + div { gap:var(--page-gutter) !important; }
+.everyday-boxes > div + div > div { padding-bottom:var(--page-gutter) !important; }
+@media(max-width:767px) {
+  #everyday-season .baagh-section-content { min-width:0; }
+  #everyday-season > div:last-child > div { padding:20px 16px !important; }
+  #everyday-season > div:last-child > div > div:first-child { min-width:460px !important; }
+  #everyday-season .everyday-calendar > div { grid-template-columns:66px repeat(12,1fr) !important; }
+}
+
+/* A collection body keeps the original lead flex row and secondary centered copy. */
+.signature-collection-lead { display:block; }
+.signature-collection-lead .signature-collection-body { display:flex; justify-content:space-between; align-items:flex-end; gap:24px; flex-wrap:wrap; margin-top:22px; }
+.signature-collection-lead .signature-collection-copy,.signature-collection-lead .signature-collection-price { margin-top:0; }
+.signature-collection-secondary .signature-collection-image { grid-row:auto; }
+.signature-collection-secondary .signature-collection-body { grid-column:2; }
+@media(max-width:767px) {
+ .signature-collection .signature-collection-body { display:block; margin:0; padding:20px 22px 0; }
+ .signature-collection .signature-collection-copy,.signature-collection .signature-collection-price { padding:0; }
+}

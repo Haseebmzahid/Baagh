@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "prerenderedRoutes": [
+    "/product/mangoes/chaunsa"
+  ],
+  "viewports": [
+    [
+      1440,
+      900
+    ],
+    [
+      768,
+      1024
+    ],
+    [
+      375,
+      812
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "initialDomRetained": true,
+  "hydrationErrors": [],
+  "consoleErrors": [],
+  "savedBasket": "PASS",
+  "browserInteractions": "PASS",
+  "otherPagePrerendering": "NOT ENABLED",
+  "fullGraphicsRegressionSuite": "NOT TESTED",
+  "deployment": "NOT PERFORMED"
+}

@@ -1,0 +1,80 @@
+{
+  "responsiveCases": {
+    "passed": 12,
+    "total": 12
+  },
+  "functional": [
+    {
+      "width": 1440,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 768,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 390,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 375,
+      "status": "PASS",
+      "errors": []
+    }
+  ],
+  "savedBaskets": [
+    {
+      "route": "/everyday-fresh",
+      "pass": true,
+      "state": {
+        "h1": true,
+        "child": true,
+        "errors": [],
+        "writes": [],
+        "saved": "{\"version\":1,\"lines\":[{\"productId\":\"chaunsa\",\"packId\":\"2kg\",\"quantity\":2}]}"
+      }
+    },
+    {
+      "route": "/signature",
+      "pass": true,
+      "state": {
+        "h1": true,
+        "child": true,
+        "errors": [],
+        "writes": [],
+        "saved": "{\"version\":1,\"lines\":[{\"productId\":\"chaunsa\",\"packId\":\"2kg\",\"quantity\":2}]}"
+      }
+    },
+    {
+      "route": "/our-story",
+      "pass": true,
+      "state": {
+        "h1": true,
+        "child": true,
+        "errors": [],
+        "writes": [],
+        "saved": "{\"version\":1,\"lines\":[{\"productId\":\"chaunsa\",\"packId\":\"2kg\",\"quantity\":2}]}"
+      }
+    }
+  ],
+  "browserFull": {
+    "startTime": "2026-11-17T08:50:13.195Z",
+    "duration": 796838.058,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "build": "PASS",
+  "types": "PASS",
+  "seo": "PASS",
+  "unit": {
+    "passed": 35,
+    "failed": 0
+  },
+  "chaunsaGate": "PASS",
+  "deployment": false
+}
