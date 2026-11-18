@@ -1,0 +1,55 @@
+{
+  "build": "PASS",
+  "types": "PASS",
+  "seo": "PASS",
+  "unit": {
+    "passed": 35,
+    "failed": 0
+  },
+  "responsive": {
+    "passed": 12,
+    "total": 12
+  },
+  "functional": [
+    {
+      "width": 1440,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 768,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 390,
+      "status": "PASS",
+      "errors": []
+    },
+    {
+      "width": 375,
+      "status": "PASS",
+      "errors": []
+    }
+  ],
+  "chaunsa": "PASS",
+  "browser": {
+    "startTime": "2026-11-18T20:31:49.647Z",
+    "duration": 787011.657,
+    "expected": 16,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "evidencePreserved": {
+    "phase2a": true,
+    "performance": true
+  },
+  "prerenderAllowlist": [
+    "/product/mangoes/chaunsa",
+    "/everyday-fresh",
+    "/signature",
+    "/our-story"
+  ],
+  "deployment": false
+}

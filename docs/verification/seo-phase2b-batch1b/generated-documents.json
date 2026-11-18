@@ -1,0 +1,212 @@
+[
+  {
+    "path": "dist\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\spa.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\about\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\about-us\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\basket\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\contact\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\contact-us\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\cookie-policy\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\cookies\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\delivery\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\everyday-fresh\\index.html",
+    "prerender": true,
+    "emptyRoot": false,
+    "h1": 1
+  },
+  {
+    "path": "dist\\faq\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\fruit-intelligence\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\help\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\our-story\\index.html",
+    "prerender": true,
+    "emptyRoot": false,
+    "h1": 1
+  },
+  {
+    "path": "dist\\privacy\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\privacy-policy\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\refund-policy\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\returns\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\shipping-policy\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\signature\\index.html",
+    "prerender": true,
+    "emptyRoot": false,
+    "h1": 1
+  },
+  {
+    "path": "dist\\terms\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\terms-and-conditions\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\product\\seasonal\\anaar\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\product\\mangoes\\chaunsa\\index.html",
+    "prerender": true,
+    "emptyRoot": false,
+    "h1": 1
+  },
+  {
+    "path": "dist\\product\\citrus\\kinnow\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\product\\apples\\apple\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\fruit-intelligence\\anaar\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\fruit-intelligence\\apple\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\fruit-intelligence\\chaunsa\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\fruit-intelligence\\kinnow\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\everyday-fresh\\seasonal\\anaar\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\everyday-fresh\\mangoes\\chaunsa\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\everyday-fresh\\citrus\\kinnow\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  },
+  {
+    "path": "dist\\everyday-fresh\\apples\\apple\\index.html",
+    "prerender": false,
+    "emptyRoot": true,
+    "h1": 0
+  }
+]

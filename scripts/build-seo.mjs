@@ -11,8 +11,8 @@ try {
   const template = await readFile('dist/index.html', 'utf8');
   if (!template.includes('<!-- BAAGH_SEO_HEAD -->')) throw new Error('SEO template marker missing');
   const html = page => template.replace('<!-- BAAGH_SEO_HEAD -->', renderHead(page));
-  const { prerenderChaunsa } = await vite.ssrLoadModule('/src/seo/prerender.tsx');
-  const chaunsa = prerenderChaunsa();
+  const { prerenderPage } = await vite.ssrLoadModule('/src/seo/prerender.tsx');
+  const { prerenderPaths } = await vite.ssrLoadModule('/src/seo/bootstrap.ts');
   const manifest = JSON.parse(await readFile('dist/.vite/manifest.json', 'utf8'));
   const productCss = manifest['src/components/commercial/ProductDetail.tsx'].css ?? [];
   if (!productCss.length) throw new Error('Product stylesheet missing: no-JavaScript layout must be available before hydration');
@@ -20,10 +20,12 @@ try {
     const file = page.path === '/' ? 'dist/index.html' : `dist${page.path}/index.html`;
     await mkdir(file.slice(0, file.lastIndexOf('/')), { recursive: true });
     const document = html(page);
-    await writeFile(file, page.path === '/product/mangoes/chaunsa'
-      ? document.replace('</head>', `${productCss.map(file => `<link rel="stylesheet" href="/${file}">`).join('')}\n</head>`)
-          .replace('<div id="root"></div>', `<div id="root">${chaunsa.body}</div><script id="baagh-prerender" type="application/json">${chaunsa.state}</script>`)
+    const rendered = prerenderPaths.includes(page.path) ? prerenderPage(page.path) : undefined;
+    await writeFile(file, rendered
+      ? document.replace('</head>', `${(page.path === '/product/mangoes/chaunsa' ? productCss : []).map(file => `<link rel="stylesheet" href="/${file}">`).join('')}\n</head>`)
+          .replace('<div id="root"></div>', `<div id="root">${rendered.body}</div><script id="baagh-prerender" type="application/json">${rendered.state}</script>`)
       : document);
+
   }
   for (const path of [...aliasPaths, '/basket']) {
     await mkdir(`dist${path}`, { recursive: true });
@@ -35,7 +37,7 @@ try {
   await writeFile('dist/llms.txt', `# BAAGH\n\n> Fruit collection, gifting and educational Fruit Intelligence experiences.\n\nThis is a supplementary navigation resource. Refer to each page for current information. Prices marked provisional and catalogue states are not verified live inventory. Confirm order details with BAAGH.\n\n## Public pages\n${publicPages.map(page => `- [${page.label}](${absoluteUrl(page.path)}): ${page.description}`).join('\n')}\n`);
   await writeFile('dist/seo-manifest.json', JSON.stringify(publicPages.map(({ path, title, description, index, schema }) => ({ path, title, description, index, schemaTypes: schema.map(item => item['@type']) })), null, 2));
   console.log(`SEO: generated initial HTML metadata for ${publicPages.length} canonical pages, ${aliasPaths.length} aliases and basket; sitemap, robots.txt and llms.txt.`);
-  console.log('Prerender: Chaunsa canonical product body only; all other routes retain the existing SPA bootstrap.');
+  console.log('Prerender: Chaunsa, Everyday Fresh, Signature and Our Story only; other routes retain SPA bootstrap.');
 } finally {
   await vite.close();
 }

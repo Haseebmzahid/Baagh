@@ -1,0 +1,86 @@
+[
+  {
+    "route": "/everyday-fresh",
+    "width": 1440,
+    "h1GeometryEqual": true,
+    "padding": "56px",
+    "pass_": true
+  },
+  {
+    "route": "/signature",
+    "width": 1440,
+    "h1GeometryEqual": true,
+    "padding": "56px",
+    "pass_": true
+  },
+  {
+    "route": "/our-story",
+    "width": 1440,
+    "h1GeometryEqual": true,
+    "padding": "56px",
+    "pass_": true
+  },
+  {
+    "route": "/everyday-fresh",
+    "width": 768,
+    "h1GeometryEqual": true,
+    "padding": "40px",
+    "pass_": true
+  },
+  {
+    "route": "/signature",
+    "width": 768,
+    "h1GeometryEqual": true,
+    "padding": "40px",
+    "pass_": true
+  },
+  {
+    "route": "/our-story",
+    "width": 768,
+    "h1GeometryEqual": true,
+    "padding": "40px",
+    "pass_": true
+  },
+  {
+    "route": "/everyday-fresh",
+    "width": 390,
+    "h1GeometryEqual": true,
+    "padding": "22px",
+    "pass_": true
+  },
+  {
+    "route": "/signature",
+    "width": 390,
+    "h1GeometryEqual": true,
+    "padding": "22px",
+    "pass_": true
+  },
+  {
+    "route": "/our-story",
+    "width": 390,
+    "h1GeometryEqual": true,
+    "padding": "22px",
+    "pass_": true
+  },
+  {
+    "route": "/everyday-fresh",
+    "width": 375,
+    "h1GeometryEqual": true,
+    "padding": "22px",
+    "pass_": true
+  },
+  {
+    "route": "/signature",
+    "width": 375,
+    "h1GeometryEqual": true,
+    "padding": "22px",
+    "pass_": true
+  },
+  {
+    "route": "/our-story",
+    "width": 375,
+    "h1GeometryEqual": true,
+    "padding": "22px",
+    "pass_": true
+  }
+]

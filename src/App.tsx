@@ -45,11 +45,13 @@ if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
 interface AppProps {
   bootstrap?: PrerenderBootstrap;
   ProductPage?: React.ComponentType<ProductDetailProps>;
+  SignaturePage?: typeof import('./components/commercial/Signature').Signature;
+  StoryPage?: typeof import('./components/information/InformationPage').InformationPage;
 }
 const ExperienceBoundary: React.FC<{ ready: boolean; children: React.ReactNode }> = ({ ready, children }) => ready
   ? <>{children}</>
   : <Suspense fallback={<div role="status" style={{minHeight:'100vh',padding:'140px 40px',color:'#e8cfa0',fontFamily:'Newsreader,serif'}}>Preparing your experience…</div>}>{children}</Suspense>;
-export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = ProductDetail }) => {
+export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = ProductDetail, SignaturePage = Signature, StoryPage = InformationPage }) => {
   const startingRoute = () => bootstrap?.route ?? initialRoute();
   const { closeBasket } = useBasket();
   const { isSupported, errorMessage } = useWebGLCapability();
@@ -193,9 +195,9 @@ export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = Produc
         onNavigateRoute={handleNavigateRoute}
       />
 
-      <ExperienceBoundary ready={!!bootstrap && viewMode === 'product'}>
+      <ExperienceBoundary ready={!!bootstrap && ((viewMode === 'product' && ProductPage !== ProductDetail) || viewMode === 'everyday-fresh' || (viewMode === 'signature' && SignaturePage !== Signature) || (viewMode === 'information' && StoryPage !== InformationPage))}>
       {viewMode === 'information' ? (
-        <InformationPage key={informationPage} page={informationPage} onNavigateRoute={handleNavigateRoute} />
+        <StoryPage key={informationPage} page={informationPage} onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'not-found' ? (
         <NotFound onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'basket' ? (
@@ -209,7 +211,7 @@ export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = Produc
           onNavigateRoute={handleNavigateRoute}
         />
       ) : viewMode === 'signature' ? (
-        <Signature onNavigateRoute={handleNavigateRoute} />
+        <SignaturePage onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'fruit-intelligence' ? (
         <FruitIntelligence
           key={activeFruit}
@@ -247,11 +249,11 @@ export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = Produc
   );
 };
 
-export const App: React.FC<AppProps> = ({ bootstrap, ProductPage }) => {
+export const App: React.FC<AppProps> = ({ bootstrap, ProductPage, SignaturePage, StoryPage }) => {
   return (
     <BrandProvider>
       <ScrollProvider>
-        <BasketProvider anonymous={!!bootstrap}><AppContent bootstrap={bootstrap} ProductPage={ProductPage} /></BasketProvider>
+        <BasketProvider anonymous={!!bootstrap}><AppContent bootstrap={bootstrap} ProductPage={ProductPage} SignaturePage={SignaturePage} StoryPage={StoryPage} /></BasketProvider>
       </ScrollProvider>
     </BrandProvider>
   );

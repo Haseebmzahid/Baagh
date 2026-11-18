@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 const pages = JSON.parse(await readFile('dist/seo-manifest.json', 'utf8'));
 const sitemap = await readFile('dist/sitemap.xml', 'utf8');
 const robots = await readFile('dist/robots.txt', 'utf8');
@@ -18,7 +18,13 @@ for (const page of pages) {
     const bootstrap = JSON.parse(html.match(/id="baagh-prerender" type="application\/json">(.*?)<\/script>/s)[1]);
     assert.equal(bootstrap.pathname, page.path);
     assert(html.includes('assets/ProductDetail-') && html.includes('.css'));
+  } else if (['/everyday-fresh', '/signature', '/our-story'].includes(page.path)) {
+    assert.equal((html.match(/<h1(?:\s|>)/g) ?? []).length, 1);
+    const bootstrap = JSON.parse(html.match(/id="baagh-prerender" type="application\/json">(.*?)<\/script>/s)[1]);
+    assert.equal(bootstrap.pathname, page.path);
+    assert(!html.includes('Preparing your experience'));
   } else {
+    assert(html.includes('<div id="root"></div>'));
     assert(!html.includes('id="baagh-prerender"'), `Unexpected prerender rollout: ${page.path}`);
   }
   assert(!titles.has(page.title), `Duplicate title: ${page.path}`);
@@ -54,3 +60,15 @@ assert.match(robots, /User-agent: OAI-SearchBot\nAllow: \/\n/);
 assert.match(robots, /User-agent: GPTBot\nDisallow: \/\n/);
 assert((await readFile('dist/spa.html', 'utf8')).includes('noindex, follow'));
 console.log(`PASS: ${pages.length} canonical HTML heads, unique metadata, social tags, sitemap coverage, JSON-LD shape, truthful Product fields, Vercel mappings and crawler policies.`);
+
+// Audit every generated document, including aliases and the SPA fallback.
+const expectedBodies = ['everyday-fresh/index.html', 'signature/index.html', 'our-story/index.html', 'product/mangoes/chaunsa/index.html'].sort();
+const actualBodies = [];
+for (const file of await readdir('dist', { recursive: true })) {
+  if (!file.endsWith('.html')) continue;
+  const html = await readFile(`dist/${file}`, 'utf8');
+  const name = file.replaceAll('\\', '/');
+  if (html.includes('id="baagh-prerender"')) actualBodies.push(name);
+  else assert(html.includes('<div id="root"></div>'), `Unexpected initial body: ${name}`);
+}
+assert.deepEqual(actualBodies.sort(), expectedBodies, 'Exactly four canonical prerendered bodies required');
