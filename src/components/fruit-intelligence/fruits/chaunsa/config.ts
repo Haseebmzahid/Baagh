@@ -228,10 +228,10 @@ export const chaunsaConfig: FruitConfig = {
 
   primaryCta: {
     label: 'EXPLORE EVERYDAY FRESH',
-    href: '#everyday-fresh',
+    href: '/everyday-fresh',
   },
   secondaryCta: {
     label: 'EXPLORE SIGNATURE COLLECTION',
-    href: '#signature-collection',
+    href: '/signature',
   },
 };

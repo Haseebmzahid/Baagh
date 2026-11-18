@@ -5,6 +5,7 @@ import { FruitFallback } from './FruitFallback';
 import { FruitViewer } from './FruitViewer';
 import { ScreenPoint } from './core/types';
 import { getFruitEntry } from './fruits';
+import './fruitIntelligence.css';
 
 export interface FruitIntelligenceProps {
   fruit?: string; // Default: 'chaunsa'
@@ -24,8 +25,21 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
   const [progress, setProgress] = useState<number>(0);
   const [hasInteracted, setHasInteracted] = useState<boolean>(false);
 
+  const [enhanced, setEnhanced] = useState(false);
+  const interactive = enhanced && hasWebGL && !forceFallback;
+
+  // Presentation only: the ref runs in React's commit before paint. Semantic
+  // children and their first-render props remain identical to the server tree.
+  const presentationRef = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return;
+    node.dataset.fiClient = 'true';
+    const requestedReading = !enhanced && new URLSearchParams(window.location.search).get('fallback') === 'true';
+    node.dataset.fiMode = hasWebGL && !forceFallback && !requestedReading ? 'interactive' : 'reading';
+  }, [enhanced, hasWebGL, forceFallback]);
+
   // Check WebGL availability and URL query parameter
   useEffect(() => {
+    setEnhanced(true);
     const searchParams = new URLSearchParams(window.location.search);
     if (searchParams.get('fallback') === 'true') {
       setForceFallback(true);
@@ -66,18 +80,15 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
     setHasWebGL(false);
   }, []);
 
-  if (!hasWebGL || forceFallback) {
-    return (
-      <><FruitFallback
-        config={config}
-        reason={forceFallback ? 'Reading view selected' : 'Interactive graphics unavailable'}
-      /><button type="button" onClick={() => { setHasWebGL(true); setForceFallback(false); }} style={{position:'fixed',right:'22px',top:'94px',zIndex:10,minHeight:'44px',padding:'0 16px',border:'1px solid #e8cfa044',background:'#211e17',color:'#e8cfa0',borderRadius:'8px',cursor:'pointer'}}>Try 3D view</button></>
-    );
-  }
 
   return (
     <div
       key={`fi-container-${fruit}`}
+      className="fi-page"
+      data-fi-fruit={config.id}
+      ref={presentationRef}
+      data-fi-client={enhanced}
+      data-fi-mode={interactive ? "interactive" : "reading"}
       style={{
         position: 'relative',
         width: '100%',
@@ -89,7 +100,8 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
       }}
     >
       {/* 3D WebGL Canvas Layer */}
-      <FruitViewer
+      <FruitFallback config={config} />
+      <div className="fi-viewer">{hasWebGL && !forceFallback && <FruitViewer
         key={`viewer-${fruit}`}
         config={config}
         loadFactory={loadFactory}
@@ -97,24 +109,26 @@ export const FruitIntelligence: React.FC<FruitIntelligenceProps> = ({
         onProgressUpdate={handleProgressUpdate}
         onInteraction={handleInteraction}
         onError={handleError}
-      />
-
-      {/* Dynamic 3D Projected DOM Annotations */}
-      <FruitAnnotations
-        key={`annotations-${fruit}`}
-        config={config}
-        points={points}
-        progress={progress}
-      />
+      />}</div>
 
       {/* Atmospheric Backdrops, 8 Acts Narrative, Rail, Hint, Spacer */}
       <FruitExperienceShell
         key={`shell-${fruit}`}
         config={config}
         progress={progress}
+        interactive={interactive}
         hasInteracted={hasInteracted}
       />
-      <button type="button" onClick={() => setForceFallback(true)} style={{position:'fixed',right:'22px',top:'94px',zIndex:10,minHeight:'44px',padding:'0 16px',border:'1px solid #e8cfa044',background:'rgba(33,30,23,.85)',color:'#e8cfa0',borderRadius:'8px',cursor:'pointer'}}>Reading view</button>
+      {/* Dynamic 3D Projected DOM Annotations */}
+      <FruitAnnotations
+        key={`annotations-${fruit}`}
+        config={config}
+        interactive={interactive}
+        points={points}
+        progress={progress}
+      />
+
+      <button className="fi-view-control" type="button" onClick={() => { if (interactive) setForceFallback(true); else { window.scrollTo(0, 0); setPoints([]); setProgress(0); setHasInteracted(false); setHasWebGL(true); setForceFallback(false); } }} style={{position:'fixed',right:'22px',top:'94px',zIndex:10,minHeight:'44px',padding:'0 16px',border:'1px solid #e8cfa044',background:'rgba(33,30,23,.85)',color:'#e8cfa0',borderRadius:'8px',cursor:'pointer'}}>{interactive ? "Reading view" : "Try 3D view"}</button>
 
       {/* Optional Top Nav / Return Bar if integrated in multi-experience site */}
       {onBackToBrand && (

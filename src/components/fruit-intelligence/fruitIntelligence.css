@@ -1,0 +1,29 @@
+.fi-static-fruit { display:none; }
+.fi-viewer { display:contents; }
+.fi-page[data-fi-mode="reading"] { padding: max(150px, 8vw) 6vw 70px; }
+.fi-page[data-fi-mode="reading"] .fi-static-fruit { display:block; margin:0 auto 32px; }
+.fi-page[data-fi-mode="reading"] .fi-viewer,
+.fi-page[data-fi-mode="reading"] .fi-spacer,
+.fi-page[data-fi-mode="reading"] .fi-rail,
+.fi-page[data-fi-mode="reading"] .fi-hint,
+.fi-page[data-fi-mode="reading"] .fi-connector { display:none !important; }
+.fi-page[data-fi-mode="reading"] .fi-narrative,
+.fi-page[data-fi-mode="reading"] .fi-narrative > div,
+.fi-page[data-fi-mode="reading"] .fi-act,
+.fi-page[data-fi-mode="reading"] .fi-characteristics,
+.fi-page[data-fi-mode="reading"] .fi-characteristic { position:relative !important; inset:auto !important; transform:none !important; width:100% !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important; }
+.fi-page[data-fi-mode="reading"] .fi-narrative { display:block !important; max-width:960px; margin:auto; }
+.fi-page[data-fi-mode="reading"] .fi-narrative > div { padding:0 !important; }
+.fi-page[data-fi-mode="reading"] .fi-act { max-width:640px; margin:0 auto 48px; text-align:left !important; align-items:flex-start !important; }
+.fi-page[data-fi-mode="reading"] .fi-act h1 { font-size:clamp(32px,5vw,56px) !important; line-height:1.08 !important; }
+.fi-page[data-fi-mode="reading"] .fi-act > div { max-width:100% !important; }
+.fi-page[data-fi-mode="reading"] .fi-characteristics { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr)); gap:24px; max-width:960px; margin:0 auto 48px; }
+.fi-page[data-fi-mode="reading"] .fi-characteristic { padding:16px; background:rgba(255,255,255,.02); }
+.fi-page[data-fi-mode="reading"] .fi-characteristic > div { line-height:1.4; }
+.fi-view-control { display:none; }
+.fi-page[data-fi-mode="interactive"] .fi-view-control { display:block; }
+/* Reading mode still offers the existing client control after mount. */
+.fi-page[data-fi-client="true"] .fi-view-control { display:block; }
+.fi-page[data-fi-mode="reading"] .fi-tier { display:none; }
+.fi-page[data-fi-mode="interactive"][data-fi-fruit="anaar"] h1 { white-space:normal !important; }
+.fi-static-fruit { position:relative; z-index:2; }

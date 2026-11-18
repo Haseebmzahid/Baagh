@@ -3,16 +3,20 @@ import { FruitConfig } from './core/types';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { win } from './core/mathUtils';
 
+const Heading = ({first, ...props}: React.HTMLAttributes<HTMLHeadingElement> & {first: boolean}) => first ? <h1 {...props} /> : <h2 {...props} />;
+
 interface FruitExperienceShellProps {
   config: FruitConfig;
   progress: number;
   hasInteracted: boolean;
+  interactive?: boolean;
 }
 
 export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.memo(({
   config,
   progress,
   hasInteracted,
+  interactive = true,
 }) => {
   const reducedMotion = useReducedMotion();
   // Calculate windowing values for each of the 8 acts
@@ -66,7 +70,7 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.m
       />
 
       {/* 2. Fixed Narrative Overlay (8 Acts) */}
-      <div
+      <div className="fi-narrative"
         style={{
           position: 'fixed',
           inset: 0,
@@ -86,14 +90,14 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.m
         >
           {config.acts.map((act, i) => {
             const opacity = Number(actOpacities[i].toFixed(3));
-            const isClickable = opacity > 0.6;
+            const isClickable = !interactive || opacity > 0.6;
             const translateY = reducedMotion ? 0 : (1 - actOpacities[i]) * 16;
             const isCentered = act.isCentered;
 
             return (
-              <div
+              <section className="fi-act"
                 key={act.index}
-                aria-hidden={!isClickable}
+                aria-hidden={interactive && !isClickable}
                 style={{
                   position: 'absolute',
                   left: isCentered ? '50%' : 'clamp(20px, 5vw, 84px)',
@@ -127,8 +131,9 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.m
                   </div>
                 ) : null}
 
-                <div
+                <Heading first={i === 0}
                   style={{
+                    margin: 0,
                     fontFamily: "'Cormorant Garamond', serif",
                     fontWeight: 300,
                     fontStyle: act.isItalicHeadline ? 'italic' : 'normal',
@@ -141,8 +146,8 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.m
                     whiteSpace: 'pre-line',
                   }}
                 >
-                  {act.headline}
-                </div>
+                  {i === 0 ? config.headline : act.headline}
+                </Heading>
 
                 <div
                   style={{
@@ -170,7 +175,7 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.m
                     <a
                       href={config.primaryCta.href}
                       className="fi-primary-cta"
-                      tabIndex={isClickable ? 0 : -1}
+                      tabIndex={!interactive || isClickable ? 0 : -1}
                       style={{
                         padding: '15px 30px',
                         borderRadius: '2px',
@@ -204,14 +209,14 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.m
                     </a>
                   </div>
                 )}
-              </div>
+              </section>
             );
           })}
         </div>
       </div>
 
       {/* 3. Chapter Rail (8-Dot Progress Indicator) */}
-      <nav
+      <nav className="fi-rail"
         aria-label="Story chapters"
         style={{
           position: 'fixed',
@@ -265,12 +270,12 @@ export const FruitExperienceShell: React.FC<FruitExperienceShellProps> = React.m
             fontFamily: "'Work Sans', system-ui, sans-serif",
           }}
         >
-          SCROLL &nbsp;·&nbsp; DRAG TO TURN
+          <span className="fi-hint">SCROLL &nbsp;·&nbsp; DRAG TO TURN</span>
         </div>
       )}
 
       {/* 5. Native Scroll Spacer */}
-      <div
+      <div className="fi-spacer"
         style={{
           position: 'relative',
           zIndex: 1,

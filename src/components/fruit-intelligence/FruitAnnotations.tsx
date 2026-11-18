@@ -7,6 +7,7 @@ interface FruitAnnotationsProps {
   points: ScreenPoint[];
   progress: number;
   visible?: boolean;
+  interactive?: boolean;
 }
 
 export const FruitAnnotations: React.FC<FruitAnnotationsProps> = ({
@@ -14,6 +15,7 @@ export const FruitAnnotations: React.FC<FruitAnnotationsProps> = ({
   points,
   progress,
   visible = true,
+  interactive = true,
 }) => {
   const pointsById = useMemo(() => {
     const map: Record<string, ScreenPoint> = {};
@@ -135,7 +137,7 @@ export const FruitAnnotations: React.FC<FruitAnnotationsProps> = ({
 
 
   return (
-    <div
+    <div className="fi-characteristics" role="list" aria-label="Fruit characteristics"
       style={{
         position: 'fixed',
         inset: 0,
@@ -144,34 +146,38 @@ export const FruitAnnotations: React.FC<FruitAnnotationsProps> = ({
       }}
     >
       {/* Editorial Callout Cards & Connecting Lines */}
-      {allCallouts.map((item) => (
+      {config.anchors.filter(anchor => anchor.description.length > 0).map(anchor => {
+        const placed = allCallouts.find(item => item.key === anchor.id);
+        const item = {key: anchor.id, label: anchor.label, description: anchor.description, opacity: placed?.opacity ?? 0};
+        return (
         <React.Fragment key={item.key}>
           {/* Connector Line */}
-          <div
+          {placed && <div className="fi-connector" aria-hidden="true"
             style={{
               position: 'absolute',
               left: 0,
               top: 0,
               height: '1px',
-              width: `${Math.round(item.line.length)}px`,
-              opacity: Number(item.line.opacity.toFixed(3)),
+              width: `${Math.round(placed.line.length)}px`,
+              opacity: Number(placed.line.opacity.toFixed(3)),
               background: 'linear-gradient(90deg, rgba(232,180,92,0.5), rgba(232,180,92,0))',
               transformOrigin: '0 50%',
-              transform: `translate3d(${Math.round(item.line.x)}px, ${Math.round(item.line.y)}px, 0) rotate(${item.line.angle.toFixed(4)}rad)`,
+              transform: `translate3d(${Math.round(placed.line.x)}px, ${Math.round(placed.line.y)}px, 0) rotate(${placed.line.angle.toFixed(4)}rad)`,
               pointerEvents: 'none',
               transition: 'opacity 0.15s ease-out',
             }}
-          />
+          />}
 
           {/* Callout Card */}
-          <div
+          <div className="fi-characteristic" role="listitem" aria-hidden={interactive && (!placed || item.opacity <= .001)}
             style={{
+              visibility: interactive && (!placed || item.opacity <= .001) ? "hidden" : "visible",
               position: 'absolute',
               left: 0,
               top: 0,
               width: `${colW}px`,
               opacity: Number(item.opacity.toFixed(3)),
-              transform: `translate3d(${Math.round(item.x)}px, ${Math.round(item.y)}px, 0)`,
+              transform: placed ? `translate3d(${Math.round(placed.x)}px, ${Math.round(placed.y)}px, 0)` : undefined,
               pointerEvents: item.opacity > 0.1 ? 'auto' : 'none',
               willChange: 'transform, opacity',
             }}
@@ -210,7 +216,7 @@ export const FruitAnnotations: React.FC<FruitAnnotationsProps> = ({
             </div>
           </div>
         </React.Fragment>
-      ))}
+      );})}
 
       {/* Selection Trio Quality Badges (GOOD, BETTER, BEST) */}
       {(['good', 'better', 'best'] as const).map((tierKey) => {
@@ -220,7 +226,7 @@ export const FruitAnnotations: React.FC<FruitAnnotationsProps> = ({
 
         return (
           <div
-            key={tierKey}
+            className="fi-tier" key={tierKey}
             style={{
               position: 'absolute',
               left: 0,

@@ -375,6 +375,6 @@ export const anaarConfig: FruitConfig = {
       'Your device can’t run the interactive inspection. The same assessment — skin, crown, chambers, arils — is written out below in full.',
   },
 
-  primaryCta: { label: 'EXPLORE EVERYDAY FRESH', href: '#everyday-fresh' },
-  secondaryCta: { label: 'EXPLORE SIGNATURE COLLECTION', href: '#signature-collection' },
+  primaryCta: { label: 'EXPLORE EVERYDAY FRESH', href: '/everyday-fresh' },
+  secondaryCta: { label: 'EXPLORE SIGNATURE COLLECTION', href: '/signature' },
 };
