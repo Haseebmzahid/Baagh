@@ -14,15 +14,31 @@ try {
   const { prerenderPage } = await vite.ssrLoadModule('/src/seo/prerender.tsx');
   const { prerenderPaths } = await vite.ssrLoadModule('/src/seo/bootstrap.ts');
   const manifest = JSON.parse(await readFile('dist/.vite/manifest.json', 'utf8'));
-  const productCss = manifest['src/components/commercial/ProductDetail.tsx'].css ?? [];
-  if (!productCss.length) throw new Error('Product stylesheet missing: no-JavaScript layout must be available before hydration');
+  function collectCss(entry, visited = new Set()) {
+    if (visited.has(entry)) return [];
+    visited.add(entry);
+    const { imports = [], css = [] } = manifest[entry];
+    return [...imports.flatMap(dependency => collectCss(dependency, visited)), ...css];
+  }
+  const routeStyles = {
+    product: 'src/components/commercial/ProductDetail.tsx',
+    // Rollup can emit this shared dynamic facade under a generated manifest key.
+    'fruit-intelligence': Object.keys(manifest).find(key =>
+      manifest[key].isDynamicEntry && manifest[key].name === 'FruitIntelligence'),
+  };
+  for (const entry of Object.values(routeStyles)) {
+    if (!manifest[entry]?.css?.length) throw new Error(`Missing prerender stylesheet: ${entry}`);
+  }
   for (const page of publicPages) {
     const file = page.path === '/' ? 'dist/index.html' : `dist${page.path}/index.html`;
     await mkdir(file.slice(0, file.lastIndexOf('/')), { recursive: true });
     const document = html(page);
-    const rendered = prerenderPaths.includes(page.path) ? prerenderPage(page.path) : undefined;
+    const rendered = prerenderPaths.includes(page.path) ? await prerenderPage(page.path) : undefined;
+    const stylesheetEntry = rendered && routeStyles[JSON.parse(rendered.state).route.view];
+    const styles = stylesheetEntry ? [...new Set(collectCss(stylesheetEntry))]
+      .filter(file => !template.includes(`href="/${file}"`)) : [];
     await writeFile(file, rendered
-      ? document.replace('</head>', `${(page.path === '/product/mangoes/chaunsa' ? productCss : []).map(file => `<link rel="stylesheet" href="/${file}">`).join('')}\n</head>`)
+      ? document.replace('</head>', `${styles.map(file => `<link rel="stylesheet" href="/${file}">`).join('')}\n</head>`)
           .replace('<div id="root"></div>', `<div id="root">${rendered.body}</div><script id="baagh-prerender" type="application/json">${rendered.state}</script>`)
       : document);
 
@@ -37,7 +53,7 @@ try {
   await writeFile('dist/llms.txt', `# BAAGH\n\n> Fruit collection, gifting and educational Fruit Intelligence experiences.\n\nThis is a supplementary navigation resource. Refer to each page for current information. Prices marked provisional and catalogue states are not verified live inventory. Confirm order details with BAAGH.\n\n## Public pages\n${publicPages.map(page => `- [${page.label}](${absoluteUrl(page.path)}): ${page.description}`).join('\n')}\n`);
   await writeFile('dist/seo-manifest.json', JSON.stringify(publicPages.map(({ path, title, description, index, schema }) => ({ path, title, description, index, schemaTypes: schema.map(item => item['@type']) })), null, 2));
   console.log(`SEO: generated initial HTML metadata for ${publicPages.length} canonical pages, ${aliasPaths.length} aliases and basket; sitemap, robots.txt and llms.txt.`);
-  console.log('Prerender: Chaunsa, Everyday Fresh, Signature and Our Story only; other routes retain SPA bootstrap.');
+  console.log(`Prerender: ${prerenderPaths.join(', ')}`);
 } finally {
   await vite.close();
 }

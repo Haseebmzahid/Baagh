@@ -2,13 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import { readBootstrap } from './seo/bootstrap';
+import { loadFruitPage } from './navigation/loadFruitPage';
 import './index.css';
 
 const root = document.getElementById('root') as HTMLElement;
 const bootstrap = readBootstrap();
 if (bootstrap) {
   // Resolve the same real component before hydration: no loading-shell swap.
-  const preload = bootstrap.pathname === '/product/mangoes/chaunsa'
+  const preload = bootstrap.route.view === 'fruit-intelligence'
+    ? loadFruitPage().then(({ FruitIntelligence: FruitPage }) => ({ FruitPage }))
+    : bootstrap.pathname === '/product/mangoes/chaunsa'
     ? import('./components/commercial/ProductDetail').then(({ ProductDetail }) => ({ ProductPage: ProductDetail }))
     : bootstrap.pathname === '/signature'
       ? import('./components/commercial/Signature').then(({ Signature }) => ({ SignaturePage: Signature }))

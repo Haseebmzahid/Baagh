@@ -1,0 +1,195 @@
+{
+  "reviewDate": "2026-11-20",
+  "baseCommit": "200886a",
+  "runtime": {
+    "node": "24.20.0",
+    "npm": "11.19.0",
+    "chrome": "157.0.8103.80",
+    "graphics": "SwiftShader software WebGL"
+  },
+  "checks": {
+    "build": "passed",
+    "types": "passed",
+    "seo": "passed",
+    "unit": {
+      "passed": 35,
+      "failed": 0
+    }
+  },
+  "html": {
+    "inspected": 35,
+    "allowlist": [
+      "/product/mangoes/chaunsa",
+      "/everyday-fresh",
+      "/signature",
+      "/our-story",
+      "/fruit-intelligence/chaunsa",
+      "/fruit-intelligence/kinnow",
+      "/fruit-intelligence/apple",
+      "/fruit-intelligence/anaar"
+    ],
+    "otherEmptyRoots": 27,
+    "fruits": [
+      {
+        "file": "dist/fruit-intelligence/chaunsa/index.html",
+        "h1": "Read a Chaunsa\nthe way a buyer reads it.",
+        "acts": 8,
+        "descriptions": 7,
+        "bodyBytes": 19438
+      },
+      {
+        "file": "dist/fruit-intelligence/kinnow/index.html",
+        "h1": "Judge a Kinnow\nbefore you peel it.",
+        "acts": 8,
+        "descriptions": 9,
+        "bodyBytes": 20886
+      },
+      {
+        "file": "dist/fruit-intelligence/apple/index.html",
+        "h1": "An apple gives away\nmore than it means to.",
+        "acts": 9,
+        "descriptions": 9,
+        "bodyBytes": 22069
+      },
+      {
+        "file": "dist/fruit-intelligence/anaar/index.html",
+        "h1": "Anaar, before anyone\nclaims anything.",
+        "acts": 10,
+        "descriptions": 16,
+        "bodyBytes": 28194
+      }
+    ]
+  },
+  "browser": {
+    "originalFullSuite": {
+      "passed": 29,
+      "failed": 5,
+      "duplicateProjectSkips": 16
+    },
+    "originalResourceErrors": [
+      {
+        "case": "apple at 390×844",
+        "error": "net::ERR_TIMED_OUT",
+        "resourceUrl": null
+      },
+      {
+        "case": "apple at 375×812",
+        "error": "net::ERR_CONNECTION_RESET",
+        "resourceUrl": null
+      },
+      {
+        "case": "anaar at 390×844",
+        "error": "net::ERR_CONNECTION_RESET",
+        "resourceUrl": null
+      }
+    ],
+    "originalRetries": [
+      {
+        "case": "apple at 390×844",
+        "status": "passed",
+        "durationMs": 46096
+      },
+      {
+        "case": "apple at 375×812",
+        "status": "passed",
+        "durationMs": 58523
+      },
+      {
+        "case": "anaar at 390×844",
+        "status": "passed",
+        "durationMs": 43139
+      }
+    ],
+    "freshIsolatedRun": [
+      {
+        "case": "chaunsa at 375×812",
+        "status": "passed",
+        "durationMs": 29376
+      },
+      {
+        "case": "kinnow at 390×844",
+        "status": "passed",
+        "durationMs": 35838
+      },
+      {
+        "case": "apple at 390×844",
+        "status": "passed",
+        "durationMs": 51913
+      },
+      {
+        "case": "apple at 375×812",
+        "status": "passed",
+        "durationMs": 70488
+      },
+      {
+        "case": "anaar at 390×844",
+        "status": "passed",
+        "durationMs": 38522
+      }
+    ],
+    "legacyDesktopFailures": [
+      {
+        "name": "kinnow: selected engine, scroll completion and scene cleanup",
+        "project": "desktop",
+        "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+      },
+      {
+        "name": "anaar: selected engine, scroll completion and scene cleanup",
+        "project": "desktop",
+        "error": "TimeoutError: page.waitForFunction: Timeout 20000ms exceeded."
+      }
+    ],
+    "matchingBaselines": [
+      "Phase 1",
+      "Phase 2A",
+      "Phase 2B Batch 1B",
+      "Phase 2C Batch 1A"
+    ],
+    "chaunsaProductionGate": {
+      "status": "passed",
+      "viewports": [
+        [
+          1440,
+          900
+        ],
+        [
+          768,
+          1024
+        ],
+        [
+          375,
+          812
+        ],
+        [
+          390,
+          844
+        ]
+      ],
+      "originalEvidenceFilesRestored": 52
+    }
+  },
+  "bundle": {
+    "entryGrowthBytes": 183,
+    "fruitRouteBytes": 40534,
+    "fruitStylesBytes": 1978,
+    "sharedThreeBytes": 732125,
+    "sharedThreeSha256": "e534bdf4b582ac9a9af07288af7ab9bf0fdb31a05bc6634d65f3cf6066cbb483",
+    "sceneChunks": [
+      "assets/ChaunsaScene-DdHaP2Nh.js",
+      "assets/KinnowScene-P6zYXZv9.js",
+      "assets/AppleScene-BprO-mIX.js",
+      "assets/AnaarScene-Dnp6gIYG.js"
+    ],
+    "existingViteSizeWarning": true
+  },
+  "byteIdenticalCrawlerResourcesSha256": {
+    "robots.txt": "3a8f5b55ec452b09ad2e189ed8f21a167690bd26d72bf992ab24567d34925c70",
+    "sitemap.xml": "be75aea6d8ad73504ff95291a3ea1b91d757be63ebbd8b0de74da9e07573ce57",
+    "llms.txt": "bcc2faad433f0c1ae93a9f054ee875d852cc5809ce84d22156f6c3bec2419beb"
+  },
+  "applicationSourceEditedDuringReview": false,
+  "staged": false,
+  "committed": false,
+  "pushed": false,
+  "deployed": false
+}

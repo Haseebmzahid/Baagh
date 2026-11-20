@@ -1,6 +1,10 @@
 import { resolveRoute, type ResolvedRoute } from '../navigation/route';
 
-export const prerenderPaths = ['/product/mangoes/chaunsa', '/everyday-fresh', '/signature', '/our-story'] as const;
+export const prerenderPaths = [
+  '/product/mangoes/chaunsa', '/everyday-fresh', '/signature', '/our-story',
+  '/fruit-intelligence/chaunsa', '/fruit-intelligence/kinnow',
+  '/fruit-intelligence/apple', '/fruit-intelligence/anaar',
+] as const;
 export type PrerenderPath = typeof prerenderPaths[number];
 
 export interface PrerenderBootstrap {

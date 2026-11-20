@@ -18,6 +18,7 @@ import { useWebGLCapability } from './hooks/useWebGLCapability';
 import { BasketProvider, useBasket } from './context/BasketContext';
 import { BasketAnnouncements, BasketDrawer, BasketLauncher, BasketReview } from './components/commercial/Basket';
 import { collectionFromHash, resolveRoute } from './navigation/route';
+import { loadFruitPage } from './navigation/loadFruitPage';
 import { gridFilters } from './data/catalogue';
 import type { PrerenderBootstrap } from './seo/bootstrap';
 import type { ProductDetailProps } from './components/commercial/ProductDetail';
@@ -26,7 +27,7 @@ import type { ViewMode, ProductRoute } from './navigation/route';
 const CinemaStage = lazy(() => import('./components/canvas/CinemaStage').then((module) => ({default:module.CinemaStage})));
 const ProductDetail = lazy(() => import('./components/commercial/ProductDetail').then((module) => ({default:module.ProductDetail})));
 const Signature = lazy(() => import('./components/commercial/Signature').then((module) => ({default:module.Signature})));
-const FruitIntelligence = lazy(() => import('./components/fruit-intelligence/FruitIntelligence').then((module) => ({default:module.FruitIntelligence})));
+const FruitIntelligence = lazy(() => loadFruitPage().then(({ FruitIntelligence }) => ({ default: FruitIntelligence })));
 const InformationPage = lazy(() => import('./components/information/InformationPage').then(module => ({default:module.InformationPage})));
 
 const initialRoute = () => resolveRoute(window.location.pathname,window.location.hash,new URLSearchParams(window.location.search).get('fruit'));
@@ -47,11 +48,12 @@ interface AppProps {
   ProductPage?: React.ComponentType<ProductDetailProps>;
   SignaturePage?: typeof import('./components/commercial/Signature').Signature;
   StoryPage?: typeof import('./components/information/InformationPage').InformationPage;
+  FruitPage?: Awaited<ReturnType<typeof loadFruitPage>>['FruitIntelligence'];
 }
 const ExperienceBoundary: React.FC<{ ready: boolean; children: React.ReactNode }> = ({ ready, children }) => ready
   ? <>{children}</>
   : <Suspense fallback={<div role="status" style={{minHeight:'100vh',padding:'140px 40px',color:'#e8cfa0',fontFamily:'Newsreader,serif'}}>Preparing your experience…</div>}>{children}</Suspense>;
-export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = ProductDetail, SignaturePage = Signature, StoryPage = InformationPage }) => {
+export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = ProductDetail, SignaturePage = Signature, StoryPage = InformationPage, FruitPage = FruitIntelligence }) => {
   const startingRoute = () => bootstrap?.route ?? initialRoute();
   const { closeBasket } = useBasket();
   const { isSupported, errorMessage } = useWebGLCapability();
@@ -195,7 +197,7 @@ export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = Produc
         onNavigateRoute={handleNavigateRoute}
       />
 
-      <ExperienceBoundary ready={!!bootstrap && ((viewMode === 'product' && ProductPage !== ProductDetail) || viewMode === 'everyday-fresh' || (viewMode === 'signature' && SignaturePage !== Signature) || (viewMode === 'information' && StoryPage !== InformationPage))}>
+      <ExperienceBoundary ready={!!bootstrap && ((viewMode === 'product' && ProductPage !== ProductDetail) || viewMode === 'everyday-fresh' || (viewMode === 'signature' && SignaturePage !== Signature) || (viewMode === 'information' && StoryPage !== InformationPage) || (viewMode === 'fruit-intelligence' && FruitPage !== FruitIntelligence))}>
       {viewMode === 'information' ? (
         <StoryPage key={informationPage} page={informationPage} onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'not-found' ? (
@@ -213,7 +215,7 @@ export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = Produc
       ) : viewMode === 'signature' ? (
         <SignaturePage onNavigateRoute={handleNavigateRoute} />
       ) : viewMode === 'fruit-intelligence' ? (
-        <FruitIntelligence
+        <FruitPage
           key={activeFruit}
           fruit={activeFruit}
           onBackToBrand={handleNavigateBrand}
@@ -249,11 +251,11 @@ export const AppContent: React.FC<AppProps> = ({ bootstrap, ProductPage = Produc
   );
 };
 
-export const App: React.FC<AppProps> = ({ bootstrap, ProductPage, SignaturePage, StoryPage }) => {
+export const App: React.FC<AppProps> = (props) => {
   return (
     <BrandProvider>
       <ScrollProvider>
-        <BasketProvider anonymous={!!bootstrap}><AppContent bootstrap={bootstrap} ProductPage={ProductPage} SignaturePage={SignaturePage} StoryPage={StoryPage} /></BasketProvider>
+        <BasketProvider anonymous={!!props.bootstrap}><AppContent {...props} /></BasketProvider>
       </ScrollProvider>
     </BrandProvider>
   );
