@@ -138,8 +138,136 @@
       "destination": "/everyday-fresh/seasonal/anaar/index.html"
     },
     {
-      "source": "/((?!assets/|images/|robots\\.txt$|sitemap\\.xml$|llms\\.txt$|seo-manifest\\.json$).*)",
-      "destination": "/spa.html"
+      "source": "/([eE][vV][eE][rR][yY][dD][aA][yY]-[fF][rR][eE][sS][hH])",
+      "destination": "/everyday-fresh/index.html"
+    },
+    {
+      "source": "/([sS][iI][gG][nN][aA][tT][uU][rR][eE])",
+      "destination": "/signature/index.html"
+    },
+    {
+      "source": "/([pP][rR][oO][dD][uU][cC][tT])/([mM][aA][nN][gG][oO][eE][sS])/([cC][hH][aA][uU][nN][sS][aA])",
+      "destination": "/product/mangoes/chaunsa/index.html"
+    },
+    {
+      "source": "/([pP][rR][oO][dD][uU][cC][tT])/([cC][iI][tT][rR][uU][sS])/([kK][iI][nN][nN][oO][wW])",
+      "destination": "/product/citrus/kinnow/index.html"
+    },
+    {
+      "source": "/([pP][rR][oO][dD][uU][cC][tT])/([aA][pP][pP][lL][eE][sS])/([aA][pP][pP][lL][eE])",
+      "destination": "/product/apples/apple/index.html"
+    },
+    {
+      "source": "/([pP][rR][oO][dD][uU][cC][tT])/([sS][eE][aA][sS][oO][nN][aA][lL])/([aA][nN][aA][aA][rR])",
+      "destination": "/product/seasonal/anaar/index.html"
+    },
+    {
+      "source": "/([fF][rR][uU][iI][tT]-[iI][nN][tT][eE][lL][lL][iI][gG][eE][nN][cC][eE])/([cC][hH][aA][uU][nN][sS][aA])",
+      "destination": "/fruit-intelligence/chaunsa/index.html"
+    },
+    {
+      "source": "/([fF][rR][uU][iI][tT]-[iI][nN][tT][eE][lL][lL][iI][gG][eE][nN][cC][eE])/([kK][iI][nN][nN][oO][wW])",
+      "destination": "/fruit-intelligence/kinnow/index.html"
+    },
+    {
+      "source": "/([fF][rR][uU][iI][tT]-[iI][nN][tT][eE][lL][lL][iI][gG][eE][nN][cC][eE])/([aA][pP][pP][lL][eE])",
+      "destination": "/fruit-intelligence/apple/index.html"
+    },
+    {
+      "source": "/([fF][rR][uU][iI][tT]-[iI][nN][tT][eE][lL][lL][iI][gG][eE][nN][cC][eE])/([aA][nN][aA][aA][rR])",
+      "destination": "/fruit-intelligence/anaar/index.html"
+    },
+    {
+      "source": "/([oO][uU][rR]-[sS][tT][oO][rR][yY])",
+      "destination": "/our-story/index.html"
+    },
+    {
+      "source": "/([cC][oO][nN][tT][aA][cC][tT])",
+      "destination": "/contact/index.html"
+    },
+    {
+      "source": "/([pP][rR][iI][vV][aA][cC][yY]-[pP][oO][lL][iI][cC][yY])",
+      "destination": "/privacy-policy/index.html"
+    },
+    {
+      "source": "/([cC][oO][oO][kK][iI][eE][sS])",
+      "destination": "/cookies/index.html"
+    },
+    {
+      "source": "/([tT][eE][rR][mM][sS])",
+      "destination": "/terms/index.html"
+    },
+    {
+      "source": "/([dD][eE][lL][iI][vV][eE][rR][yY])",
+      "destination": "/delivery/index.html"
+    },
+    {
+      "source": "/([rR][eE][tT][uU][rR][nN][sS])",
+      "destination": "/returns/index.html"
+    },
+    {
+      "source": "/([hH][eE][lL][pP])",
+      "destination": "/help/index.html"
+    },
+    {
+      "source": "/([aA][bB][oO][uU][tT])",
+      "destination": "/about/index.html"
+    },
+    {
+      "source": "/([aA][bB][oO][uU][tT]-[uU][sS])",
+      "destination": "/about-us/index.html"
+    },
+    {
+      "source": "/([cC][oO][nN][tT][aA][cC][tT]-[uU][sS])",
+      "destination": "/contact-us/index.html"
+    },
+    {
+      "source": "/([pP][rR][iI][vV][aA][cC][yY])",
+      "destination": "/privacy/index.html"
+    },
+    {
+      "source": "/([cC][oO][oO][kK][iI][eE]-[pP][oO][lL][iI][cC][yY])",
+      "destination": "/cookie-policy/index.html"
+    },
+    {
+      "source": "/([tT][eE][rR][mM][sS]-[aA][nN][dD]-[cC][oO][nN][dD][iI][tT][iI][oO][nN][sS])",
+      "destination": "/terms-and-conditions/index.html"
+    },
+    {
+      "source": "/([fF][aA][qQ])",
+      "destination": "/faq/index.html"
+    },
+    {
+      "source": "/([sS][hH][iI][pP][pP][iI][nN][gG]-[pP][oO][lL][iI][cC][yY])",
+      "destination": "/shipping-policy/index.html"
+    },
+    {
+      "source": "/([rR][eE][fF][uU][nN][dD]-[pP][oO][lL][iI][cC][yY])",
+      "destination": "/refund-policy/index.html"
+    },
+    {
+      "source": "/([fF][rR][uU][iI][tT]-[iI][nN][tT][eE][lL][lL][iI][gG][eE][nN][cC][eE])",
+      "destination": "/fruit-intelligence/index.html"
+    },
+    {
+      "source": "/([bB][aA][sS][kK][eE][tT])",
+      "destination": "/basket/index.html"
+    },
+    {
+      "source": "/([eE][vV][eE][rR][yY][dD][aA][yY]-[fF][rR][eE][sS][hH])/([mM][aA][nN][gG][oO][eE][sS])/([cC][hH][aA][uU][nN][sS][aA])",
+      "destination": "/everyday-fresh/mangoes/chaunsa/index.html"
+    },
+    {
+      "source": "/([eE][vV][eE][rR][yY][dD][aA][yY]-[fF][rR][eE][sS][hH])/([cC][iI][tT][rR][uU][sS])/([kK][iI][nN][nN][oO][wW])",
+      "destination": "/everyday-fresh/citrus/kinnow/index.html"
+    },
+    {
+      "source": "/([eE][vV][eE][rR][yY][dD][aA][yY]-[fF][rR][eE][sS][hH])/([aA][pP][pP][lL][eE][sS])/([aA][pP][pP][lL][eE])",
+      "destination": "/everyday-fresh/apples/apple/index.html"
+    },
+    {
+      "source": "/([eE][vV][eE][rR][yY][dD][aA][yY]-[fF][rR][eE][sS][hH])/([sS][eE][aA][sS][oO][nN][aA][lL])/([aA][nN][aA][aA][rR])",
+      "destination": "/everyday-fresh/seasonal/anaar/index.html"
     }
   ]
 }

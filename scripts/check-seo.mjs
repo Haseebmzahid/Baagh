@@ -1,10 +1,50 @@
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
+import { createServer } from 'vite';
 const pages = JSON.parse(await readFile('dist/seo-manifest.json', 'utf8'));
 const sitemap = await readFile('dist/sitemap.xml', 'utf8');
 const robots = await readFile('dist/robots.txt', 'utf8');
 const llms = await readFile('dist/llms.txt', 'utf8');
 const config = JSON.parse(await readFile('vercel.json', 'utf8'));
+const vite = await createServer({ configFile: false, mode: 'production', server: { middlewareMode: true }, appType: 'custom' });
+let entries;
+let absoluteUrl;
+try {
+  const { publicPages, aliasPaths, seoForPath } = await vite.ssrLoadModule('/src/seo/pages.ts');
+  ({ absoluteUrl } = await vite.ssrLoadModule('/src/seo/config.ts'));
+  assert.deepEqual(pages.map(page => page.path), publicPages.map(page => page.path));
+  entries = [...publicPages.map(page => page.path), ...aliasPaths, '/basket'].map(path => ({
+    path,
+    page: seoForPath(path),
+    destination: path === '/' ? '/index.html' : `${path}/index.html`,
+  }));
+} finally {
+  await vite.close();
+}
+
+assert.equal(new Set(entries.map(entry => entry.path)).size, entries.length, 'Duplicate legitimate route');
+const exactRules = entries.map(({ path, destination }) => ({ source: path, destination }));
+const caseRules = exactRules.filter(rule => rule.source !== '/').map(({ source, destination }) => ({
+  // Vercel sources are case-sensitive. A custom pattern per segment explicitly
+  // accepts both ASCII cases of each letter in a registered path.
+  source: source.split('/').map(segment => segment
+    ? `(${segment.replace(/[a-z]/g, letter => `[${letter}${letter.toUpperCase()}]`)})`
+    : '').join('/'),
+  destination,
+}));
+assert.equal(config.trailingSlash, false);
+const bySource = (a, b) => a.source.localeCompare(b.source);
+assert.deepEqual([...config.rewrites].sort(bySource), [...exactRules, ...caseRules].sort(bySource),
+  'Vercel rewrites must cover every canonical, alias and basket path, including case variants, without extra matches');
+
+for (const { path, page, destination } of entries) {
+  const document = await readFile(`dist${destination}`, 'utf8');
+  const canonical = document.match(/rel="canonical" href="([^"]+)"/)?.[1];
+  assert.equal(canonical, absoluteUrl(page.path), `Wrong canonical for ${path}`);
+  const robotsMeta = document.match(/name="robots" content="([^"]+)"/)?.[1];
+  assert.equal(robotsMeta, page.index ? 'index, follow, max-image-preview:large' : 'noindex, follow',
+    `Wrong robots metadata for ${path}`);
+}
 const fruitInventories = {
   chaunsa: [8, 7],
   kinnow: [8, 9],
@@ -67,25 +107,32 @@ for (const page of pages) {
   if (page.path.startsWith('/product/')) {
     for (const type of ['Organization', 'WebSite', 'WebPage', 'BreadcrumbList']) assert(schema['@graph'].some(node => node['@type'] === type));
   }
-  const rewrite = config.rewrites.find(rule => rule.source === page.path);
-  assert(rewrite, `Missing Vercel rewrite: ${page.path}`);
-  assert.equal(rewrite.destination, page.path === '/' ? '/index.html' : `${page.path}/index.html`);
 }
-assert.equal((sitemap.match(/<loc>/g) || []).length, pages.length);
+assert.deepEqual([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]),
+  pages.map(page => absoluteUrl(page.path)));
 assert(!sitemap.includes('/basket'));
+assert(!sitemap.includes('/404'));
 assert.match(robots, /User-agent: OAI-SearchBot\nAllow: \/\n/);
 assert.match(robots, /User-agent: GPTBot\nDisallow: \/\n/);
 assert(robots.includes('Sitemap: https://baagh.vercel.app/sitemap.xml'));
-assert((await readFile('dist/spa.html', 'utf8')).includes('noindex, follow'));
+await assert.rejects(readFile('dist/spa.html'), { code: 'ENOENT' });
+const notFound = await readFile('dist/404.html', 'utf8');
+assert.match(notFound, /<title>Page not found \| BAAGH<\/title>/);
+assert.match(notFound, /<meta name="robots" content="noindex, follow">/);
+assert.match(notFound, /<main>[\s\S]*Page not found[\s\S]*<h1>[^<]+<\/h1>[\s\S]*<\/main>/);
+assert.match(notFound, /<a href="\/everyday-fresh">Shop Everyday Fresh<\/a>/);
+assert.match(notFound, /<a href="\/">Back to homepage<\/a>/);
+assert.doesNotMatch(notFound, /rel=["']canonical|baagh-prerender|id=["']root|<script\b/i);
 console.log(`PASS: ${pages.length} canonical HTML heads, unique metadata, social tags, sitemap coverage, JSON-LD shape, truthful Product fields, Vercel mappings and crawler policies.`);
 
-// Audit every generated document, including aliases and the SPA fallback.
+// Audit the React documents separately from the standalone error page.
 const expectedBodies = expectedPaths.map(path => `${path.slice(1)}/index.html`).sort();
 const actualBodies = [];
 for (const file of await readdir('dist', { recursive: true })) {
   if (!file.endsWith('.html')) continue;
   const html = await readFile(`dist/${file}`, 'utf8');
   const name = file.replaceAll('\\', '/');
+  if (name === '404.html') continue;
   const markers = (html.match(/id="baagh-prerender"/g) ?? []).length;
   if (markers) {
     assert.equal(markers, 1, `Duplicate prerender marker: ${name}`);
